@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Déclaration enregistrée ✅</h1>
+
+  {% if data %}
+    <p>Merci <strong>{{ data.declarant }}</strong> pour votre déclaration de
+    <strong>{{ data.nombre_equipes }}</strong> équipe(s) pour le club
+    <strong>{{ data.club }}</strong> dans la catégorie
+    <strong>{{ data.categorie_age }}</strong>.</p>
+  {% else %}
+    <p>Votre déclaration a bien été prise en compte.</p>
+  {% endif %}
+
+  <a href="{% url 'declaration' %}">Faire une autre déclaration</a>
+{% endblock %}

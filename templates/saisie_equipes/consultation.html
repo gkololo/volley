@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+  <h1>📋 Déclarations de tournois {{ type }}</h1>
+
+  {% if tournois %}
+    {% for tournoi in tournois %}
+      <div class="tournoi-block">
+        <h2 class="tournoi-date">
+          🏐 Tournoi du {{ tournoi.date|date:"l d F Y" }}
+        </h2>
+
+        <!-- 📊 TABLEAU DE SYNTHÈSE -->
+        <div class="synthese-section">
+          <h3>📊 Synthèse des inscriptions</h3>
+          <div class="stats-global">
+            <span class="stat-item">
+              <strong>{{ tournoi.total_general }}</strong> équipes au total
+            </span>
+            <span class="stat-item">
+              <strong>{{ tournoi.nb_clubs_total }}</strong> clubs participants
+            </span>
+            <span class="stat-item">
+              <strong>{{ tournoi.nb_categories }}</strong> catégories
+            </span>
+          </div>
+
+          <table class="tableau-synthese">
+            <thead>
+              <tr>
+                <th>Catégorie</th>
+                <th>Sexe</th>
+                <th>Zone</th>
+                <th>Clubs</th>
+                <th>Équipes</th>
+                <th>Détails</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for ligne in tournoi.tableau_synthese %}
+                <tr>
+                  <td data-label="Catégorie"><strong>{{ ligne.categorie }}</strong></td>
+                  <td data-label="Sexe">{{ ligne.sexe }}</td>
+                  <td data-label="Zone">{{ ligne.zone }}</td>
+                  <td data-label="Clubs" class="text-center">{{ ligne.nb_clubs }}</td>
+                  <td data-label="Équipes" class="text-center">
+                    <strong>{{ ligne.total_equipes }}</strong>
+                  </td>
+                  <td data-label="Actions" class="text-center">
+                    <a href="#cat-{{ ligne.cle }}" class="btn-details">👁️ Voir détails</a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 📋 DÉTAILS PAR CATÉGORIE -->
+        <div class="details-section">
+          <h3>📋 Détails par catégorie</h3>
+
+          {% for categorie in tournoi.categories_detaillees %}
+            <div class="categorie-block" id="cat-{{ categorie.cle }}">
+              <h4 class="categorie-titre">
+                {{ categorie.categorie }} {{ categorie.sexe }}
+                {% if categorie.zone != "Toutes zones" %}({{ categorie.zone }}){% endif %}
+                <span class="badge">
+                  {{ categorie.nb_clubs }} club{{ categorie.nb_clubs|pluralize }} -
+                  {{ categorie.total_equipes }} équipe{{ categorie.total_equipes|pluralize }}
+                </span>
+              </h4>
+
+              <ul class="declaration-list">
+                {% for d in categorie.declarations %}
+                  <li class="declaration-item">
+                    <strong>{{ d.club.nom }}</strong> —
+                    {{ d.nombre_equipes }} équipe{{ d.nombre_equipes|pluralize }}
+                    <br>
+                    <small>
+                      📅 Déclaré le {{ d.date_declaration|date:"d/m/Y H:i" }}
+                    </small>
+                    {% if d.remarques %}
+                      <br><small class="remarques">💬 {{ d.remarques }}</small>
+                    {% endif %}
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endfor %}
+        </div>
+
+        <hr class="tournoi-separator">
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="no-data">
+      <p>🤷‍♂️ Aucune déclaration {{ type }} pour le moment.</p>
+    </div>
+  {% endif %}
+
+  <!-- 🔗 NAVIGATION -->
+  <div class="navigation-links">
+    {% if type == "à venir" %}
+      <a href="{% url 'consultation_archive' %}" class="btn btn-secondary">
+        📚 Voir les tournois passés
+      </a>
+    {% else %}
+      <a href="{% url 'consultation' %}" class="btn btn-primary">
+        🔜 Voir les tournois à venir
+      </a>
+    {% endif %}
+    <a href="{% url 'declaration' %}" class="btn btn-success">
+      ➕ Nouvelle déclaration
+    </a>
+  </div>
+</div>
+{% endblock %}

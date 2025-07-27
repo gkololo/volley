@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Déclarer une équipe championnat Jeunes{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="form-container">
+        <h1 class="form-title">🏐 Déclaration d'équipe</h1>
+
+        <div class="form-description">
+            <p><strong>📋 Instructions :</strong></p>
+            <ul>
+                <li>Remplissez tous les champs obligatoires</li>
+                <li>Vérifiez les informations avant de soumettre</li>
+                <li>Une confirmation vous sera envoyée après validation</li>
+            </ul>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% for field in form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.help_text %}
+                        <div class="form-help-text">{{ field.help_text }}</div>
+                    {% endif %}
+                    {% if field.errors %}
+                        <div class="form-errors">
+                            {% for error in field.errors %}
+                                <div class="error-message">❌ {{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <div class="form-actions">
+                <button type="submit">
+                    ✅ Envoyer la déclaration
+                </button>
+            </div>
+        </form>
+
+        <div class="form-navigation">
+            <a href="{% url 'consultation' %}">👁️ Voir les déclarations</a>
+            <a href="{% url 'consultation_archive' %}">📚 Archives</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

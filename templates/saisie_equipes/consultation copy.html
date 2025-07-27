@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+  <h1>Déclarations de tournois {{ type }}</h1>
+
+  {% if groupes %}
+    {% for date_tournoi, declarations in groupes.items %}
+      <div class="tournoi-block">
+        <h2 class="tournoi-date">
+          Tournoi du {{ date_tournoi|date:"l d F Y" }}
+        </h2>
+
+        <p class="total-equipes">
+            🏐 Total d’équipes engagées :
+            <strong>{{ declarations|length }}</strong> déclaration{{ declarations|length|pluralize }} –
+            {{ totaux[date_tournoi] }} équipe{{ totaux[date_tournoi]|pluralize }}
+            </p>
+
+
+        <ul class="declaration-list">
+          {% for d in declarations %}
+            <li class="declaration-item">
+              <strong>{{ d.club.nom }}</strong> —
+              {{ d.nombre_equipes }} équipe{{ d.nombre_equipes|pluralize }}
+              en {{ d.get_categorie_age_display }} {{ d.get_sexe_display }}
+              {% if d.zone %}(Zone {{ d.get_zone_display }}){% endif %} <br>
+              <em>Déclaré le {{ d.date_declaration|date:"d/m/Y H:i" }} par {{ d.declarant }}</em>
+            </li>
+          {% endfor %}
+        </ul>
+        <hr>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>Aucune déclaration {{ type }} pour le moment.</p>
+  {% endif %}
+</div>
+{% endblock %}

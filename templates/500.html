@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erreur serveur - Championnat Volleyball</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<div class="container">
+    <div class="error-container">
+        <!-- 🚨 EN-TÊTE D'ERREUR -->
+        <div class="error-header">
+            <div class="error-icon">🚨</div>
+            <h1 class="error-title">500</h1>
+            <h2 class="error-subtitle">Erreur interne du serveur</h2>
+        </div>
+
+        <!-- 📝 MESSAGE D'ERREUR -->
+        <div class="error-message">
+            <p>Une erreur inattendue s'est produite sur le serveur. 😔</p>
+            <p>Nos équipes techniques ont été automatiquement informées et travaillent à résoudre le problème.</p>
+        </div>
+
+        <!-- 🛠️ SOLUTIONS -->
+        <div class="error-help">
+            <h3>🛠️ Que faire ?</h3>
+            <ul>
+                <li><strong>Attendez quelques minutes</strong> et réessayez</li>
+                <li><strong>Revenez à l'accueil</strong> pour continuer votre navigation</li>
+                <li><strong>Vérifiez votre connexion</strong> internet</li>
+                <li>Si le problème persiste, contactez l'administrateur</li>
+            </ul>
+        </div>
+
+        <!-- 🔗 NAVIGATION DE SECOURS -->
+        <div class="error-actions">
+            <button onclick="location.reload()" class="btn btn-secondary">
+                🔄 Réessayer
+            </button>
+            <a href="/" class="btn btn-primary">
+                🏠 Retour à l'accueil
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Styles identiques à 404.html */
+.error-container {
+    max-width: 600px;
+    margin: 4rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.error-header {
+    margin-bottom: 2rem;
+}
+
+.error-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.error-title {
+    font-size: 4rem;
+    color: #dc3545;
+    margin: 0;
+    font-weight: bold;
+}
+
+.error-subtitle {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin: 0.5rem 0 0 0;
+}
+
+.error-message {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 4px;
+    margin-bottom: 2rem;
+    border-left: 4px solid #dc3545;
+}
+
+.error-help {
+    background: #fff3cd;
+    padding: 1.5rem;
+    border-radius: 4px;
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.error-help h3 {
+    margin-top: 0;
+    text-align: center;
+    color: #856404;
+}
+
+.error-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: #3498db;
+    color: white;
+}
+
+.btn-secondary {
+    background: #757575;
+    color: white;
+}
+</style>
+</body>
+</html>

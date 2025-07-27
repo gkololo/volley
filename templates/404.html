@@ -1,0 +1,278 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Page non trouvée - Championnat Volleyball{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="error-container">
+        <!-- 🏐 EN-TÊTE D'ERREUR -->
+        <div class="error-header">
+            <div class="error-icon">🏐</div>
+            <h1 class="error-title">404</h1>
+            <h2 class="error-subtitle">Oups ! Page non trouvée</h2>
+        </div>
+
+        <!-- 📝 MESSAGE D'ERREUR -->
+        <div class="error-message">
+            <p>La page que vous recherchez semble avoir disparu du terrain... 🤷‍♂️</p>
+            <p>Elle a peut-être été déplacée, supprimée, ou l'adresse que vous avez saisie n'est pas correcte.</p>
+        </div>
+
+        <!-- 🧭 NAVIGATION DE SECOURS -->
+        <div class="error-navigation">
+            <h3>🧭 Où souhaitez-vous aller ?</h3>
+
+            <div class="error-nav-grid">
+                <!-- Accueil -->
+                <a href="{% url 'accueil' %}" class="error-nav-card">
+                    <div class="error-nav-icon">🏠</div>
+                    <h4>Retour à l'accueil</h4>
+                    <p>Page principale avec navigation complète</p>
+                </a>
+
+                <!-- Nouvelle déclaration -->
+                <a href="{% url 'declaration' %}" class="error-nav-card">
+                    <div class="error-nav-icon">➕</div>
+                    <h4>Nouvelle déclaration</h4>
+                    <p>Déclarer une équipe pour un tournoi</p>
+                </a>
+
+                <!-- Consultation -->
+                <a href="{% url 'consultation' %}" class="error-nav-card">
+                    <div class="error-nav-icon">👁️</div>
+                    <h4>Voir les tournois</h4>
+                    <p>Consulter les inscriptions en cours</p>
+                </a>
+
+                <!-- Archives -->
+                <a href="{% url 'consultation_archive' %}" class="error-nav-card">
+                    <div class="error-nav-icon">📚</div>
+                    <h4>Archives</h4>
+                    <p>Tournois passés et historique</p>
+                </a>
+            </div>
+        </div>
+
+        <!-- ℹ️ AIDE SUPPLÉMENTAIRE -->
+        <div class="error-help">
+            <h3>💡 Quelques suggestions</h3>
+            <ul>
+                <li><strong>Vérifiez l'adresse</strong> dans la barre de navigation</li>
+                <li><strong>Utilisez le menu principal</strong> pour naviguer</li>
+                <li><strong>Revenez à l'accueil</strong> et recommencez votre navigation</li>
+                <li>Si le problème persiste, <strong>contactez l'administrateur</strong></li>
+            </ul>
+        </div>
+
+        <!-- 🔗 NAVIGATION RAPIDE -->
+        <div class="error-actions">
+            <button onclick="history.back()" class="btn btn-secondary">
+                ← Retour en arrière
+            </button>
+            <a href="{% url 'accueil' %}" class="btn btn-primary">
+                🏠 Retour à l'accueil
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+/* 🎨 STYLES SPÉCIFIQUES À LA PAGE 404 */
+.error-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.error-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f1f1f1;
+}
+
+.error-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+}
+
+.error-title {
+    font-size: 4rem;
+    color: var(--accent-color);
+    margin: 0;
+    font-weight: bold;
+}
+
+.error-subtitle {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin: 0.5rem 0 0 0;
+}
+
+.error-message {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: calc(var(--border-radius) / 2);
+    margin-bottom: 2rem;
+    border-left: 4px solid var(--accent-color);
+}
+
+.error-message p {
+    margin: 0.5rem 0;
+    color: #666;
+    line-height: 1.5;
+}
+
+.error-navigation {
+    margin-bottom: 2rem;
+}
+
+.error-navigation h3 {
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+}
+
+.error-nav-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.error-nav-card {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: calc(var(--border-radius) / 2);
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+}
+
+.error-nav-card:hover {
+    background: white;
+    border-color: var(--accent-color);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    text-decoration: none;
+    color: inherit;
+}
+
+.error-nav-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.error-nav-card h4 {
+    margin: 0 0 0.5rem 0;
+    color: var(--primary-color);
+    font-size: 1.1rem;
+}
+
+.error-nav-card p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.error-help {
+    background: #e3f2fd;
+    padding: 1.5rem;
+    border-radius: calc(var(--border-radius) / 2);
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.error-help h3 {
+    color: var(--primary-color);
+    margin-top: 0;
+    text-align: center;
+}
+
+.error-help ul {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.error-help li {
+    margin-bottom: 0.5rem;
+    color: #666;
+}
+
+.error-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-block;
+}
+
+.btn-primary {
+    background: var(--accent-color);
+    color: white;
+}
+
+.btn-secondary {
+    background: #757575;
+    color: white;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    text-decoration: none;
+    color: white;
+}
+
+/* Mobile */
+@media screen and (max-width: 768px) {
+    .error-container {
+        margin: 1rem;
+        padding: 1rem;
+    }
+
+    .error-title {
+        font-size: 3rem;
+    }
+
+    .error-subtitle {
+        font-size: 1.2rem;
+    }
+
+    .error-nav-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .error-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btn {
+        width: 100%;
+        max-width: 250px;
+    }
+}
+</style>
+{% endblock %}
