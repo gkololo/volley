@@ -2,11 +2,18 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from pathlib import Path
 
+if __name__ == '__main__':
+    # Charger les variables d'environnement depuis .env si le fichier existe
+    env_file = Path(__file__).resolve().parent / '.env'
+    if env_file.exists():
+        from dotenv import load_dotenv
+        load_dotenv(env_file)
 
-def main():
-    """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
+    # Définir le module de settings par défaut
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.local')
+
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
@@ -16,7 +23,3 @@ def main():
             "forget to activate a virtual environment?"
         ) from exc
     execute_from_command_line(sys.argv)
-
-
-if __name__ == '__main__':
-    main()

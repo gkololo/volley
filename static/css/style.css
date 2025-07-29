@@ -1,324 +1,195 @@
-:root {
-  --primary-color: #2c3e50;
-  --accent-color: #3498db;
-  --background-color: #f4f4f4;
-  --second-color: red;
-  --text-color: #333;
-  --border-radius: 8px;
-  --spacing: 1rem;
-  --max-form-width: 90vw;
+/* 🔄 RESET CSS MODERNE */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  /* Améliore la lisibilité sur mobile */
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  font-size: 100%;
 }
 
 body {
   margin: 0;
-  padding: 0; /* Suppression du padding par défaut */
-  background-color: var(--background-color);
-  font-family: system-ui, sans-serif;
-  color: var(--text-color);
-  font-size: 15px; /* Base mobile optimisée */
-}
-
-/* 📝 FORMULAIRES */
-.form-container {
-  max-width: 600px;
-  margin: 0.5rem; /* Marge très réduite */
-  padding: 1rem; /* Padding réduit */
-  background: white;
-  border-radius: var(--border-radius);
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-.form-title {
-  color: var(--primary-color);
-  text-align: center;
-  margin-bottom: 1rem; /* Marge réduite */
-  font-size: 1.5rem; /* Taille réduite pour mobile */
-  border-bottom: 3px solid var(--accent-color);
-  padding-bottom: 0.5rem; /* Padding réduit */
-}
-
-.form-description {
-  background: #e3f2fd;
-  padding: 0.8rem; /* Padding réduit */
-  border-radius: calc(var(--border-radius) / 2);
-  margin-bottom: 1rem; /* Marge réduite */
-  border-left: 4px solid var(--accent-color);
-  font-size: 0.9rem; /* Police légèrement plus petite */
-}
-
-form {
-  background-color: transparent;
   padding: 0;
-  border-radius: 0;
-  box-shadow: none;
-  max-width: none;
+  line-height: 1.6;
+  /* Police plus grande pour mobile */
+  font-size: 18px; /* Augmenté de 15px à 18px */
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  /* Améliore le rendu des polices sur mobile */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Supprime les marges par défaut des éléments */
+h1, h2, h3, h4, h5, h6, p, ul, ol, li, blockquote, figure {
   margin: 0;
+  padding: 0;
 }
 
-.form-group {
-  margin-bottom: 1rem; /* Marge réduite */
-}
-
-label {
-  font-weight: bold;
-  margin-top: 0;
-  margin-bottom: 0.5rem;
+/* Améliore les images responsive */
+img {
+  max-width: 100%;
+  height: auto;
   display: block;
-  color: var(--primary-color);
-  font-size: 1rem;
 }
 
-input,
-select,
-textarea {
+/* Variables CSS pour consistance */
+:root {
+  --primary-color: #2c3e50;
+  --accent-color: #3498db;
+  --background-color: #f4f4f4;
+  --text-color: #333;
+  --border-radius: 12px; /* Augmenté pour un look plus moderne */
+  --spacing-xs: 0.5rem;   /* 8px */
+  --spacing-sm: 0.75rem;  /* 12px */
+  --spacing-md: 1rem;     /* 16px */
+  --spacing-lg: 1.5rem;   /* 24px */
+  --spacing-xl: 2rem;     /* 32px */
+
+  /* Tailles de police responsive */
+  --font-xs: 0.875rem;    /* 14px */
+  --font-sm: 1rem;        /* 16px */
+  --font-md: 1.125rem;    /* 18px */
+  --font-lg: 1.25rem;     /* 20px */
+  --font-xl: 1.5rem;      /* 24px */
+  --font-xxl: 2rem;       /* 32px */
+}
+
+/* 📱 CONTENEUR PRINCIPAL MOBILE-FIRST */
+.container {
   width: 100%;
-  padding: 0.6em; /* Padding légèrement réduit */
-  margin-top: 0;
-  margin-bottom: 0;
-  border: 2px solid #e1e8ed;
-  border-radius: var(--border-radius);
-  font-size: 1rem;
-  box-sizing: border-box;
-  transition: border-color 0.3s, box-shadow 0.3s;
+  margin: 0;
+  padding: var(--spacing-sm); /* 12px partout */
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  border-color: var(--accent-color);
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-}
-
-.form-help-text {
-  font-size: 0.9rem;
-  color: #666;
-  margin-top: 0.3rem;
-}
-
-.form-actions {
-  text-align: center;
-  margin-top: 1rem; /* Marge réduite */
-  padding-top: 1rem; /* Padding réduit */
-  border-top: 1px solid #eee;
-}
-
-button {
-  background: linear-gradient(135deg, var(--accent-color), #2980b9);
-  color: white;
-  border: none;
-  padding: 0.8rem 1.5rem; /* Padding réduit */
-  font-size: 1rem; /* Taille réduite */
-  border-radius: var(--border-radius);
-  cursor: pointer;
-  width: auto;
-  min-width: 180px; /* Largeur minimum réduite */
-  transition: all 0.3s;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-button:hover {
-  background: linear-gradient(135deg, #2980b9, var(--accent-color));
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-}
-
-button:active {
-  transform: translateY(0);
-}
-
-.form-navigation {
-  text-align: center;
-  margin-top: 1rem; /* Marge réduite */
-}
-
-.form-navigation a {
-  color: var(--accent-color);
-  text-decoration: none;
-  font-weight: 500;
-  margin: 0 1rem;
-  padding: 0.5rem 1rem;
-  border-radius: calc(var(--border-radius) / 2);
-  transition: background-color 0.3s;
-}
-
-.form-navigation a:hover {
-  background-color: rgba(52, 152, 219, 0.1);
-}
-
-/* ERREURS DE FORMULAIRE */
-.form-errors {
-  margin-top: 0.5rem;
-}
-
-.error-message {
-  background: #f8d7da;
-  color: #721c24;
-  padding: 0.5rem;
-  border-radius: calc(var(--border-radius) / 2);
-  border: 1px solid #f5c6cb;
-  font-size: 0.9rem;
-  margin-bottom: 0.3rem;
-}
-
-.form-group input.error,
-.form-group select.error,
-.form-group textarea.error {
-  border-color: #dc3545;
-  background-color: #fff5f5;
-}
-
-/* RESPONSIVE FORMULAIRE */
-@media screen and (max-width: 600px) {
-  .form-container {
-    margin: 0.3rem; /* Marge très réduite sur mobile */
-    padding: 0.8rem; /* Padding très réduit */
-    border-radius: calc(var(--border-radius) / 2);
-  }
-
-  .form-title {
-    font-size: 1.3rem; /* Titre plus petit */
-    margin-bottom: 0.8rem;
-  }
-
-  .form-description {
-    padding: 0.6rem;
-    font-size: 0.85rem;
-    margin-bottom: 0.8rem;
-  }
-
-  .form-group {
-    margin-bottom: 0.8rem;
-  }
-
-  button {
-    min-width: auto;
-    width: 100%;
-    padding: 0.8rem;
-    font-size: 0.95rem;
-  }
-
-  .form-navigation a {
-    display: block;
-    margin: 0.3rem 0;
-    padding: 0.4rem 0.8rem;
-    font-size: 0.9rem;
-  }
-}
-
-/* 🏠 STYLES PAGE D'ACCUEIL */
-
-/* Container principal comme formulaire */
+/* 🏠 PAGE D'ACCUEIL AMÉLIORÉE */
 .accueil-container {
-  max-width: 1000px;
-  margin: 0.5rem;
+  width: 100%;
+  margin: 0;
   background: white;
   border-radius: var(--border-radius);
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   overflow: hidden;
 }
 
-/* Hero Section avec même style que form-title */
+/* Hero Section optimisée mobile */
 .hero-section {
   text-align: center;
-  padding: 2rem;
+  padding: var(--spacing-lg); /* 24px */
   background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
   color: white;
-  margin: 0;
-  border-radius: 0;
 }
 
 .hero-title {
-  font-size: 2rem;
-  margin: 0 0 0.5rem 0;
+  font-size: var(--font-xl); /* 24px sur mobile */
+  margin-bottom: var(--spacing-sm);
   font-weight: bold;
+  line-height: 1.2;
 }
 
 .hero-subtitle {
-  font-size: 1.1rem;
+  font-size: var(--font-md); /* 18px */
   margin: 0;
   opacity: 0.9;
+  line-height: 1.4;
 }
 
-/* Section avec fond blanc comme form-container */
+/* Section contenu avec moins de padding */
 .content-section {
-  padding: 2rem;
+  padding: var(--spacing-md); /* 16px */
 }
 
-/* Stats Section */
+/* 📊 STATISTIQUES AMÉLIORÉES */
 .stats-section {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--spacing-sm); /* 12px */
+  margin-bottom: var(--spacing-lg);
 }
 
 .stat-card {
   background: #f8f9fa;
-  padding: 1.5rem;
+  padding: var(--spacing-md); /* 16px */
   border-radius: var(--border-radius);
   text-align: center;
   border: 2px solid #e1e8ed;
-  transition: all 0.3s;
+  transition: all 0.3s ease;
 }
 
 .stat-card:hover {
   transform: translateY(-3px);
   border-color: var(--accent-color);
-  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+  box-shadow: 0 6px 15px rgba(52, 152, 219, 0.15);
 }
 
 .stat-icon {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
+  font-size: 2.5rem; /* Plus grand pour mobile */
+  margin-bottom: var(--spacing-sm);
 }
 
 .stat-number {
-  font-size: 2rem;
+  font-size: var(--font-xxl); /* 32px */
   font-weight: bold;
   color: var(--primary-color);
-  margin-bottom: 0.3rem;
+  margin-bottom: var(--spacing-xs);
+  line-height: 1;
 }
 
 .stat-label {
-  font-size: 0.9rem;
+  font-size: var(--font-sm); /* 16px */
   color: #666;
+  line-height: 1.3;
 }
 
-/* Navigation Section */
+/* 🔗 NAVIGATION CARDS AMÉLIORÉES */
 .nav-section {
-  margin-bottom: 2rem;
+  margin-bottom: var(--spacing-lg);
 }
 
 .nav-title {
   color: var(--primary-color);
   text-align: center;
-  margin-bottom: 2rem;
-  font-size: 1.5rem;
+  margin-bottom: var(--spacing-lg);
+  font-size: var(--font-xl);
   border-bottom: 3px solid var(--accent-color);
-  padding-bottom: 1rem;
+  padding-bottom: var(--spacing-md);
 }
 
 .nav-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-md);
 }
 
 .nav-card {
   background: #f8f9fa;
-  padding: 2rem;
+  padding: var(--spacing-lg); /* 24px */
   border-radius: var(--border-radius);
   text-decoration: none;
   color: inherit;
   border: 2px solid #e1e8ed;
-  transition: all 0.3s;
+  transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  /* Améliore la zone tactile */
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .nav-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-3px);
   box-shadow: 0 8px 25px rgba(0,0,0,0.15);
   border-color: transparent;
 }
@@ -345,26 +216,28 @@ button:active {
 
 .nav-icon {
   font-size: 3rem;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-md);
   display: block;
 }
 
 .nav-card-title {
-  font-size: 1.3rem;
-  margin: 0 0 0.5rem 0;
+  font-size: var(--font-lg); /* 20px */
+  margin-bottom: var(--spacing-sm);
   color: var(--primary-color);
+  font-weight: 600;
 }
 
 .nav-card-desc {
-  margin: 0 0 1rem 0;
+  margin: 0;
   color: #666;
   line-height: 1.4;
+  font-size: var(--font-sm);
 }
 
 .nav-arrow {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
   font-size: 1.5rem;
   color: #ccc;
   transition: all 0.3s;
@@ -372,534 +245,232 @@ button:active {
 
 .nav-card:hover .nav-arrow {
   color: var(--accent-color);
-  transform: translateX(5px);
+  transform: translateX(3px);
 }
 
-/* Info Section comme form-description */
-.info-section {
-  background: #e3f2fd;
-  padding: 1.5rem;
-  border-radius: var(--border-radius);
-  border-left: 4px solid var(--accent-color);
-}
-
-.info-section h3 {
-  color: var(--primary-color);
-  margin-bottom: 1.5rem;
-  text-align: center;
-  margin-top: 0;
-}
-
-.info-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-}
-
-.info-card {
-  display: flex;
-  gap: 1rem;
-  padding: 1rem;
-  background: white;
-  border-radius: calc(var(--border-radius) / 2);
-  border: 1px solid rgba(255,255,255,0.5);
-}
-
-.info-icon {
-  font-size: 2rem;
-  flex-shrink: 0;
-}
-
-.info-content h4 {
-  margin: 0 0 0.5rem 0;
-  color: var(--primary-color);
-  font-size: 1.1rem;
-}
-
-.info-content p {
+/* 📋 FORMULAIRES OPTIMISÉS MOBILE */
+.form-container {
+  width: 100%;
   margin: 0;
-  color: #666;
-  font-size: 0.9rem;
-  line-height: 1.4;
+  padding: var(--spacing-md);
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
-/* Mobile Optimizations */
-@media screen and (max-width: 768px) {
-  .accueil-container {
-    margin: 0.3rem;
-  }
+.form-title {
+  color: var(--primary-color);
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+  font-size: var(--font-xl);
+  border-bottom: 3px solid var(--accent-color);
+  padding-bottom: var(--spacing-sm);
+  line-height: 1.2;
+}
 
-  .hero-section {
-    padding: 1.5rem 1rem;
-  }
+.form-description {
+  background: #e3f2fd;
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius);
+  margin-bottom: var(--spacing-lg);
+  border-left: 4px solid var(--accent-color);
+  font-size: var(--font-sm);
+  line-height: 1.5;
+}
 
-  .content-section {
-    padding: 1rem;
+.form-group {
+  margin-bottom: var(--spacing-lg);
+}
+
+label {
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+  display: block;
+  color: var(--primary-color);
+  font-size: var(--font-md); /* 18px pour meilleure lisibilité */
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: var(--spacing-md); /* 16px padding pour zone tactile */
+  border: 2px solid #e1e8ed;
+  border-radius: var(--border-radius);
+  font-size: var(--font-md); /* 18px pour éviter le zoom iOS */
+  box-sizing: border-box;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  /* Améliore l'expérience tactile */
+  min-height: 48px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+button {
+  background: linear-gradient(135deg, var(--accent-color), #2980b9);
+  color: white;
+  border: none;
+  padding: var(--spacing-md) var(--spacing-xl); /* 16px 32px */
+  font-size: var(--font-md); /* 18px */
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  width: 100%;
+  min-height: 48px; /* Zone tactile minimum */
+  transition: all 0.3s;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  font-weight: 600;
+}
+
+button:hover {
+  background: linear-gradient(135deg, #2980b9, var(--accent-color));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* 📱 RESPONSIVE AMÉLIORÉ */
+
+/* Petits mobiles (320px - 479px) */
+@media screen and (max-width: 479px) {
+  .container {
+    padding: var(--spacing-xs); /* 8px sur très petits écrans */
   }
 
   .hero-title {
-    font-size: 1.6rem;
+    font-size: var(--font-lg); /* 20px */
   }
 
   .hero-subtitle {
-    font-size: 1rem;
+    font-size: var(--font-sm); /* 16px */
   }
 
   .stats-section {
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 0.8rem;
   }
+}
 
-  .stat-card {
-    padding: 1rem;
-  }
-
-  .stat-icon {
-    font-size: 1.5rem;
-  }
-
-  .stat-number {
-    font-size: 1.5rem;
+/* Mobiles normaux (480px - 767px) */
+@media screen and (min-width: 480px) {
+  .container {
+    padding: var(--spacing-md); /* 16px */
   }
 
   .nav-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .nav-card {
-    padding: 1.5rem;
-  }
-
-  .nav-icon {
-    font-size: 2.5rem;
-  }
-
-  .info-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .info-card {
-    flex-direction: column;
-    text-align: center;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   }
 }
 
-/* Desktop - Plus d'espace */
-@media screen and (min-width: 768px) {
-  .accueil-container {
-    margin: 2rem auto;
-  }
-
-  .content-section {
-    padding: 2.5rem;
-  }
-}
-
-/* DESKTOP - Plus d'espace */
-@media screen and (min-width: 768px) {
-  .form-container {
-    margin: 2rem auto;
-    padding: 2rem;
-  }
-
-  .form-title {
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .form-description {
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .form-group {
-    margin-bottom: 1.5rem;
-  }
-
-  button {
-    padding: 1rem 2rem;
-    font-size: 1.1rem;
-    min-width: 200px;
-  }
-}
-
-/* 📱 MOBILE FIRST - PAGES DE CONSULTATION */
-/* Base : styles pour mobile (320px+) */
-.container {
-  max-width: 100%;
-  margin: 0;
-  padding: 0.3rem; /* Padding réduit pour plus d'espace */
-}
-
-.tournoi-block {
-  margin-bottom: 1.5rem; /* Espacement réduit entre tournois */
-  padding: 0.8rem; /* Padding plus compact */
-  border: 1px solid #ddd;
-  border-radius: var(--border-radius);
-  background: #fafafa;
-}
-
-h1 {
-  font-size: 1.8rem; /* Titre principal plus grand */
-  margin-bottom: 1.5rem;
-}
-
-h2.tournoi-date {
-  color: var(--primary-color);
-  margin-bottom: 1.5rem;
-  border-bottom: 2px solid var(--accent-color);
-  padding-bottom: 0.5rem;
-  font-size: 1.4rem; /* Dates de tournoi visibles */
-}
-
-h3 {
-  font-size: 1.3rem; /* Sous-titres sections */
-}
-
-.categorie-titre {
-  margin: 0 0 1rem 0;
-  color: #2E7D32;
-}
-
-/* 📊 SECTION SYNTHÈSE */
-.synthese-section {
-  background: white;
-  padding: 0.8rem; /* Padding réduit */
-  border-radius: calc(var(--border-radius) - 2px);
-  margin-bottom: 1.2rem; /* Marge réduite */
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.stats-global {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem; /* Gap réduit */
-  margin-bottom: 0.8rem; /* Marge réduite */
-  align-items: center;
-}
-
-.stat-item {
-  background: #e3f2fd;
-  padding: 0.5rem 1rem; /* Padding réduit */
-  border-radius: 20px;
-  font-size: 1rem; /* Police légèrement réduite */
-  white-space: nowrap;
-  width: 100%;
-  text-align: center;
-  max-width: 290px;
-}
-
-/* 📋 TABLEAU MOBILE OPTIMISÉ */
-.tableau-synthese {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 0.8rem; /* Marge réduite */
-  font-size: 1rem; /* Police ajustée */
-}
-
-.tableau-synthese thead {
-  display: none; /* Cache les en-têtes sur mobile */
-}
-
-.tableau-synthese tbody {
-  display: block;
-}
-
-.tableau-synthese tr {
-  display: block;
-  background: white;
-  margin-bottom: 0.4rem; /* Marge réduite */
-  padding: 0.8rem; /* Padding réduit */
-  border-radius: calc(var(--border-radius) / 2);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  position: relative;
-}
-
-.tableau-synthese td {
-  display: block;
-  padding: 0.3rem 0; /* Padding réduit */
-  border: none;
-  text-align: left;
-  font-size: 0.95rem; /* Police ajustée */
-}
-
-.tableau-synthese td:before {
-  content: attr(data-label) ": ";
-  font-weight: bold;
-  color: var(--primary-color);
-  font-size: 0.95rem; /* Labels ajustés */
-}
-
-.btn-details {
-  background: var(--accent-color);
-  color: white;
-  padding: 0.6rem 1.2rem; /* Padding réduit */
-  border-radius: calc(var(--border-radius) / 2);
-  text-decoration: none;
-  font-size: 0.95rem; /* Police ajustée */
-  display: inline-block;
-  margin-top: 0.3rem; /* Marge réduite */
-  transition: background-color 0.2s;
-  min-height: 40px; /* Hauteur tactile réduite mais suffisante */
-}
-
-.btn-details:hover {
-  background: #1976D2;
-}
-
-/* 📋 SECTION DÉTAILS */
-.details-section {
-  background: white;
-  padding: 0.8rem; /* Padding réduit */
-  border-radius: calc(var(--border-radius) - 2px);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.categorie-block {
-  margin-bottom: 1.5rem; /* Marge réduite */
-  padding: 0.8rem; /* Padding réduit */
-  border-left: 4px solid #4CAF50;
-  background: #f9f9f9;
-  border-radius: 0 var(--border-radius) var(--border-radius) 0;
-}
-
-.categorie-titre {
-  margin: 0 0 1rem 0;
-  color: #2E7D32;
-}
-
-.badge {
-  background: #4CAF50;
-  color: white;
-  padding: 0.3rem 0.8rem; /* Padding réduit */
-  border-radius: 15px;
-  font-size: 0.9rem; /* Police ajustée */
-  font-weight: normal;
-  display: inline-block;
-  margin-top: 0.3rem; /* Marge réduite */
-}
-
-.declaration-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.declaration-item {
-  background: white;
-  padding: 1rem; /* Padding réduit */
-  margin-bottom: 0.5rem; /* Marge réduite */
-  border-radius: calc(var(--border-radius) / 2);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  font-size: 0.95rem; /* Police ajustée */
-  line-height: 1.4; /* Line-height réduit */
-}
-
-.declaration-item small {
-  font-size: 0.85rem; /* Détails plus compacts */
-  line-height: 1.3;
-}
-
-.remarques {
-  color: #666;
-  font-style: italic;
-}
-
-.tournoi-separator {
-  margin: 2rem 0;
-  border: 2px solid #4CAF50;
-}
-
-/* 🔗 NAVIGATION MOBILE */
-.navigation-links {
-  margin-top: 2rem;
-  text-align: center;
-}
-
-.navigation-links a {
-  display: block;
-  margin: 0.5rem auto; /* Marge réduite */
-  width: 100%;
-  max-width: 300px;
-  padding: 0.8rem 1.4rem; /* Padding réduit */
-  text-decoration: none;
-  border-radius: var(--border-radius);
-  font-weight: bold;
-  font-size: 1rem; /* Police ajustée */
-  transition: all 0.2s;
-  box-sizing: border-box;
-  min-height: 44px; /* Hauteur tactile maintenue */
-}
-
-.btn-primary {
-  background: var(--accent-color);
-  color: white;
-}
-
-.btn-secondary {
-  background: #757575;
-  color: white;
-}
-
-.btn-success {
-  background: #4CAF50;
-  color: white;
-}
-
-.navigation-links a:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
-
-.no-data {
-  text-align: center;
-  padding: 3rem;
-  color: #666;
-}
-
-.text-center {
-  text-align: center;
-}
-
-/* 📱 TABLETTE (600px+) */
-@media screen and (min-width: 600px) {
-  .container {
-    padding: 1rem;
-  }
-
-  .tournoi-block {
-    padding: 1.5rem;
-  }
-
-  .synthese-section,
-  .details-section {
-    padding: 1.5rem;
-  }
-
-  .stats-global {
-    flex-direction: row;
-    justify-content: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .stat-item {
-    width: auto;
-    flex: 1;
-    min-width: 150px;
-  }
-
-  /* Tableau normal sur tablette */
-  .tableau-synthese {
-    display: table;
-    font-size: 0.9rem;
-  }
-
-  .tableau-synthese thead {
-    display: table-header-group;
-  }
-
-  .tableau-synthese th {
-    background: var(--primary-color);
-    color: white;
-    font-weight: bold;
-    padding: 0.6rem;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-  }
-
-  .tableau-synthese tbody {
-    display: table-row-group;
-  }
-
-  .tableau-synthese tr {
-    display: table-row;
-    background: transparent;
-    margin: 0;
-    padding: 0;
-    box-shadow: none;
-  }
-
-  .tableau-synthese td {
-    display: table-cell;
-    padding: 0.6rem;
-    border-bottom: 1px solid #ddd;
-  }
-
-  .tableau-synthese td:before {
-    content: none;
-  }
-
-  .navigation-links a {
-    display: inline-block;
-    width: auto;
-    margin: 0 0.5rem;
-  }
-}
-
-/* 🖥️ DESKTOP (768px+) */
+/* Tablettes (768px - 1023px) */
 @media screen and (min-width: 768px) {
   .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: var(--spacing-xl); /* 32px */
   }
 
-  form {
-    max-width: 600px;
+  .accueil-container {
+    margin: var(--spacing-xl) auto;
+  }
+
+  .content-section {
+    padding: var(--spacing-xl);
+  }
+
+  .hero-title {
+    font-size: var(--font-xxl); /* 32px */
+  }
+
+  .hero-subtitle {
+    font-size: var(--font-lg); /* 20px */
+  }
+
+  .nav-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   }
 
   button {
     width: auto;
-  }
-
-  .stats-global {
-    gap: 2rem;
-  }
-
-  .tableau-synthese {
-    font-size: 1rem;
-  }
-
-  .tableau-synthese th,
-  .tableau-synthese td {
-    padding: 0.8rem;
-  }
-
-  .tournoi-block {
-    margin-bottom: 3rem;
-    padding: 2rem;
+    min-width: 200px;
   }
 }
 
-/* 📚 STYLES SPÉCIFIQUES AUX ARCHIVES */
-.badge-archive {
-  background: #6c757d;
-  color: white;
-  padding: 0.3rem 0.8rem;
-  border-radius: 15px;
-  font-size: 0.8rem;
-  font-weight: normal;
-  margin-left: 1rem;
+/* Desktop (1024px+) */
+@media screen and (min-width: 1024px) {
+  .nav-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stats-section {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
-.archive-item {
-  border-left: 4px solid #6c757d;
-  background: #f8f9fa;
+/* 🚨 MESSAGES D'ALERTE DJANGO */
+
+.messages-container {
+  margin-bottom: var(--spacing-md);
 }
 
-.archive-item:hover {
-  background: #e9ecef;
+.alert {
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
+  border-radius: var(--border-radius);
+  border-left: 4px solid;
+  font-size: var(--font-sm);
+  line-height: 1.4;
+  animation: slideIn 0.3s ease-out;
 }
 
-/* Titre spécifique archives */
-h1.archives-title {
-  color: #6c757d;
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.tournoi-date.archives {
-  color: #6c757d;
-  border-bottom-color: #6c757d;
+/* Types de messages */
+.alert-success {
+  background-color: #d4edda;
+  border-color: #28a745;
+  color: #155724;
+}
+
+.alert-info {
+  background-color: #cce7ff;
+  border-color: var(--accent-color);
+  color: #0c5460;
+}
+
+.alert-warning {
+  background-color: #fff3cd;
+  border-color: #ffc107;
+  color: #856404;
+}
+
+.alert-error,
+.alert-danger {
+  background-color: #f8d7da;
+  border-color: #dc3545;
+  color: #721c24;
+}
+
+/* Responsive messages */
+@media screen and (max-width: 479px) {
+  .alert {
+    padding: var(--spacing-sm);
+    font-size: var(--font-xs);
+  }
 }

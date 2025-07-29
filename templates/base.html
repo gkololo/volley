@@ -3,14 +3,132 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Championnat de La Réunion de VolleyBall : Jeunes {% endblock %}</title>
+
+    <!-- 📱 Configuration mobile essentielle -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+    <!-- 🎯 Meta tags pour mobile -->
+    <meta name="description" content="Championnat de La Réunion de Volleyball Jeunes - Gestion des déclarations d'équipes">
+    <meta name="theme-color" content="#3498db">
+
+    <!-- 📱 iOS Safari -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Volley Réunion">
+
+    <!-- 🏐 Favicon et icônes -->
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <link rel="apple-touch-icon" href="{% static 'icon-192.png' %}">
+
+    <!-- 📄 Titre dynamique -->
+    <title>{% block title %}Championnat de La Réunion de VolleyBall : Jeunes{% endblock %}</title>
+
+    <!-- 🎨 CSS principal -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- 🔤 Police système optimisée -->
+    <style>
+        /* Police de fallback si problème de chargement */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+                         'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji',
+                         'Segoe UI Emoji', 'Segoe UI Symbol';
+        }
+
+        /* Évite le flash de contenu non stylé */
+        .container {
+            opacity: 0;
+            animation: fadeIn 0.3s ease-in forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Loading state */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+    </style>
+
+    <!-- 📊 CSS additionnels par page -->
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
+    <!-- 🔄 Loading minimal -->
+    <noscript>
+        <div class="loading">
+            <p>🏐 Chargement...</p>
+        </div>
+    </noscript>
+
+    <!-- 📱 Container principal -->
     <div class="container">
-        {% block content %}
-        <!-- Le contenu des autres templates viendra ici -->
-        {% endblock %}
+        <!-- 🚨 Messages Django -->
+        {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- 📄 Contenu principal -->
+        <main role="main">
+            {% block content %}
+            <!-- Le contenu des autres templates viendra ici -->
+            {% endblock %}
+        </main>
     </div>
+
+    <!-- 📱 JavaScript pour interactions mobiles -->
+    <script>
+        // 🔄 Améliore l'expérience tactile
+        document.addEventListener('DOMContentLoaded', function() {
+            // Évite le double-tap zoom sur les boutons
+            const buttons = document.querySelectorAll('button, .btn');
+            buttons.forEach(button => {
+                button.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    this.click();
+                });
+            });
+
+            // Feedback visuel pour les touches tactiles
+            const touchElements = document.querySelectorAll('button, .nav-card, .btn');
+            touchElements.forEach(element => {
+                element.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.98)';
+                });
+
+                element.addEventListener('touchend', function() {
+                    this.style.transform = '';
+                });
+            });
+        });
+
+        // 📱 Détection de l'orientation mobile
+        function handleOrientationChange() {
+            // Recalcule les layouts si nécessaire
+            if (window.orientation !== undefined) {
+                document.body.classList.toggle('landscape', Math.abs(window.orientation) === 90);
+            }
+        }
+
+        window.addEventListener('orientationchange', handleOrientationChange);
+        window.addEventListener('resize', handleOrientationChange);
+
+        // 🎯 Analytics simple (optionnel)
+        {% if not debug %}
+        // Google Analytics ou autres tracking ici si nécessaire
+        {% endif %}
+    </script>
+
+    <!-- 📊 JavaScript additionnel par page -->
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

@@ -14,10 +14,24 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+"""
+Configuration des URLs pour le projet volleychamp
+"""
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("", include("saisie_equipes.urls")),  # ton app ici
+    path('admin/', admin.site.urls),
+    path('', include('saisie_equipes.urls')),
 ]
+
+# Ajouter les URLs de debug_toolbar seulement en développement
+""" if hasattr(settings, 'DEBUG') and settings.DEBUG:
+    try:
+        import debug_toolbar
+        urlpatterns = [
+            path('__debug__/', include(debug_toolbar.urls)),
+        ] + urlpatterns
+    except ImportError:
+        pass """
