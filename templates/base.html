@@ -9,7 +9,7 @@
 
     <!-- 🎯 Meta tags pour mobile -->
     <meta name="description" content="Championnat de La Réunion de Volleyball Jeunes - Gestion des déclarations d'équipes">
-    <meta name="theme-color" content="#3498db">
+    <meta name="theme-color" content="#3398db">
 
     <!-- 📱 iOS Safari -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -66,6 +66,15 @@
 
     <!-- 📱 Container principal -->
     <div class="container">
+        <!-- 🏠 Lien retour accueil (sauf sur la page d'accueil) -->
+        {% if request.resolver_match.url_name != 'accueil' %}
+            <div class="home-link-container">
+                <a href="{% url 'accueil' %}" class="home-link">
+                    🏐 Retour à l'accueil
+                </a>
+            </div>
+        {% endif %}
+
         <!-- 🚨 Messages Django -->
         {% if messages %}
             <div class="messages-container">
@@ -122,10 +131,8 @@
         window.addEventListener('orientationchange', handleOrientationChange);
         window.addEventListener('resize', handleOrientationChange);
 
-        // 🎯 Analytics simple (optionnel)
-        {% if not debug %}
-        // Google Analytics ou autres tracking ici si nécessaire
-        {% endif %}
+        // 🎯 Analytics (si nécessaire plus tard)
+        // Google Analytics ou autres outils de tracking ici
     </script>
 
     <!-- 📊 JavaScript additionnel par page -->
