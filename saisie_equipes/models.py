@@ -53,13 +53,17 @@ class Declaration(models.Model):
         "Nombre d'équipes",
         validators=[MaxValueValidator(10)]
     )
-    # ✅ Correction : suppression des doubles parenthèses
+    # ✅ declaration MAJ
     date_tournoi = models.DateField("Date du tournoi", default=datetime.date.today)
     remarques = models.TextField(blank=True)
-    declarant = models.CharField(max_length=200, default="inconnu")
+    declarant = models.CharField(
+        "Déclarant",  # ← Label en français avec accent
+        max_length=200,
+        default="Vos Nom et Prénom"
+    )
     email_club = models.EmailField(
         validators=[EmailValidator(message="Email non valide")],
-        default="inconnu@exemple.com"
+        default="votre_email@exemple.com"
     )
     date_declaration = models.DateTimeField("Date de déclaration", auto_now_add=True)
 

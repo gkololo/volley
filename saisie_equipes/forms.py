@@ -29,7 +29,7 @@ class DeclarationForm(forms.ModelForm):
                 "class": "form-control"
             }),
             "remarques": forms.Textarea(attrs={
-                "placeholder": "Remarques éventuelles concernant cette déclaration (optionnel)",
+                "placeholder": "Remarques éventuelles concernant cette déclaration (ceci est optionnel)",
                 "rows": 3,
                 "class": "form-control"
             }),
