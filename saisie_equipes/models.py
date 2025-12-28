@@ -43,7 +43,7 @@ class Declaration(models.Model):
         verbose_name="Sexe"
     )
     zone = models.CharField(
-        max_length=1,
+        max_length=1,,
         choices=Zone.choices,
         default=Zone.AUCUNE,
         blank=True,
