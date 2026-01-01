@@ -107,45 +107,20 @@ def confirmation_view(request):
     confirmation_data = request.session.pop("confirmation_data", {})
     return render(request, "saisie_equipes/confirmation.html", {"data": confirmation_data})
 
-# ═══════════════════════════════════════════════════════
-# 🔧 FONCTION HELPER (placer ICI, AVANT les vues qui l'utilisent)
-# ═══════════════════════════════════════════════════════
-
-def _get_tournois_regroupes(futurs=True):
-    """
-    Fonction helper qui regroupe les déclarations par date et catégorie.
-
-    Args:
-        futurs (bool): True pour tournois à venir, False pour tournois passés
-
-    Returns:
-        list: Liste de dictionnaires contenant les tournois regroupés
-    """
+def consultation_view(request):
     today = timezone.now().date()
 
-    # Filtre dynamique selon le paramètre
-    if futurs:
-        declarations = Declaration.objects.filter(
-            date_tournoi__gte=today
-        ).order_by(
-            "date_tournoi",
-            "categorie_age",
-            "sexe",
-            "zone",
-            "club__nom"
-        )
-    else:
-        declarations = Declaration.objects.filter(
-            date_tournoi__lt=today
-        ).order_by(
-            "-date_tournoi",
-            "categorie_age",
-            "sexe",
-            "zone",
-            "club__nom"
-        )
+    declarations = Declaration.objects.filter(
+        date_tournoi__gte=today
+    ).order_by(
+        "date_tournoi",
+        "categorie_age",
+        "sexe",
+        "zone",
+        "club__nom"
+    )
 
-    # Algorithme de regroupement
+    # 🎯 LOGIQUE : Grouper par date, puis par catégorie
     tournois = []
     groupes_par_date = defaultdict(list)
 
@@ -158,6 +133,95 @@ def _get_tournois_regroupes(futurs=True):
 
         # Grouper par catégorie + sexe + zone
         categories = defaultdict(list)
+
+        for decl in declarations_liste:
+            # Créer une clé unique pour chaque catégorie/sexe/zone
+            cle_categorie = f"{decl.categorie_age}_{decl.sexe}_{decl.zone}"
+            categories[cle_categorie].append(decl)
+
+        # Créer le tableau de synthèse pour cette date
+        tableau_synthese = []
+        categories_detaillees = []
+        total_general = 0
+
+        # Trier les catégories pour un affichage logique
+        for cle_categorie in sorted(categories.keys()):
+            declarations_cat = categories[cle_categorie]
+
+            # Infos de la première déclaration pour les métadonnées
+            premiere_decl = declarations_cat[0]
+
+            # Calculer les totaux pour cette catégorie
+            total_equipes_cat = sum(d.nombre_equipes for d in declarations_cat)
+            nb_clubs = len(declarations_cat)
+
+            total_general += total_equipes_cat
+
+            # Ligne du tableau de synthèse
+            tableau_synthese.append({
+                'categorie': premiere_decl.get_categorie_age_display(),
+                'sexe': premiere_decl.get_sexe_display(),
+                'zone': premiere_decl.get_zone_display() if premiere_decl.zone else "Toutes zones",
+                'nb_clubs': nb_clubs,
+                'total_equipes': total_equipes_cat,
+                'cle': cle_categorie  # Pour les liens ancres
+            })
+
+            # Détails de la catégorie
+            categories_detaillees.append({
+                'categorie': premiere_decl.get_categorie_age_display(),
+                'sexe': premiere_decl.get_sexe_display(),
+                'zone': premiere_decl.get_zone_display() if premiere_decl.zone else "Toutes zones",
+                'declarations': sorted(declarations_cat, key=lambda x: x.club.nom),
+                'total_equipes': total_equipes_cat,
+                'nb_clubs': nb_clubs,
+                'cle': cle_categorie
+            })
+
+        tournois.append({
+            'date': date_tournoi,
+            'tableau_synthese': tableau_synthese,
+            'categories_detaillees': categories_detaillees,
+            'total_general': total_general,
+            'nb_categories': len(tableau_synthese),
+            'nb_clubs_total': len(declarations_liste)
+        })
+
+    # Trier les tournois par date
+    tournois.sort(key=lambda x: x['date'])
+
+    return render(request, "saisie_equipes/consultation.html", {
+        "tournois": tournois,
+        "type": "à venir",
+    })
+
+def consultation_passee_view(request):
+    today = timezone.now().date()
+
+    declarations_passees = Declaration.objects.filter(
+        date_tournoi__lt=today
+    ).order_by(
+        '-date_tournoi',          # Du plus récent au plus ancien
+        'categorie_age',
+        'sexe',
+        'zone',
+        'club__nom'
+    )
+
+    # 📊 MÊME LOGIQUE que consultation_view
+    tournois_passes = []
+    groupes_par_date = defaultdict(list)
+
+    # Étape 1 : Grouper par date
+    for declaration in declarations_passees:
+        groupes_par_date[declaration.date_tournoi].append(declaration)
+
+    # Étape 2 : Pour chaque date, créer la structure complète
+    for date_tournoi, declarations_liste in groupes_par_date.items():
+
+        # Grouper par catégorie + sexe + zone
+        categories = defaultdict(list)
+
         for decl in declarations_liste:
             cle_categorie = f"{decl.categorie_age}_{decl.sexe}_{decl.zone}"
             categories[cle_categorie].append(decl)
@@ -198,7 +262,7 @@ def _get_tournois_regroupes(futurs=True):
                 'cle': cle_categorie
             })
 
-        tournois.append({
+        tournois_passes.append({
             'date': date_tournoi,
             'tableau_synthese': tableau_synthese,
             'categories_detaillees': categories_detaillees,
@@ -207,29 +271,26 @@ def _get_tournois_regroupes(futurs=True):
             'nb_clubs_total': len(declarations_liste)
         })
 
-    # Tri final selon le paramètre
-    if futurs:
-        tournois.sort(key=lambda x: x['date'])
-    else:
-        tournois.sort(key=lambda x: x['date'], reverse=True)
-
-    return tournois
-
-
-def consultation_view(request):
-    """Affiche les tournois à venir"""
-    tournois = _get_tournois_regroupes(futurs=True)
-
-    return render(request, "saisie_equipes/consultation.html", {
-        "tournois": tournois,
-        "type": "à venir",
-    })
-
-def consultation_passee_view(request):
-    """Affiche les tournois passés (archives)"""
-    tournois = _get_tournois_regroupes(futurs=False)
+    # Trier par date décroissante (plus récent en premier)
+    tournois_passes.sort(key=lambda x: x['date'], reverse=True)
 
     return render(request, 'saisie_equipes/consultation_passee.html', {
-        'tournois': tournois,
+        'tournois': tournois_passes,
         'type': 'passés',
     })
+
+# ═══════════════════════════════════════════════════════
+# 🔧 FONCTION HELPER (placer ICI, AVANT les vues qui l'utilisent)
+# ═══════════════════════════════════════════════════════
+
+def _get_tournois_regroupes(futurs=True):
+    """
+    Fonction helper qui regroupe les déclarations par date et catégorie.
+
+    Args:
+        futurs (bool): True pour tournois à venir, False pour tournois passés
+
+    Returns:
+        list: Liste de dictionnaires contenant les tournois regroupés
+    """
+    # CODE ICI (je te le donne juste après)
