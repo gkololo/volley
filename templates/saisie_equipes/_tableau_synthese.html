@@ -1,0 +1,48 @@
+
+{#<!-- 📊 PARTIAL : TABLEAU DE SYNTHÈSE DES INSCRIPTIONS -->#}
+{#<!-- Utilisé par consultation.html et consultation_passee.html -->#}
+
+<div class="synthese-section">
+  <h3>📊 {% if type == "à venir" %}Synthèse des inscriptions{% else %}Récapitulatif des participations{% endif %}</h3>
+
+  <div class="stats-global">
+    <span class="stat-item">
+      <strong>{{ tournoi.total_general }}</strong> équipes {% if type == "à venir" %}au total{% else %}ont participé{% endif %}
+    </span>
+    <span class="stat-item">
+      <strong>{{ tournoi.nb_clubs_total }}</strong> clubs participants
+    </span>
+    <span class="stat-item">
+      <strong>{{ tournoi.nb_categories }}</strong> catégories
+    </span>
+  </div>
+
+  <table class="tableau-synthese">
+    <thead>
+      <tr>
+        <th>Catégorie</th>
+        <th>Sexe</th>
+        <th>Zone</th>
+        <th>Clubs</th>
+        <th>Équipes</th>
+        <th>Détails</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ligne in tournoi.tableau_synthese %}
+        <tr>
+          <td data-label="Catégorie"><strong>{{ ligne.categorie }}</strong></td>
+          <td data-label="Sexe">{{ ligne.sexe }}</td>
+          <td data-label="Zone">{{ ligne.zone }}</td>
+          <td data-label="Clubs" class="text-center">{{ ligne.nb_clubs }}</td>
+          <td data-label="Équipes" class="text-center">
+            <strong>{{ ligne.total_equipes }}</strong>
+          </td>
+          <td data-label="Actions" class="text-center">
+            <a href="#cat-{{ ligne.cle }}" class="btn-details">👁️ Voir détails</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

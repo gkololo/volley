@@ -6,6 +6,14 @@ from django.urls import path
 from django.http import HttpResponse
 from .models import Declaration, CategorieAge, Sexe, Zone, Club
 
+# ═══════════════════════════════════════════════════
+# 🎨 PERSONNALISATION DU TITRE DE L'ADMIN
+# ═══════════════════════════════════════════════════
+
+admin.site.site_header = "Administration VolleyChamp"  # ← Titre en haut
+admin.site.site_title = "VolleyChamp Admin"           # ← Titre de l'onglet navigateur
+admin.site.index_title = "Gestion du championnat"     # ← Titre page d'accueil
+
 # Register your models here.
 @admin.register(Declaration)
 class DeclarationAdmin(admin.ModelAdmin):

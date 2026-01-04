@@ -20,18 +20,19 @@
 
         <!-- CONTENU PRINCIPAL -->
         <div class="content-section">
+            <h2 class="nav-title">🔔 Consulter les informations :</h2>
             <!-- 📊 STATISTIQUES RAPIDES -->
             <div class="stats-section">
-                <div class="stat-card">
-                    <div class="stat-icon">🔜</div>
+                <a href="{% url 'consultation' %}" class="stat-card">
+                    <div class="stat-icon">🗓️</div>
                     <div class="stat-number">{{ tournois_a_venir }}</div>
                     <div class="stat-label">Tournoi{{ tournois_a_venir|pluralize }} à venir</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">📚</div>
+                </a>
+                <a href="{% url 'consultation_archive' %}" class="stat-card">
+                    <div class="stat-icon">⏰</div>
                     <div class="stat-number">{{ tournois_passes }}</div>
                     <div class="stat-label">Tournoi{{ tournois_passes|pluralize }} terminé{{ tournois_passes|pluralize }}</div>
-                </div>
+                </a>
                 <div class="stat-card">
                     <div class="stat-icon">📝</div>
                     <div class="stat-number">{{ total_declarations }}</div>
