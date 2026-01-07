@@ -4,7 +4,8 @@ from django.contrib import admin, messages
 from django.shortcuts import render, redirect
 from django.urls import path
 from django.http import HttpResponse
-from .models import Declaration, CategorieAge, Sexe, Zone, Club
+from .models import Declaration, CategorieAge, Sexe, Zone, Club, Tournoi, Candidature
+
 
 # ═══════════════════════════════════════════════════
 # 🎨 PERSONNALISATION DU TITRE DE L'ADMIN

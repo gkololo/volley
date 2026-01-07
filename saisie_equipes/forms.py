@@ -1,6 +1,6 @@
 from django import forms
 from django.utils import timezone
-from .models import Declaration
+from .models import Declaration  
 
 class DeclarationForm(forms.ModelForm):
     # 🍯 HONEYPOT - Champ piège invisible pour robots
