@@ -2,6 +2,8 @@
 Configuration Django pour l'environnement de production (PythonAnywhere)
 """
 from .base import *
+from decouple import config  # ← AJOUTER CETTE LIGNE
+
 import os
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -16,11 +18,11 @@ ALLOWED_HOSTS = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('DB_NAME', 'GkoProd$default'),
-        'USER': os.environ.get('DB_USER', 'GkoProd'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),  # OBLIGATOIRE via variable d'environnement
-        'HOST': os.environ.get('DB_HOST', 'GkoProd.mysql.pythonanywhere-services.com'),
-        'PORT': os.environ.get('DB_PORT', '3306'),
+        'NAME': config('DB_NAME', default='GkoProd$default'),
+        'USER': config('DB_USER', default='GkoProd'),
+        'PASSWORD': config('DB_PASSWORD'),  # Pas de default pour sécurité
+        'HOST': config('DB_HOST', default='GkoProd.mysql.pythonanywhere-services.com'),
+        'PORT': config('DB_PORT', default='3306'),
         'OPTIONS': {
             'charset': 'utf8mb4',
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
@@ -33,13 +35,13 @@ STATIC_ROOT = '/home/GkoProd/mysite/staticfiles'
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 # Configuration email pour production
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
-EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '587'))
+
+EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
+EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@yourdomain.com')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='noreply@yourdomain.com')
 
 # Configuration de sécurité pour production
 SECURE_BROWSER_XSS_FILTER = True
@@ -73,13 +75,21 @@ CACHES = {
 }
 
 # Configuration des logs pour production
-LOGGING['handlers']['file']['filename'] = '/home/GkoProd/mysite/logs/django.log'
-LOGGING['root']['level'] = 'WARNING'
-LOGGING['loggers']['django']['level'] = 'WARNING'
-LOGGING['loggers']['saisie_equipes']['level'] = 'INFO'
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'WARNING',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',
+    },
+}
 
-# Désactiver les logs de debug en production
-LOGGING['handlers']['console']['level'] = 'WARNING'
 
 # Répertoire pour les médias uploadés
 MEDIA_URL = '/media/'
