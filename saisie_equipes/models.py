@@ -175,7 +175,7 @@ class Tournoi(models.Model):
         """Vérifie si on peut encore déclarer des équipes"""
         return (
             self.est_publie and
-            self.statut == StatutTournoi.CONFIRME and
+            self.statut in [StatutTournoi.PLANIFIE, StatutTournoi.CONFIRME] and
             not self.est_passe()
         )
 

@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Candidater pour organiser - {{ tournoi }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="form-container">
+        <h1 class="form-title">📋 Candidature pour organiser un tournoi</h1>
+
+        <div class="tournoi-info-box">
+            <h3>🎯 Tournoi concerné :</h3>
+            <div class="tournoi-info-details">
+                <div class="info-row">
+                    <span class="info-label">📅 Date :</span>
+                    <span class="info-value">{{ tournoi.date|date:"l d F Y" }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">🏐 Catégorie :</span>
+                    <span class="info-value">
+                        {{ tournoi.get_categorie_age_display }} - {{ tournoi.get_sexe_display }}
+                        {% if tournoi.zone %}({{ tournoi.get_zone_display }}){% endif %}
+                    </span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">📊 Statut :</span>
+                    <span class="info-value">{{ tournoi.get_statut_display }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-description">
+            <p><strong>📋 Informations à fournir :</strong></p>
+            <ul>
+                <li>Votre club et vos coordonnées</li>
+                <li>Le gymnase que vous proposez</li>
+                <li>Vos motivations (optionnel)</li>
+            </ul>
+            <p><small>⏱️ Les candidatures sont traitées dans l'ordre d'arrivée par l'équipe organisatrice.</small></p>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% for field in form %}
+                {% if field.name != 'website' %}
+                    <div class="form-group">
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {% if field.help_text %}
+                            <div class="form-help-text">{{ field.help_text }}</div>
+                        {% endif %}
+                        {% if field.errors %}
+                            <div class="form-errors">
+                                {% for error in field.errors %}
+                                    <div class="error-message">❌ {{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    {{ field }}
+                {% endif %}
+            {% endfor %}
+
+            {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {% for error in form.non_field_errors %}
+                        <div class="error-message">❌ {{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    ✅ Envoyer ma candidature
+                </button>
+                <a href="{% url 'candidature_liste' %}" class="btn btn-secondary">
+                    ← Retour à la liste
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.tournoi-info-box {
+    background: linear-gradient(135deg, 
+        color-mix(in srgb, var(--primary-color) 10%, var(--surface)),
+        var(--surface));
+    border: 2px solid var(--primary-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.tournoi-info-box h3 {
+    margin: 0 0 var(--spacing-md) 0;
+    color: var(--primary-base);
+}
+
+.tournoi-info-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.info-row {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.info-label {
+    font-weight: 600;
+    color: var(--primary-base);
+    min-width: 120px;
+}
+
+.info-value {
+    color: var(--text-primary);
+}
+
+.form-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.form-actions .btn {
+    flex: 1;
+    min-width: 180px;
+}
+
+@media (max-width: 768px) {
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .form-actions .btn {
+        width: 100%;
+    }
+    
+    .info-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .info-label {
+        min-width: auto;
+    }
+}
+</style>
+{% endblock %}

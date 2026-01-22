@@ -1,10 +1,12 @@
+{% load tournoi_tags %}
+
 {# 📋 PARTIAL : DÉTAILS PAR CATÉGORIE #}
 {# Utilisé par consultation.html et consultation_passee.html #}
 
 <div class="details-section">
   <h3>📋 Détails par catégorie</h3>
 
-  {% for categorie in tournoi.categories_detaillees %}
+  {% for categorie in tournoi|get_categories_detaillees %}
     <div class="categorie-block" id="cat-{{ categorie.cle }}">
       <h4 class="categorie-titre">
         {{ categorie.categorie }} {{ categorie.sexe }}

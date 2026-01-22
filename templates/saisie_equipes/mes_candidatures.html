@@ -1,0 +1,281 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Toutes les candidatures{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="form-container">
+        <h1 class="form-title">📋 Toutes les candidatures</h1>
+
+        <div class="stats-overview">
+            <div class="stat-item">
+                <div class="stat-number">{{ total }}</div>
+                <div class="stat-label">Total</div>
+            </div>
+            <div class="stat-item stat-warning">
+                <div class="stat-number">{{ candidatures_en_attente.count }}</div>
+                <div class="stat-label">En attente</div>
+            </div>
+            <div class="stat-item stat-success">
+                <div class="stat-number">{{ candidatures_validees.count }}</div>
+                <div class="stat-label">Validées</div>
+            </div>
+            <div class="stat-item stat-error">
+                <div class="stat-number">{{ candidatures_refusees.count }}</div>
+                <div class="stat-label">Refusées</div>
+            </div>
+        </div>
+
+        {% if candidatures_en_attente %}
+            <section class="candidatures-section">
+                <h2>⏳ Candidatures en attente</h2>
+                {% for candidature in candidatures_en_attente %}
+                    <div class="candidature-card candidature-attente">
+                        <div class="candidature-header">
+                            <h3>{{ candidature.tournoi }}</h3>
+                            <span class="badge badge-warning">En attente</span>
+                        </div>
+                        <div class="candidature-body">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <span class="info-icon">🏢</span>
+                                    <strong>{{ candidature.club.nom }}</strong>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-icon">👤</span>
+                                    {{ candidature.declarant }}
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-icon">📍</span>
+                                    {{ candidature.lieu }}
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-icon">📅</span>
+                                    Déposée le {{ candidature.created_at|date:"d/m/Y à H:i" }}
+                                </div>
+                            </div>
+                            {% if candidature.remarques %}
+                                <div class="candidature-remarques">
+                                    <strong>💬 Remarques :</strong>
+                                    <p>{{ candidature.remarques }}</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </section>
+        {% endif %}
+
+        {% if candidatures_validees %}
+            <section class="candidatures-section">
+                <h2>✅ Candidatures validées</h2>
+                {% for candidature in candidatures_validees %}
+                    <div class="candidature-card candidature-validee">
+                        <div class="candidature-header">
+                            <h3>{{ candidature.tournoi }}</h3>
+                            <span class="badge badge-success">Validée</span>
+                        </div>
+                        <div class="candidature-body">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <span class="info-icon">🏢</span>
+                                    <strong>{{ candidature.club.nom }}</strong>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-icon">📍</span>
+                                    {{ candidature.lieu }}
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-icon">✅</span>
+                                    Validée le {{ candidature.date_traitement|date:"d/m/Y" }}
+                                    {% if candidature.traite_par %}
+                                        par {{ candidature.traite_par.get_full_name|default:candidature.traite_par.username }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </section>
+        {% endif %}
+
+        {% if candidatures_refusees %}
+            <section class="candidatures-section">
+                <h2>❌ Candidatures refusées</h2>
+                {% for candidature in candidatures_refusees %}
+                    <div class="candidature-card candidature-refusee">
+                        <div class="candidature-header">
+                            <h3>{{ candidature.tournoi }}</h3>
+                            <span class="badge badge-error">Refusée</span>
+                        </div>
+                        <div class="candidature-body">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <span class="info-icon">🏢</span>
+                                    <strong>{{ candidature.club.nom }}</strong>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-icon">📍</span>
+                                    {{ candidature.lieu }}
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-icon">❌</span>
+                                    Refusée le {{ candidature.date_traitement|date:"d/m/Y" }}
+                                </div>
+                            </div>
+                            {% if candidature.raison_refus %}
+                                <div class="candidature-refus">
+                                    <strong>📝 Raison :</strong>
+                                    <p>{{ candidature.raison_refus }}</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </section>
+        {% endif %}
+
+        {% if not total %}
+            <div class="no-data">
+                <p>🔭 Aucune candidature pour le moment.</p>
+                <p><small>Les candidatures apparaîtront ici une fois déposées.</small></p>
+            </div>
+        {% endif %}
+
+        <div class="form-navigation" style="margin-top: 2rem;">
+            <a href="{% url 'candidature_liste' %}">➕ Candidater pour un tournoi</a>
+            <a href="{% url 'consultation' %}">📋 Voir les déclarations d'équipes</a>
+        </div>
+    </div>
+</div>
+
+<style>
+.stats-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+}
+
+.stat-item {
+    background: var(--surface);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-md);
+    text-align: center;
+}
+
+.stat-item.stat-warning { border-color: #ffc107; }
+.stat-item.stat-success { border-color: #28a745; }
+.stat-item.stat-error { border-color: #dc3545; }
+
+.stat-number {
+    font-size: var(--font-xxl);
+    font-weight: bold;
+    color: var(--primary-base);
+}
+
+.stat-label {
+    font-size: var(--font-sm);
+    color: var(--text-secondary);
+    margin-top: var(--spacing-xs);
+}
+
+.candidatures-section {
+    margin-bottom: var(--spacing-xl);
+}
+
+.candidatures-section h2 {
+    color: var(--primary-base);
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.candidature-card {
+    background: var(--surface);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+    transition: all var(--transition-normal);
+}
+
+.candidature-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.candidature-attente { border-left: 4px solid #ffc107; }
+.candidature-validee { border-left: 4px solid #28a745; }
+.candidature-refusee { border-left: 4px solid #dc3545; }
+
+.candidature-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+.candidature-header h3 {
+    margin: 0;
+    color: var(--primary-base);
+    font-size: var(--font-md);
+}
+
+.badge {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: 20px;
+    font-size: var(--font-xs);
+    font-weight: 500;
+}
+
+.badge-warning { background: #fff3cd; color: #856404; }
+.badge-success { background: #d4edda; color: #155724; }
+.badge-error { background: #f8d7da; color: #721c24; }
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-sm);
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: var(--font-sm);
+}
+
+.info-icon {
+    font-size: var(--font-md);
+}
+
+.candidature-remarques,
+.candidature-refus {
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: color-mix(in srgb, var(--primary-color) 5%, var(--surface));
+    border-radius: var(--border-radius);
+}
+
+.candidature-remarques p,
+.candidature-refus p {
+    margin: var(--spacing-xs) 0 0 0;
+    color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+    .candidature-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}

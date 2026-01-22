@@ -6,22 +6,46 @@ from django.urls import path
 from django.http import HttpResponse
 from .models import Declaration, CategorieAge, Sexe, Zone, Club, Tournoi, Candidature
 
-
 # ═══════════════════════════════════════════════════
 # 🎨 PERSONNALISATION DU TITRE DE L'ADMIN
 # ═══════════════════════════════════════════════════
 
 admin.site.site_header = "Administration VolleyChamp"  # ← Titre en haut
 admin.site.site_title = "VolleyChamp Admin"           # ← Titre de l'onglet navigateur
-admin.site.index_title = "Gestion du championnat"     # ← Titre page d'accueil
+admin.site.index_title = "Gestion du championnat volley jeunes"     # ← Titre page d'accueil
 
 # Register your models here.
 @admin.register(Declaration)
 class DeclarationAdmin(admin.ModelAdmin):
-    list_display = ("club", "declarant", "nombre_equipes", "categorie_age", "sexe", "zone", "date_tournoi")
-    list_filter = ("categorie_age", "sexe", "zone", "date_tournoi")
-    search_fields = ("club__nom", "declarant")
+    list_display = (
+        "club",
+        "declarant",
+        "nombre_equipes",
+        "categorie_age",
+        "sexe",
+        "zone",
+        "get_tournoi_display",  # ← NOUVEAU : Affiche le tournoi lié
+        "date_tournoi"  # ← ANCIEN : À garder temporairement
+    )
+    list_filter = (
+        "tournoi",  # ← NOUVEAU : Filtre par tournoi
+        "categorie_age",
+        "sexe",
+        "zone",
+        "date_tournoi"
+    )
+    search_fields = ("club__nom", "declarant", "tournoi__lieu")
     date_hierarchy = "date_tournoi"
+
+    def get_tournoi_display(self, obj):
+        """Affiche le tournoi avec un lien cliquable"""
+        if obj.tournoi:
+            from django.urls import reverse
+            from django.utils.html import format_html
+            url = reverse("admin:saisie_equipes_tournoi_change", args=[obj.tournoi.pk])
+            return format_html('<a href="{}">{}</a>', url, obj.tournoi)
+        return "⚠️ Non lié"
+    get_tournoi_display.short_description = "🏆 Tournoi"
 
 @admin.register(Club)
 class ClubAdmin(admin.ModelAdmin):
@@ -143,3 +167,196 @@ class ClubAdmin(admin.ModelAdmin):
         extra_context = extra_context or {}
         extra_context['import_csv_url'] = 'import-csv/'
         return super().changelist_view(request, extra_context)
+
+# ═══════════════════════════════════════════════════
+# 🏆 GESTION DES TOURNOIS
+# ═══════════════════════════════════════════════════
+
+class CandidatureInline(admin.TabularInline):
+    """Affiche les candidatures directement dans la page du tournoi"""
+    model = Candidature
+    extra = 0  # Ne pas afficher de ligne vide pour nouvelle candidature
+    can_delete = False  # Empêcher la suppression directe
+
+    fields = (
+        'club',
+        'declarant',
+        'lieu',
+        'statut',
+        'email_contact',
+        'created_at'
+    )
+    readonly_fields = ('club', 'declarant', 'lieu', 'email_contact', 'created_at')
+
+    def has_add_permission(self, request, obj=None):
+        """Empêcher l'ajout de candidatures depuis cette inline"""
+        return False
+
+@admin.register(Tournoi)
+class TournoiAdmin(admin.ModelAdmin):
+    list_display = (
+        'date',
+        'categorie_age',
+        'sexe',
+        'zone',
+        'club_organisateur',
+        'lieu',
+        'statut',
+        'est_publie',
+        'get_nb_declarations',
+        'get_nb_equipes_total',
+        'get_nb_candidatures_display'  # ← NOUVEAU
+    )
+    list_filter = (
+        'statut',
+        'est_publie',
+        'categorie_age',
+        'sexe',
+        'zone',
+        'date'
+    )
+    search_fields = (
+        'club_organisateur__nom',
+        'lieu'
+    )
+    date_hierarchy = 'date'
+
+    # ← NOUVEAU : Inline pour voir les candidatures dans la page de détail
+    inlines = [CandidatureInline]
+
+    fieldsets = (
+        ('📅 Informations du tournoi', {
+            'fields': ('date', 'categorie_age', 'sexe', 'zone')
+        }),
+        ('🏢 Organisation', {
+            'fields': ('club_organisateur', 'lieu', 'statut', 'est_publie')
+        }),
+        ('📝 Remarques', {
+            'fields': ('remarques',),
+            'classes': ('collapse',)
+        }),
+        ('ℹ️ Métadonnées', {
+            'fields': ('created_by', 'created_at', 'updated_at'),
+            'classes': ('collapse',)
+        })
+    )
+
+    readonly_fields = ('created_at', 'updated_at')
+
+    def get_nb_declarations(self, obj):
+        """Affiche le nombre de déclarations"""
+        return obj.get_nb_declarations()
+    get_nb_declarations.short_description = '🏐 Clubs'
+
+    def get_nb_equipes_total(self, obj):
+        """Affiche le nombre total d'équipes"""
+        return obj.get_nb_equipes_total()
+    get_nb_equipes_total.short_description = '👥 Équipes'
+
+    def get_nb_candidatures_display(self, obj):
+        """Affiche le nombre de candidatures avec détails"""
+        from django.utils.html import format_html
+
+        total = obj.candidatures.count()
+        if total == 0:
+            return "—"
+
+        en_attente = obj.candidatures.filter(statut='EN_ATTENTE').count()
+        validees = obj.candidatures.filter(statut='VALIDEE').count()
+        refusees = obj.candidatures.filter(statut='REFUSEE').count()
+
+        details = []
+        if en_attente > 0:
+            details.append(f'<span style="color: orange;">{en_attente} en attente</span>')
+        if validees > 0:
+            details.append(f'<span style="color: green;">{validees} validée(s)</span>')
+        if refusees > 0:
+            details.append(f'<span style="color: red;">{refusees} refusée(s)</span>')
+
+        return format_html(f'<strong>{total}</strong> ({", ".join(details)})')
+
+    get_nb_candidatures_display.short_description = '📋 Candidatures'
+
+    def save_model(self, request, obj, form, change):
+        """Enregistre le tournoi en ajoutant l'utilisateur créateur"""
+        if not change:  # Si c'est une création
+            obj.created_by = request.user
+        super().save_model(request, obj, form, change)
+
+# ═══════════════════════════════════════════════════
+# 📋 GESTION DES CANDIDATURES
+# ═══════════════════════════════════════════════════
+
+@admin.register(Candidature)
+class CandidatureAdmin(admin.ModelAdmin):
+    list_display = (
+        'tournoi',
+        'club',
+        'declarant',
+        'lieu',
+        'statut',
+        'created_at',
+        'traite_par'
+    )
+    list_filter = (
+        'statut',
+        'created_at',
+        'date_traitement'
+    )
+    search_fields = (
+        'club__nom',
+        'declarant',
+        'lieu',
+        'email_contact'
+    )
+    date_hierarchy = 'created_at'
+
+    fieldsets = (
+        ('🏆 Tournoi', {
+            'fields': ('tournoi',)
+        }),
+        ('🏢 Club candidat', {
+            'fields': ('club', 'declarant', 'email_contact', 'telephone_contact')
+        }),
+        ('📍 Proposition', {
+            'fields': ('lieu', 'remarques')
+        }),
+        ('✅ Traitement', {
+            'fields': ('statut', 'raison_refus', 'traite_par', 'date_traitement')
+        }),
+        ('ℹ️ Métadonnées', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        })
+    )
+
+    readonly_fields = ('created_at', 'updated_at', 'date_traitement', 'traite_par')
+
+    actions = ['valider_candidatures', 'refuser_candidatures']
+
+    def valider_candidatures(self, request, queryset):
+        """Action pour valider des candidatures"""
+        nb_validees = 0
+        for candidature in queryset.filter(statut='EN_ATTENTE'):
+            candidature.valider(request.user)
+            nb_validees += 1
+
+        self.message_user(
+            request,
+            f"✅ {nb_validees} candidature(s) validée(s) avec succès."
+        )
+    valider_candidatures.short_description = "✅ Valider les candidatures sélectionnées"
+
+    def refuser_candidatures(self, request, queryset):
+        """Action pour refuser des candidatures"""
+        # Note : Pour une vraie utilisation, il faudrait un formulaire pour saisir la raison
+        nb_refusees = 0
+        for candidature in queryset.filter(statut='EN_ATTENTE'):
+            candidature.refuser(request.user, "Refusé par action groupée")
+            nb_refusees += 1
+
+        self.message_user(
+            request,
+            f"❌ {nb_refusees} candidature(s) refusée(s)."
+        )
+    refuser_candidatures.short_description = "❌ Refuser les candidatures sélectionnées"

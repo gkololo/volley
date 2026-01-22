@@ -1,26 +1,32 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
-from collections import defaultdict
-from .forms import DeclarationForm
-from .models import Declaration
 from django.contrib import messages
-from datetime import datetime, timedelta  # ← AJOUT IMPORTANT
+from datetime import datetime, timedelta
 from django.http import Http404
+
+from .forms import DeclarationForm, CandidatureForm
+from .models import Declaration, Tournoi, Candidature
 
 
 def test_404(request):
     raise Http404("Page de test pour 404")
 
 
-
 def accueil_view(request):
     """Page d'accueil avec navigation principale"""
-    # Quelques statistiques pour rendre la page vivante
     today = timezone.now().date()
 
-    # Compter les tournois à venir et passés
-    tournois_a_venir = Declaration.objects.filter(date_tournoi__gte=today).values('date_tournoi').distinct().count()
-    tournois_passes = Declaration.objects.filter(date_tournoi__lt=today).values('date_tournoi').distinct().count()
+    # ✨ NOUVEAU : Utiliser les objets Tournoi directement
+    tournois_a_venir = Tournoi.objects.filter(
+        date__gte=today,
+        est_publie=True
+    ).count()
+
+    tournois_passes = Tournoi.objects.filter(
+        date__lt=today,
+        est_publie=True
+    ).count()
+
     total_declarations = Declaration.objects.count()
 
     context = {
@@ -31,7 +37,9 @@ def accueil_view(request):
 
     return render(request, 'saisie_equipes/accueil.html', context)
 
+
 def declaration_view(request):
+    """Formulaire de déclaration d'équipe"""
     if request.method == "POST":
         # 🕐 VÉRIFICATION TEMPORELLE - Anti-robot
         form_start_time = request.session.get('form_start_time')
@@ -51,7 +59,6 @@ def declaration_view(request):
                     return redirect("declaration")
 
             except (ValueError, TypeError):
-                # Session corrompue
                 messages.warning(request, "Session invalide détectée. Formulaire réinitialisé.")
                 return redirect("declaration")
 
@@ -60,7 +67,7 @@ def declaration_view(request):
         session_key = f'submissions_{ip_address.replace(".", "_")}'
         submissions_today = request.session.get(session_key, 0)
 
-        if submissions_today >= 5:  # Maximum 5 soumissions par IP/session
+        if submissions_today >= 5:
             messages.error(request, "🚫 Vous avez atteint la limite de déclarations pour cette session. Réessayez plus tard.")
             return redirect("declaration")
 
@@ -70,9 +77,9 @@ def declaration_view(request):
             try:
                 declaration = form.save()
 
-                # 📈 COMPTEUR DE SOUMISSIONS (succès uniquement)
+                # 📈 COMPTEUR DE SOUMISSIONS
                 request.session[session_key] = submissions_today + 1
-                request.session.set_expiry(3600)  # Expire dans 1 heure
+                request.session.set_expiry(3600)
 
                 # 🧹 NETTOYER LA SESSION
                 if 'form_start_time' in request.session:
@@ -93,143 +100,177 @@ def declaration_view(request):
                 messages.error(request, "❌ Erreur lors de l'enregistrement. Veuillez réessayer.")
                 print(f"Erreur sauvegarde déclaration: {e}")
         else:
-            # 🚨 ERREURS DE VALIDATION
             messages.error(request, "❌ Veuillez corriger les erreurs signalées ci-dessous.")
     else:
         # 🆕 NOUVEAU FORMULAIRE
-        # Marquer le début du remplissage pour vérification temporelle
         request.session['form_start_time'] = timezone.now().replace(tzinfo=None).isoformat()
         form = DeclarationForm()
 
     return render(request, "saisie_equipes/declaration_form.html", {"form": form})
 
+
 def confirmation_view(request):
+    """Page de confirmation après déclaration"""
     confirmation_data = request.session.pop("confirmation_data", {})
     return render(request, "saisie_equipes/confirmation.html", {"data": confirmation_data})
 
-# ═══════════════════════════════════════════════════════
-# 🔧 FONCTION HELPER (placer ICI, AVANT les vues qui l'utilisent)
-# ═══════════════════════════════════════════════════════
 
-def _get_tournois_regroupes(futurs=True):
+def consultation_view(request):
     """
-    Fonction helper qui regroupe les déclarations par date et catégorie.
+    ✨ NOUVEAU : Version simplifiée utilisant les objets Tournoi
 
-    Args:
-        futurs (bool): True pour tournois à venir, False pour tournois passés
-
-    Returns:
-        list: Liste de dictionnaires contenant les tournois regroupés
+    Au lieu de regrouper manuellement les déclarations,
+    on charge directement les tournois avec leurs déclarations.
     """
     today = timezone.now().date()
 
-    # Filtre dynamique selon le paramètre
-    if futurs:
-        declarations = Declaration.objects.filter(
-            date_tournoi__gte=today
-        ).order_by(
-            "date_tournoi",
-            "categorie_age",
-            "sexe",
-            "zone",
-            "club__nom"
-        )
-    else:
-        declarations = Declaration.objects.filter(
-            date_tournoi__lt=today
-        ).order_by(
-            "-date_tournoi",
-            "categorie_age",
-            "sexe",
-            "zone",
-            "club__nom"
-        )
-
-    # Algorithme de regroupement
-    tournois = []
-    groupes_par_date = defaultdict(list)
-
-    # Étape 1 : Grouper par date
-    for d in declarations:
-        groupes_par_date[d.date_tournoi].append(d)
-
-    # Étape 2 : Pour chaque date, créer la structure complète
-    for date_tournoi, declarations_liste in groupes_par_date.items():
-
-        # Grouper par catégorie + sexe + zone
-        categories = defaultdict(list)
-        for decl in declarations_liste:
-            cle_categorie = f"{decl.categorie_age}_{decl.sexe}_{decl.zone}"
-            categories[cle_categorie].append(decl)
-
-        # Créer le tableau de synthèse pour cette date
-        tableau_synthese = []
-        categories_detaillees = []
-        total_general = 0
-
-        # Trier les catégories pour un affichage logique
-        for cle_categorie in sorted(categories.keys()):
-            declarations_cat = categories[cle_categorie]
-            premiere_decl = declarations_cat[0]
-
-            # Calculer les totaux pour cette catégorie
-            total_equipes_cat = sum(d.nombre_equipes for d in declarations_cat)
-            nb_clubs = len(declarations_cat)
-            total_general += total_equipes_cat
-
-            # Ligne du tableau de synthèse
-            tableau_synthese.append({
-                'categorie': premiere_decl.get_categorie_age_display(),
-                'sexe': premiere_decl.get_sexe_display(),
-                'zone': premiere_decl.get_zone_display() if premiere_decl.zone else "Toutes zones",
-                'nb_clubs': nb_clubs,
-                'total_equipes': total_equipes_cat,
-                'cle': cle_categorie
-            })
-
-            # Détails de la catégorie
-            categories_detaillees.append({
-                'categorie': premiere_decl.get_categorie_age_display(),
-                'sexe': premiere_decl.get_sexe_display(),
-                'zone': premiere_decl.get_zone_display() if premiere_decl.zone else "Toutes zones",
-                'declarations': sorted(declarations_cat, key=lambda x: x.club.nom),
-                'total_equipes': total_equipes_cat,
-                'nb_clubs': nb_clubs,
-                'cle': cle_categorie
-            })
-
-        tournois.append({
-            'date': date_tournoi,
-            'tableau_synthese': tableau_synthese,
-            'categories_detaillees': categories_detaillees,
-            'total_general': total_general,
-            'nb_categories': len(tableau_synthese),
-            'nb_clubs_total': len(declarations_liste)
-        })
-
-    # Tri final selon le paramètre
-    if futurs:
-        tournois.sort(key=lambda x: x['date'])
-    else:
-        tournois.sort(key=lambda x: x['date'], reverse=True)
-
-    return tournois
-
-
-def consultation_view(request):
-    """Affiche les tournois à venir"""
-    tournois = _get_tournois_regroupes(futurs=True)
+    # 🎯 Charger les tournois à venir avec leurs déclarations
+    tournois = Tournoi.objects.filter(
+        date__gte=today,
+        est_publie=True
+    ).prefetch_related(
+        'declarations__club'  # Optimisation : charge les clubs en une seule requête
+    ).order_by('date', 'categorie_age', 'sexe')
 
     return render(request, "saisie_equipes/consultation.html", {
         "tournois": tournois,
         "type": "à venir",
     })
 
+
 def consultation_passee_view(request):
-    """Affiche les tournois passés (archives)"""
-    tournois = _get_tournois_regroupes(futurs=False)
+    """
+    ✨ NOUVEAU : Version simplifiée pour les tournois passés
+    """
+    today = timezone.now().date()
+
+    # 🎯 Charger les tournois passés avec leurs déclarations
+    tournois = Tournoi.objects.filter(
+        date__lt=today,
+        est_publie=True
+    ).prefetch_related(
+        'declarations__club'
+    ).order_by('-date', 'categorie_age', 'sexe')
 
     return render(request, 'saisie_equipes/consultation_passee.html', {
         'tournois': tournois,
         'type': 'passés',
+    })
+
+def candidature_liste_view(request):
+    """
+    Liste des tournois disponibles pour candidater
+
+    Affiche les tournois à venir publiés avec leur statut :
+    - Nombre de candidatures en attente
+    - Si organisateur déjà assigné
+    - Possibilité de candidater
+    """
+    today = timezone.now().date()
+
+    # Charger les tournois à venir publiés
+    tournois = Tournoi.objects.filter(
+        date__gte=today,
+        est_publie=True
+    ).prefetch_related('candidatures').order_by('date', 'categorie_age', 'sexe')
+
+    # Enrichir chaque tournoi avec des infos supplémentaires
+    tournois_enrichis = []
+    for tournoi in tournois:
+        # Compter les candidatures
+        nb_candidatures = tournoi.candidatures.exclude(statut='RETIREE').count()
+        nb_en_attente = tournoi.candidatures.filter(statut='EN_ATTENTE').count()
+
+        # Vérifier si ouvert aux candidatures
+        peut_candidater = tournoi.peut_recevoir_candidatures() and not tournoi.a_organisateur()
+
+        tournois_enrichis.append({
+            'tournoi': tournoi,
+            'nb_candidatures': nb_candidatures,
+            'nb_en_attente': nb_en_attente,
+            'peut_candidater': peut_candidater,
+            'a_organisateur': tournoi.a_organisateur()
+        })
+
+    return render(request, 'saisie_equipes/candidature_liste.html', {
+        'tournois_enrichis': tournois_enrichis,
+    })
+
+
+def candidature_form_view(request, tournoi_id):
+    """
+    Formulaire de candidature pour un tournoi spécifique
+
+    Args:
+        tournoi_id: ID du tournoi pour lequel candidater
+    """
+    tournoi = get_object_or_404(Tournoi, pk=tournoi_id)
+
+    # Vérifier que le tournoi accepte encore les candidatures
+    if not tournoi.peut_recevoir_candidatures():
+        messages.error(request, "❌ Ce tournoi n'accepte plus de candidatures.")
+        return redirect('candidature_liste')
+
+    # Vérifier qu'il n'y a pas déjà un organisateur
+    if tournoi.a_organisateur():
+        messages.warning(request, f"⚠️ Ce tournoi a déjà un organisateur : {tournoi.club_organisateur}")
+        return redirect('candidature_liste')
+
+    if request.method == 'POST':
+        form = CandidatureForm(request.POST)
+
+        if form.is_valid():
+            try:
+                candidature = form.save()
+
+                messages.success(
+                    request,
+                    f"✅ Candidature enregistrée avec succès pour le tournoi du "
+                    f"{tournoi.date.strftime('%d/%m/%Y')} ! "
+                    f"Vous serez contacté une fois votre candidature traitée."
+                )
+
+                return redirect('candidature_liste')
+
+            except Exception as e:
+                messages.error(request, "❌ Erreur lors de l'enregistrement. Veuillez réessayer.")
+                print(f"Erreur sauvegarde candidature: {e}")
+        else:
+            messages.error(request, "❌ Veuillez corriger les erreurs signalées ci-dessous.")
+    else:
+        # Pré-remplir le formulaire avec le tournoi
+        form = CandidatureForm(initial={'tournoi': tournoi})
+
+    return render(request, 'saisie_equipes/candidature_form.html', {
+        'form': form,
+        'tournoi': tournoi,
+    })
+
+
+def mes_candidatures_view(request):
+    """
+    Liste des candidatures (filtrable par club si souhaité)
+
+    Pour l'instant, affiche toutes les candidatures.
+    Plus tard, on pourra filtrer par club si authentification.
+    """
+    # Charger toutes les candidatures récentes
+    candidatures = Candidature.objects.select_related(
+        'tournoi',
+        'club',
+        'traite_par'
+    ).order_by('-created_at')
+
+    # Grouper par statut
+    en_attente = candidatures.filter(statut='EN_ATTENTE')
+    validees = candidatures.filter(statut='VALIDEE')
+    refusees = candidatures.filter(statut='REFUSEE')
+    retirees = candidatures.filter(statut='RETIREE')
+
+    return render(request, 'saisie_equipes/mes_candidatures.html', {
+        'candidatures_en_attente': en_attente,
+        'candidatures_validees': validees,
+        'candidatures_refusees': refusees,
+        'candidatures_retirees': retirees,
+        'total': candidatures.count(),
     })

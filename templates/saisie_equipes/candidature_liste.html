@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Candidater pour organiser un tournoi{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="form-container">
+        <h1 class="form-title">📋 Candidater pour organiser un tournoi</h1>
+
+        <div class="form-description">
+            <p><strong>🎯 Comment ça marche ?</strong></p>
+            <ul>
+                <li>Choisissez un tournoi disponible ci-dessous</li>
+                <li>Remplissez le formulaire de candidature</li>
+                <li>L'équipe organisatrice étudiera votre candidature</li>
+                <li>Vous serez contacté par email une fois la décision prise</li>
+            </ul>
+        </div>
+
+        {% if tournois_enrichis %}
+            <h2 style="margin-top: 2rem; margin-bottom: 1.5rem; color: var(--primary-base);">
+                🗓️ Tournois disponibles
+            </h2>
+
+            <div style="display: grid; gap: 1.5rem;">
+                {% for item in tournois_enrichis %}
+                    <div class="tournoi-card {% if not item.peut_candidater %}tournoi-card-disabled{% endif %}">
+                        <div class="tournoi-card-header">
+                            <h3>
+                                📅 {{ item.tournoi.date|date:"l d F Y" }}
+                            </h3>
+                            <div class="tournoi-card-subtitle">
+                                {{ item.tournoi.get_categorie_age_display }} - 
+                                {{ item.tournoi.get_sexe_display }}
+                                {% if item.tournoi.zone %}
+                                    - {{ item.tournoi.get_zone_display }}
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="tournoi-card-body">
+                            <div class="tournoi-card-stats">
+                                {% if item.a_organisateur %}
+                                    <div class="stat-badge stat-success">
+                                        ✅ Organisateur : {{ item.tournoi.club_organisateur }}
+                                    </div>
+                                    {% if item.tournoi.lieu %}
+                                        <div class="stat-badge stat-info">
+                                            📍 {{ item.tournoi.lieu }}
+                                        </div>
+                                    {% endif %}
+                                {% else %}
+                                    <div class="stat-badge stat-warning">
+                                        ⏳ Recherche organisateur
+                                    </div>
+                                    {% if item.nb_en_attente > 0 %}
+                                        <div class="stat-badge stat-info">
+                                            📋 {{ item.nb_en_attente }} candidature{{ item.nb_en_attente|pluralize }} en attente
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+
+                            <div class="tournoi-card-actions">
+                                {% if item.peut_candidater %}
+                                    <a href="{% url 'candidature_form' item.tournoi.id %}" class="btn btn-primary">
+                                        ➕ Candidater pour organiser
+                                    </a>
+                                {% elif item.a_organisateur %}
+                                    <button class="btn btn-secondary" disabled>
+                                        ✅ Organisateur déjà assigné
+                                    </button>
+                                {% else %}
+                                    <button class="btn btn-secondary" disabled>
+                                        ⏰ Candidatures fermées
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="no-data">
+                <p>🔭 Aucun tournoi disponible pour le moment.</p>
+                <p><small>Les prochains tournois apparaîtront ici dès leur publication.</small></p>
+            </div>
+        {% endif %}
+
+        <div class="form-navigation" style="margin-top: 2rem;">
+            <a href="{% url 'mes_candidatures' %}">👁️ Voir toutes les candidatures</a>
+            <a href="{% url 'consultation' %}">📋 Voir les déclarations d'équipes</a>
+        </div>
+    </div>
+</div>
+
+<style>
+.tournoi-card {
+    background: var(--surface);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-lg);
+    transition: all var(--transition-normal);
+}
+
+.tournoi-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-md);
+}
+
+.tournoi-card-disabled {
+    opacity: 0.7;
+}
+
+.tournoi-card-header h3 {
+    margin: 0 0 var(--spacing-xs) 0;
+    color: var(--primary-base);
+    font-size: var(--font-lg);
+}
+
+.tournoi-card-subtitle {
+    color: var(--text-secondary);
+    font-size: var(--font-sm);
+}
+
+.tournoi-card-body {
+    margin-top: var(--spacing-md);
+}
+
+.tournoi-card-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.stat-badge {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: 20px;
+    font-size: var(--font-xs);
+    font-weight: 500;
+    display: inline-block;
+}
+
+.stat-success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.stat-warning {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.stat-info {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.tournoi-card-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.tournoi-card-actions .btn {
+    flex: 1;
+}
+</style>
+{% endblock %}
