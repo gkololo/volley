@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#213f7b">
+    
+    <title>{% block title %}Staff - VolleyChamp{% endblock %}</title>
+    
+    <!-- CSS principal du site -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    <!-- CSS spécifique interface staff -->
+    <link rel="stylesheet" href="{% static 'css/staff.css' %}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- ═══════════════════════════════════════════════════
+         🧭 NAVIGATION STAFF
+         ═══════════════════════════════════════════════════ -->
+    <nav class="staff-nav">
+        <div class="staff-nav-container">
+            <a href="{% url 'staff:dashboard' %}" class="staff-nav-brand">
+                🏐 VolleyChamp Staff
+            </a>
+            
+            <a href="{% url 'staff:dashboard' %}" class="staff-nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                🏠 Dashboard
+            </a>
+            
+            <a href="#" class="staff-nav-link" title="Bientôt disponible - Étape 2">
+                🗓️ Tournois
+            </a>
+            
+            <a href="#" class="staff-nav-link" title="Bientôt disponible - Étape 3">
+                📋 Candidatures
+            </a>
+            
+            <a href="#" class="staff-nav-link" title="Bientôt disponible - Étape 4">
+                📊 Déclarations
+            </a>
+            
+            <div class="staff-nav-divider"></div>
+            
+            <a href="{% url 'accueil' %}" class="staff-nav-link">
+                ← Site public
+            </a>
+            
+            <!-- Lien Admin Django uniquement pour superusers -->
+            {% if user.is_superuser %}
+                <a href="{% url 'admin:index' %}" class="staff-nav-link" target="_blank">
+                    ⚙️ Admin Django
+                </a>
+            {% endif %}
+        </div>
+    </nav>
+    
+    <!-- ═══════════════════════════════════════════════════
+         📄 CONTENU PRINCIPAL
+         ═══════════════════════════════════════════════════ -->
+    <div class="staff-container">
+        <!-- Messages Django -->
+        {% if messages %}
+            <div class="staff-messages">
+                {% for message in messages %}
+                    <div class="staff-alert staff-alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <!-- Contenu spécifique de chaque page -->
+        {% block content %}
+        {% endblock %}
+    </div>
+    
+    <!-- ═══════════════════════════════════════════════════
+         📱 JAVASCRIPT POUR MOBILE
+         ═══════════════════════════════════════════════════ -->
+    <script>
+        // Améliore l'expérience tactile mobile
+        document.addEventListener('DOMContentLoaded', function() {
+            // Feedback visuel pour les touches tactiles
+            const touchElements = document.querySelectorAll('.staff-nav-link, button, .btn');
+            
+            touchElements.forEach(element => {
+                element.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.98)';
+                });
+                
+                element.addEventListener('touchend', function() {
+                    this.style.transform = '';
+                });
+            });
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

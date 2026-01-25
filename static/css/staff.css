@@ -1,0 +1,608 @@
+/* ═══════════════════════════════════════════════════
+   🏢 VOLLEYCHAMP - STYLES INTERFACE STAFF
+   ═══════════════════════════════════════════════════
+   
+   Styles spécifiques pour l'interface staff (/staff/)
+   Réutilise les variables CSS définies dans style.css
+   
+   ═══════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════
+   🎨 VARIABLES SPÉCIFIQUES STAFF
+   ═══════════════════════════════════════════════════ */
+
+:root {
+    --staff-primary: #213f7b;
+    --staff-accent: #f6121b;
+    --staff-success: #28a745;
+    --staff-warning: #ffc107;
+    --staff-danger: #dc3545;
+    --staff-info: #17a2b8;
+}
+
+/* ═══════════════════════════════════════════════════
+   🧭 NAVIGATION STAFF
+   ═══════════════════════════════════════════════════ */
+
+.staff-nav {
+    background: linear-gradient(135deg, var(--staff-primary), #1a3260);
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.staff-nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.staff-nav-brand {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: white;
+    margin-right: auto;
+    text-decoration: none;
+}
+
+.staff-nav-link {
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.staff-nav-link:hover {
+    background: rgba(255,255,255,0.15);
+    transform: translateY(-1px);
+    text-decoration: none;
+    color: white;
+}
+
+.staff-nav-link.active {
+    background: var(--staff-accent);
+}
+
+.staff-nav-divider {
+    width: 1px;
+    height: 24px;
+    background: rgba(255,255,255,0.2);
+}
+
+/* ═══════════════════════════════════════════════════
+   📦 CONTAINER PRINCIPAL STAFF
+   ═══════════════════════════════════════════════════ */
+
+.staff-container {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.staff-header {
+    margin-bottom: 2rem;
+}
+
+.staff-header h1 {
+    color: var(--staff-primary);
+    margin-bottom: 0.5rem;
+    font-size: clamp(1.75rem, 2vw + 1rem, 2.5rem);
+}
+
+.staff-header .user-info {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+/* ═══════════════════════════════════════════════════
+   🚨 MESSAGES / ALERTS STAFF
+   ═══════════════════════════════════════════════════ */
+
+.staff-messages {
+    margin-bottom: 1.5rem;
+}
+
+.staff-alert {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    border-left: 4px solid;
+}
+
+.staff-alert-success {
+    background: #d4edda;
+    border-color: var(--staff-success);
+    color: #155724;
+}
+
+.staff-alert-warning {
+    background: #fff3cd;
+    border-color: var(--staff-warning);
+    color: #856404;
+}
+
+.staff-alert-error {
+    background: #f8d7da;
+    border-color: var(--staff-danger);
+    color: #721c24;
+}
+
+.staff-alert-info {
+    background: #d1ecf1;
+    border-color: var(--staff-info);
+    color: #0c5460;
+}
+
+/* ═══════════════════════════════════════════════════
+   📊 DASHBOARD - SECTIONS
+   ═══════════════════════════════════════════════════ */
+
+.dashboard-section {
+    margin-bottom: 3rem;
+}
+
+.section-title {
+    color: var(--staff-primary);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 3px solid var(--staff-accent);
+    font-size: 1.5rem;
+}
+
+/* ═══════════════════════════════════════════════════
+   📈 STATS GRID
+   ═══════════════════════════════════════════════════ */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: white;
+    border: 2px solid #e1e8ed;
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+.stat-card.stat-warning {
+    border-left: 4px solid var(--staff-warning);
+}
+
+.stat-card.stat-success {
+    border-left: 4px solid var(--staff-success);
+}
+
+.stat-card.stat-danger {
+    border-left: 4px solid var(--staff-danger);
+}
+
+.stat-card.stat-info {
+    border-left: 4px solid var(--staff-info);
+}
+
+.stat-icon {
+    font-size: 2.5rem;
+    line-height: 1;
+}
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--staff-primary);
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.95rem;
+    color: #666;
+    margin-top: 0.25rem;
+}
+
+/* ═══════════════════════════════════════════════════
+   🎯 ACTIONS GRID
+   ═══════════════════════════════════════════════════ */
+
+.actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.action-card {
+    background: white;
+    border: 2px solid #e1e8ed;
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.action-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    border-color: var(--staff-primary);
+    text-decoration: none;
+}
+
+.action-card.action-primary:hover {
+    border-color: var(--staff-success);
+}
+
+.action-card.action-warning:hover {
+    border-color: var(--staff-warning);
+}
+
+.action-card.action-info:hover {
+    border-color: var(--staff-info);
+}
+
+.action-icon {
+    font-size: 2.5rem;
+    line-height: 1;
+}
+
+.action-content {
+    flex: 1;
+}
+
+.action-content h3 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.1rem;
+    color: var(--staff-primary);
+}
+
+.action-content p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* ═══════════════════════════════════════════════════
+   🗓️ LISTE TOURNOIS
+   ═══════════════════════════════════════════════════ */
+
+.tournois-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.tournoi-card {
+    background: white;
+    border: 2px solid #e1e8ed;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.tournoi-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tournoi-header h3 {
+    margin: 0;
+    color: var(--staff-primary);
+    font-size: 1.2rem;
+}
+
+.badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.badge-planifie {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.badge-confirme {
+    background: #d4edda;
+    color: #155724;
+}
+
+.badge-warning {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.tournoi-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.tournoi-info {
+    color: var(--staff-primary);
+    font-size: 1.05rem;
+}
+
+.tournoi-zone {
+    color: #666;
+    font-size: 0.9rem;
+    margin-left: 0.5rem;
+}
+
+.tournoi-org {
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.tournoi-org .label {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.tournoi-org .lieu {
+    color: #666;
+    font-size: 0.9rem;
+    margin-left: 0.5rem;
+}
+
+.tournoi-org.no-org {
+    color: var(--staff-warning);
+    font-weight: 500;
+}
+
+.tournoi-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* ═══════════════════════════════════════════════════
+   📋 LISTE CANDIDATURES
+   ═══════════════════════════════════════════════════ */
+
+.candidatures-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.candidature-card {
+    background: white;
+    border: 2px solid #e1e8ed;
+    border-left: 4px solid var(--staff-warning);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.candidature-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.candidature-header h4 {
+    margin: 0;
+    color: var(--staff-primary);
+    font-size: 1.1rem;
+}
+
+.candidature-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.candidature-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+/* ═══════════════════════════════════════════════════
+   🔘 BOUTONS STAFF
+   ═══════════════════════════════════════════════════ */
+
+.btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    text-decoration: none;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-sm {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.9rem;
+}
+
+.btn-primary {
+    background: var(--staff-primary);
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: #1a3260;
+    color: white;
+}
+
+.btn-success {
+    background: var(--staff-success);
+    color: white;
+}
+
+.btn-success:hover:not(:disabled) {
+    background: #218838;
+    color: white;
+}
+
+.btn-danger {
+    background: var(--staff-danger);
+    color: white;
+}
+
+.btn-danger:hover:not(:disabled) {
+    background: #c82333;
+    color: white;
+}
+
+.btn-warning {
+    background: var(--staff-warning);
+    color: #212529;
+}
+
+.btn-warning:hover:not(:disabled) {
+    background: #e0a800;
+}
+
+.btn-info {
+    background: var(--staff-info);
+    color: white;
+}
+
+.btn-info:hover:not(:disabled) {
+    background: #138496;
+    color: white;
+}
+
+/* ═══════════════════════════════════════════════════
+   📱 RESPONSIVE MOBILE
+   ═══════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+    /* Navigation */
+    .staff-nav-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .staff-nav-brand {
+        margin-bottom: 0.5rem;
+        text-align: center;
+    }
+    
+    .staff-nav-link {
+        justify-content: center;
+    }
+    
+    .staff-nav-divider {
+        display: none;
+    }
+    
+    /* Stats grid */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    /* Actions grid */
+    .actions-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Tournois / Candidatures */
+    .tournoi-header,
+    .candidature-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* ═══════════════════════════════════════════════════
+   🖨️ IMPRESSION
+   ═══════════════════════════════════════════════════ */
+
+@media print {
+    .staff-nav {
+        display: none;
+    }
+    
+    .staff-container {
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .action-card,
+    .btn {
+        display: none;
+    }
+    
+    .stat-card,
+    .tournoi-card,
+    .candidature-card {
+        page-break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #333;
+    }
+}
+
+/* ═══════════════════════════════════════════════════
+   ♿ ACCESSIBILITÉ
+   ═══════════════════════════════════════════════════ */
+
+/* Respecte la préférence de mouvement réduit */
+@media (prefers-reduced-motion: reduce) {
+    .stat-card,
+    .action-card,
+    .btn,
+    .staff-nav-link {
+        transition: none !important;
+    }
+}
+
+/* ═══════════════════════════════════════════════════
+   🎨 FIN DES STYLES STAFF
+   ═══════════════════════════════════════════════════ */

@@ -1,0 +1,246 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#213f7b">
+    
+    <title>{% block title %}Staff - VolleyChamp{% endblock %}</title>
+    
+    <!-- Réutiliser le CSS principal du site -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    <!-- CSS spécifique staff -->
+    <style>
+        /* ═══════════════════════════════════════════════════
+           🎨 STYLES INTERFACE STAFF
+           ═══════════════════════════════════════════════════ */
+        
+        :root {
+            --staff-primary: #213f7b;
+            --staff-accent: #f6121b;
+            --staff-success: #28a745;
+            --staff-warning: #ffc107;
+            --staff-danger: #dc3545;
+        }
+        
+        /* Navigation Staff */
+        .staff-nav {
+            background: linear-gradient(135deg, var(--staff-primary), #1a3260);
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .staff-nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .staff-nav-brand {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: white;
+            margin-right: auto;
+            text-decoration: none;
+        }
+        
+        .staff-nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .staff-nav-link:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-1px);
+        }
+        
+        .staff-nav-link.active {
+            background: var(--staff-accent);
+        }
+        
+        .staff-nav-divider {
+            width: 1px;
+            height: 24px;
+            background: rgba(255,255,255,0.2);
+        }
+        
+        /* Container principal staff */
+        .staff-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .staff-header {
+            margin-bottom: 2rem;
+        }
+        
+        .staff-header h1 {
+            color: var(--staff-primary);
+            margin-bottom: 0.5rem;
+            font-size: clamp(1.75rem, 2vw + 1rem, 2.5rem);
+        }
+        
+        .staff-header .user-info {
+            color: #666;
+            font-size: 0.95rem;
+        }
+        
+        /* Messages/Alerts */
+        .staff-messages {
+            margin-bottom: 1.5rem;
+        }
+        
+        .staff-alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border-left: 4px solid;
+        }
+        
+        .staff-alert-success {
+            background: #d4edda;
+            border-color: var(--staff-success);
+            color: #155724;
+        }
+        
+        .staff-alert-warning {
+            background: #fff3cd;
+            border-color: var(--staff-warning);
+            color: #856404;
+        }
+        
+        .staff-alert-error {
+            background: #f8d7da;
+            border-color: var(--staff-danger);
+            color: #721c24;
+        }
+        
+        .staff-alert-info {
+            background: #d1ecf1;
+            border-color: #17a2b8;
+            color: #0c5460;
+        }
+        
+        /* Responsive mobile */
+        @media (max-width: 768px) {
+            .staff-nav-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .staff-nav-brand {
+                margin-bottom: 0.5rem;
+                text-align: center;
+            }
+            
+            .staff-nav-link {
+                justify-content: center;
+            }
+            
+            .staff-nav-divider {
+                display: none;
+            }
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- ═══════════════════════════════════════════════════
+         🧭 NAVIGATION STAFF
+         ═══════════════════════════════════════════════════ -->
+    <nav class="staff-nav">
+        <div class="staff-nav-container">
+            <a href="{% url 'staff:dashboard' %}" class="staff-nav-brand">
+                🏐 VolleyChamp Staff
+            </a>
+            
+            <a href="{% url 'staff:dashboard' %}" class="staff-nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                🏠 Dashboard
+            </a>
+            
+            <a href="#" class="staff-nav-link" title="Bientôt disponible">
+                🗓️ Tournois
+            </a>
+            
+            <a href="#" class="staff-nav-link" title="Bientôt disponible">
+                📋 Candidatures
+            </a>
+            
+            <a href="#" class="staff-nav-link" title="Bientôt disponible">
+                📊 Déclarations
+            </a>
+            
+            <div class="staff-nav-divider"></div>
+            
+            <a href="{% url 'accueil' %}" class="staff-nav-link">
+                ← Site public
+            </a>
+            
+            <a href="{% url 'admin:index' %}" class="staff-nav-link" target="_blank">
+                ⚙️ Admin Django
+            </a>
+        </div>
+    </nav>
+    
+    <!-- ═══════════════════════════════════════════════════
+         📄 CONTENU PRINCIPAL
+         ═══════════════════════════════════════════════════ -->
+    <div class="staff-container">
+        <!-- Messages Django -->
+        {% if messages %}
+            <div class="staff-messages">
+                {% for message in messages %}
+                    <div class="staff-alert staff-alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <!-- Contenu spécifique de chaque page -->
+        {% block content %}
+        {% endblock %}
+    </div>
+    
+    <!-- ═══════════════════════════════════════════════════
+         📱 JAVASCRIPT POUR MOBILE
+         ═══════════════════════════════════════════════════ -->
+    <script>
+        // Améliore l'expérience tactile mobile
+        document.addEventListener('DOMContentLoaded', function() {
+            // Feedback visuel pour les touches tactiles
+            const touchElements = document.querySelectorAll('.staff-nav-link, button, .btn');
+            
+            touchElements.forEach(element => {
+                element.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.98)';
+                });
+                
+                element.addEventListener('touchend', function() {
+                    this.style.transform = '';
+                });
+            });
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

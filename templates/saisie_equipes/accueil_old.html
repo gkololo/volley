@@ -45,22 +45,6 @@
                 <h2 class="nav-title">🧭 Que souhaitez-vous faire ?</h2>
 
                 <div class="nav-grid">
-                    <!-- Nouvelle déclaration -->
-                    <a href="{% url 'declaration' %}" class="nav-card nav-primary">
-                        <div class="nav-icon">➕</div>
-                        <h3 class="nav-card-title">Nouvelle déclaration</h3>
-                        <p class="nav-card-desc">Déclarer une équipe pour un tournoi</p>
-                        <div class="nav-arrow">→</div>
-                    </a>
-
-                    <!-- Candidater pour organiser -->
-                    <a href="{% url 'candidature_liste' %}" class="nav-card nav-info">
-                        <div class="nav-icon">📋</div>
-                        <h3 class="nav-card-title">Candidater pour organiser</h3>
-                        <p class="nav-card-desc">Proposer votre club pour organiser un tournoi</p>
-                        <div class="nav-arrow">→</div>
-                    </a>
-
                     <!-- Consultation tournois à venir -->
                     <a href="{% url 'consultation' %}" class="nav-card nav-info">
                         <div class="nav-icon">👁️</div>
@@ -68,6 +52,21 @@
                         <p class="nav-card-desc">Voir les inscriptions en cours</p>
                         <div class="nav-arrow">→</div>
                     </a>
+
+                    <!-- Nouvelle déclaration -->
+                    <a href="{% url 'declaration' %}" class="nav-card nav-primary">
+                        <div class="nav-icon">➕</div>
+                        <h3 class="nav-card-title">Nouvelle déclaration</h3>
+                        <p class="nav-card-desc">Déclarer une équipe pour un tournoi</p>
+                        <div class="nav-arrow">→</div>
+                    </a>
+                         <!-- Candidater pour organiser -->
+                <a href="{% url 'candidature_liste' %}" class="nav-card nav-info">
+                    <div class="nav-icon">📋</div>
+                    <h3 class="nav-card-title">Candidater pour organiser</h3>
+                    <p class="nav-card-desc">Proposer votre club pour organiser un tournoi</p>
+                    <div class="nav-arrow">→</div>
+                </a>
 
                     <!-- Archives -->
                     <a href="{% url 'consultation_archive' %}" class="nav-card nav-secondary">
@@ -77,36 +76,13 @@
                         <div class="nav-arrow">→</div>
                     </a>
 
-                    <!-- ═══════════════════════════════════════════════════
-                         🆕 BOUTON INTELLIGENT : STAFF OU ADMIN
-                         ═══════════════════════════════════════════════════ -->
-                    {% if user.is_authenticated %}
-                        {% if user.is_superuser %}
-                            <!-- Superuser → Admin Django -->
-                            <a href="{% url 'admin:index' %}" class="nav-card nav-admin" target="_blank">
-                                <div class="nav-icon">⚙️</div>
-                                <h3 class="nav-card-title">Administration</h3>
-                                <p class="nav-card-desc">Console Django complète (superuser)</p>
-                                <div class="nav-arrow">↗</div>
-                            </a>
-                        {% elif user.is_staff %}
-                            <!-- Staff → Interface Staff -->
-                            <a href="{% url 'staff:dashboard' %}" class="nav-card nav-admin">
-                                <div class="nav-icon">🏢</div>
-                                <h3 class="nav-card-title">Interface Staff</h3>
-                                <p class="nav-card-desc">Gestion tournois & candidatures</p>
-                                <div class="nav-arrow">→</div>
-                            </a>
-                        {% endif %}
-                    {% else %}
-                        <!-- Non connecté → Lien de connexion -->
-                        <a href="{% url 'admin:login' %}?next={% url 'accueil' %}" class="nav-card nav-admin">
-                            <div class="nav-icon">🔐</div>
-                            <h3 class="nav-card-title">Connexion Staff</h3>
-                            <p class="nav-card-desc">Accès réservé au personnel</p>
-                            <div class="nav-arrow">→</div>
-                        </a>
-                    {% endif %}
+                    <!-- Administration -->
+                    <a href="{% url 'admin:index' %}" class="nav-card nav-admin" target="_blank">
+                        <div class="nav-icon">⚙️</div>
+                        <h3 class="nav-card-title">Administration</h3>
+                        <p class="nav-card-desc">Gestion avancée (admins uniquement)</p>
+                        <div class="nav-arrow">↗</div>
+                    </a>
                 </div>
             </div>
 
