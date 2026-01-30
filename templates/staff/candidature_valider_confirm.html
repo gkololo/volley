@@ -1,0 +1,133 @@
+{% extends "staff/base_staff.html" %}
+
+{% block title %}Valider Candidature - Staff VolleyChamp{% endblock %}
+
+{% block content %}
+<!-- ═══════════════════════════════════════════════════
+     ✅ HEADER VALIDATION
+     ═══════════════════════════════════════════════════ -->
+<div class="staff-header">
+    <h1>✅ Validation de Candidature</h1>
+    <p>Confirmer l'organisation du tournoi par ce club</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     📋 INFORMATIONS CANDIDATURE
+     ═══════════════════════════════════════════════════ -->
+<section class="dashboard-section">
+    <div class="form-container-staff">
+        <h2 class="section-title" style="margin-bottom: 1.5rem;">
+            📋 Détails de la candidature
+        </h2>
+        
+        <div class="tournoi-card" style="margin-bottom: 1.5rem;">
+            <div class="tournoi-header" style="background: linear-gradient(135deg, #28a745, #20c997); color: white;">
+                <h3>{{ candidature.club.nom }}</h3>
+                <span class="badge" style="background: white; color: #28a745;">Candidat</span>
+            </div>
+            
+            <div class="tournoi-body">
+                <!-- Tournoi concerné -->
+                <div style="padding: 1rem; background: #f8f9fa; border-radius: 6px; margin-bottom: 1rem;">
+                    <h4 style="margin-bottom: 0.5rem; color: #213f7b;">🗓️ Tournoi concerné</h4>
+                    <div style="font-size: 1.1rem;"><strong>{{ tournoi }}</strong></div>
+                    <div style="margin-top: 0.25rem; color: #666;">
+                        {{ tournoi.date|date:"l d F Y" }}
+                    </div>
+                </div>
+                
+                <!-- Lieu proposé -->
+                <div class="form-section">
+                    <h4>📍 Lieu d'organisation proposé</h4>
+                    <div style="padding: 0.75rem; background: #fff; border: 2px solid #28a745; border-radius: 6px; margin-top: 0.5rem;">
+                        <strong style="font-size: 1.1rem;">{{ candidature.lieu }}</strong>
+                    </div>
+                </div>
+                
+                <!-- Contact -->
+                <div class="form-section">
+                    <h4>👤 Personne de contact</h4>
+                    <ul style="list-style: none; padding: 0; margin-top: 0.5rem;">
+                        <li><strong>Nom :</strong> {{ candidature.declarant }}</li>
+                        <li><strong>Email :</strong> {{ candidature.email_contact }}</li>
+                        {% if candidature.telephone_contact %}
+                            <li><strong>Téléphone :</strong> {{ candidature.telephone_contact }}</li>
+                        {% endif %}
+                    </ul>
+                </div>
+                
+                <!-- Remarques -->
+                {% if candidature.remarques %}
+                <div class="form-section">
+                    <h4>💬 Motivations / Remarques</h4>
+                    <div style="padding: 0.75rem; background: #f8f9fa; border-left: 4px solid #28a745; border-radius: 4px; margin-top: 0.5rem; font-style: italic;">
+                        {{ candidature.remarques }}
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Date candidature -->
+                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e1e8ed; font-size: 0.85rem; color: #666;">
+                    <div>🕐 Candidature déposée le {{ candidature.created_at|date:"d/m/Y à H:i" }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Avertissement autres candidatures -->
+        {% if autres_candidatures > 0 %}
+        <div style="padding: 1rem; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 6px; margin-bottom: 1.5rem;">
+            <strong>⚠️ Attention :</strong> Il y a {{ autres_candidatures }} autre{{ autres_candidatures|pluralize }} candidature{{ autres_candidatures|pluralize }} en attente pour ce tournoi. 
+            En validant celle-ci, les autres seront automatiquement refusées.
+        </div>
+        {% endif %}
+        
+        <!-- Confirmation actions -->
+        <div style="padding: 1.5rem; background: #d4edda; border: 2px solid #28a745; border-radius: 8px; margin-bottom: 1.5rem;">
+            <h3 style="color: #155724; margin-bottom: 1rem;">✅ Que se passera-t-il après validation ?</h3>
+            <ul style="list-style: none; padding-left: 1.5rem; margin: 0;">
+                <li style="margin-bottom: 0.5rem;">✓ Le club <strong>{{ candidature.club.nom }}</strong> deviendra l'organisateur officiel</li>
+                <li style="margin-bottom: 0.5rem;">✓ Le lieu sera défini : <strong>{{ candidature.lieu }}</strong></li>
+                <li style="margin-bottom: 0.5rem;">✓ Le statut du tournoi passera à <strong>"Confirmé"</strong></li>
+                <li style="margin-bottom: 0.5rem;">✓ La candidature sera marquée comme <strong>"Validée"</strong></li>
+                {% if autres_candidatures > 0 %}
+                    <li style="margin-bottom: 0.5rem;">⚠️ Les {{ autres_candidatures }} autre{{ autres_candidatures|pluralize }} candidature{{ autres_candidatures|pluralize }} sera{{ autres_candidatures|pluralize:"ont,ont" }} refusée{{ autres_candidatures|pluralize }}</li>
+                {% endif %}
+            </ul>
+        </div>
+        
+        <!-- Formulaire confirmation -->
+        <form method="post">
+            {% csrf_token %}
+            
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
+                <button type="submit" name="confirmer" class="btn btn-success" style="min-width: 200px; font-size: 1.1rem;">
+                    ✅ Confirmer la validation
+                </button>
+                <a href="{% url 'staff:candidatures_liste' %}" class="btn btn-secondary" style="min-width: 200px; font-size: 1.1rem;">
+                    ↩️ Annuler
+                </a>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Responsive */
+    @media (max-width: 768px) {
+        .form-container-staff {
+            padding: 1rem;
+        }
+        
+        form > div {
+            flex-direction: column;
+        }
+        
+        form button,
+        form a {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,295 @@
+{% extends "staff/base_staff.html" %}
+
+{% block title %}Consultation Déclarations - Staff VolleyChamp{% endblock %}
+
+{% block content %}
+<!-- ═══════════════════════════════════════════════════
+     📊 HEADER
+     ═══════════════════════════════════════════════════ -->
+<div class="staff-header">
+    <h1>📊 Consultation des Déclarations</h1>
+    <p>Toutes les déclarations d'équipes pour les tournois</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     📊 STATISTIQUES
+     ═══════════════════════════════════════════════════ -->
+<section class="dashboard-section">
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">📋</div>
+            <div class="stat-content">
+                <div class="stat-number">{{ nb_total }}</div>
+                <div class="stat-label">Déclaration{{ nb_total|pluralize }}</div>
+            </div>
+        </div>
+        
+        <div class="stat-card stat-success">
+            <div class="stat-icon">🏐</div>
+            <div class="stat-content">
+                <div class="stat-number">{{ nb_equipes_total }}</div>
+                <div class="stat-label">Équipe{{ nb_equipes_total|pluralize }} inscrite{{ nb_equipes_total|pluralize }}</div>
+            </div>
+        </div>
+        
+        <div class="stat-card stat-info">
+            <div class="stat-icon">🏛️</div>
+            <div class="stat-content">
+                <div class="stat-number">{{ nb_clubs }}</div>
+                <div class="stat-label">Club{{ nb_clubs|pluralize }} participant{{ nb_clubs|pluralize }}</div>
+            </div>
+        </div>
+        
+        <div class="stat-card stat-warning">
+            <div class="stat-icon">🗓️</div>
+            <div class="stat-content">
+                <div class="stat-number">{{ nb_tournois }}</div>
+                <div class="stat-label">Tournoi{{ nb_tournois|pluralize }}</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     📊 RÉPARTITION PAR CATÉGORIE
+     ═══════════════════════════════════════════════════ -->
+{% if repartition_categories %}
+<section class="dashboard-section">
+    <h2 class="section-title">📊 Répartition par catégorie</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+        {% for cat in repartition_categories %}
+        <div style="background: #f8f9fa; padding: 1rem; border-radius: 6px; text-align: center; border-left: 4px solid #213f7b;">
+            <div style="font-size: 1.5rem; font-weight: bold; color: #213f7b;">{{ cat.equipes }}</div>
+            <div style="color: #666; font-size: 0.9rem;">{{ cat.categorie_age }}</div>
+            <div style="color: #999; font-size: 0.8rem;">{{ cat.count }} déclaration{{ cat.count|pluralize }}</div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<!-- ═══════════════════════════════════════════════════
+     🔍 FILTRES
+     ═══════════════════════════════════════════════════ -->
+<section class="dashboard-section">
+    <form method="get" class="filters-section">
+        <div class="filters-row">
+            <!-- Filtre Tournoi -->
+            <div class="filter-group">
+                <label for="tournoi">Tournoi</label>
+                <select name="tournoi" id="tournoi" class="form-control">
+                    <option value="">Tous les tournois</option>
+                    {% for t in tournois_liste %}
+                        <option value="{{ t.id }}" {% if tournoi_id == t.id|stringformat:"s" %}selected{% endif %}>
+                            {{ t.date|date:"d/m/Y" }} - {{ t.get_categorie_age_display }} {{ t.get_sexe_display }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Filtre Club -->
+            <div class="filter-group">
+                <label for="club">Club</label>
+                <select name="club" id="club" class="form-control">
+                    <option value="">Tous les clubs</option>
+                    {% for club_id, club_nom in clubs_liste %}
+                        <option value="{{ club_id }}" {% if club_id == club_id|stringformat:"s" %}selected{% endif %}>
+                            {{ club_nom }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Filtre Catégorie -->
+            <div class="filter-group">
+                <label for="categorie">Catégorie</label>
+                <select name="categorie" id="categorie" class="form-control">
+                    <option value="">Toutes</option>
+                    <option value="M11" {% if categorie == 'M11' %}selected{% endif %}>M11</option>
+                    <option value="M13" {% if categorie == 'M13' %}selected{% endif %}>M13</option>
+                    <option value="M15" {% if categorie == 'M15' %}selected{% endif %}>M15</option>
+                    <option value="M18" {% if categorie == 'M18' %}selected{% endif %}>M18</option>
+                </select>
+            </div>
+            
+            <!-- Filtre Sexe -->
+            <div class="filter-group">
+                <label for="sexe">Sexe</label>
+                <select name="sexe" id="sexe" class="form-control">
+                    <option value="">Tous</option>
+                    <option value="M" {% if sexe == 'M' %}selected{% endif %}>Masculin</option>
+                    <option value="F" {% if sexe == 'F' %}selected{% endif %}>Féminin</option>
+                </select>
+            </div>
+            
+            <!-- Filtre Zone -->
+            <div class="filter-group">
+                <label for="zone">Zone</label>
+                <select name="zone" id="zone" class="form-control">
+                    <option value="">Toutes</option>
+                    <option value="N" {% if zone == 'N' %}selected{% endif %}>Nord</option>
+                    <option value="S" {% if zone == 'S' %}selected{% endif %}>Sud</option>
+                    <option value="" {% if zone == '' %}selected{% endif %}>Aucune</option>
+                </select>
+            </div>
+            
+            <!-- Recherche -->
+            <div class="filter-group">
+                <label for="q">Recherche</label>
+                <input 
+                    type="text" 
+                    name="q" 
+                    id="q" 
+                    value="{{ recherche }}" 
+                    placeholder="Club, déclarant..."
+                    class="form-control"
+                >
+            </div>
+            
+            <!-- Boutons -->
+            <div class="filter-group" style="display: flex; gap: 0.5rem; align-items: flex-end; flex-wrap: wrap;">
+                <button type="submit" class="btn btn-primary">
+                    🔍 Filtrer
+                </button>
+                {% if tournoi_id or club_id or categorie or sexe or zone or recherche %}
+                    <a href="{% url 'staff:declarations_liste' %}" class="btn btn-secondary">
+                        🔄 Réinitialiser
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     📋 LISTE DÉCLARATIONS
+     ═══════════════════════════════════════════════════ -->
+<section class="dashboard-section">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <h2 class="section-title" style="margin: 0;">
+            📋 Déclarations ({{ declarations.count }})
+        </h2>
+        
+        {% if declarations %}
+        <a href="?{% for key, value in request.GET.items %}{% if key != 'export' %}{{ key }}={{ value }}&{% endif %}{% endfor %}export=csv" class="btn btn-success btn-sm">
+            📥 Exporter CSV
+        </a>
+        {% endif %}
+    </div>
+    
+    {% if declarations %}
+        <div class="declarations-list">
+            {% for declaration in declarations %}
+            <div class="tournoi-card">
+                <div class="tournoi-header">
+                    <div>
+                        <h3>{{ declaration.club.nom }}</h3>
+                        <div style="margin-top: 0.25rem; font-size: 0.9rem; color: #666;">
+                            {% if declaration.tournoi %}
+                                🗓️ {{ declaration.tournoi }}
+                            {% else %}
+                                🗓️ Tournoi du {{ declaration.date_tournoi|date:"d/m/Y" }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div class="badge badge-{{ declaration.categorie_age|lower }}">
+                            {{ declaration.get_categorie_age_display }} {{ declaration.get_sexe_display }}
+                        </div>
+                        {% if declaration.zone %}
+                            <div class="badge" style="margin-top: 0.25rem; background: #6c757d;">
+                                {{ declaration.get_zone_display }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="tournoi-body">
+                    <!-- Informations déclaration -->
+                    <div class="tournoi-info">
+                        <div><strong>🏐 Équipes :</strong> {{ declaration.nombre_equipes }}</div>
+                        <div><strong>👤 Déclarant :</strong> {{ declaration.declarant }}</div>
+                        <div><strong>📧 Email :</strong> {{ declaration.email_club }}</div>
+                        {% if declaration.remarques %}
+                            <div style="margin-top: 0.5rem;">
+                                <strong>💬 Remarques :</strong>
+                                <div style="margin-top: 0.25rem; font-style: italic; color: #555; padding: 0.5rem; background: #f8f9fa; border-radius: 4px;">
+                                    {{ declaration.remarques }}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Date déclaration -->
+                    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e1e8ed; font-size: 0.85rem; color: #666;">
+                        <div>🕐 Déclarée le {{ declaration.date_declaration|date:"d/m/Y à H:i" }}</div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="no-data">
+            <p>🤷‍♂️ Aucune déclaration trouvée avec ces filtres.</p>
+            {% if tournoi_id or club_id or categorie or sexe or zone or recherche %}
+                <p><small>Essayez de modifier les filtres.</small></p>
+            {% endif %}
+        </div>
+    {% endif %}
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     🔗 NAVIGATION
+     ═══════════════════════════════════════════════════ -->
+<div class="navigation-links" style="margin-top: 2rem;">
+    <a href="{% url 'staff:dashboard' %}" class="btn btn-secondary">
+        🏠 Retour au dashboard
+    </a>
+    <a href="{% url 'staff:tournois_liste' %}" class="btn btn-primary">
+        🗓️ Voir les tournois
+    </a>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Badge catégories */
+    .badge-m11 {
+        background: linear-gradient(135deg, #17a2b8, #138496);
+        color: white;
+    }
+    
+    .badge-m13 {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+    }
+    
+    .badge-m15 {
+        background: linear-gradient(135deg, #ffc107, #ff9800);
+        color: white;
+    }
+    
+    .badge-m18 {
+        background: linear-gradient(135deg, #dc3545, #c82333);
+        color: white;
+    }
+    
+    /* Liste déclarations */
+    .declarations-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .filters-row {
+            flex-direction: column;
+        }
+        
+        .filter-group {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}

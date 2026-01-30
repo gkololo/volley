@@ -4,27 +4,14 @@
 ═══════════════════════════════════════════════════
 
 Toutes les URLs commençant par /staff/
-
-VERSION 4 : Ajout route consultation déclarations (Étape 4)
 """
 
 from django.urls import path
 from .views_staff import (
-    # Dashboard
     dashboard_view,
-    
-    # Gestion Tournois (Étape 2)
     tournois_liste_view,
     tournoi_create_view,
     tournoi_edit_view,
-    
-    # Gestion Candidatures (Étape 3)
-    candidatures_liste_view,
-    candidature_valider_view,
-    candidature_refuser_view,
-    
-    # Consultation Déclarations (Étape 4)
-    declarations_liste_view,
 )
 
 # Namespace pour les URLs staff
@@ -37,21 +24,21 @@ urlpatterns = [
     path('', dashboard_view, name='dashboard'),
     
     # ═══════════════════════════════════════════════════
-    # 🗓️ GESTION TOURNOIS (Étape 2)
+    # 🗓️ GESTION TOURNOIS
     # ═══════════════════════════════════════════════════
     path('tournois/', tournois_liste_view, name='tournois_liste'),
     path('tournois/nouveau/', tournoi_create_view, name='tournoi_create'),
     path('tournois/<int:tournoi_id>/edit/', tournoi_edit_view, name='tournoi_edit'),
     
     # ═══════════════════════════════════════════════════
-    # 📋 GESTION CANDIDATURES (Étape 3)
+    # 📋 GESTION CANDIDATURES (Étape 3 - à venir)
     # ═══════════════════════════════════════════════════
-    path('candidatures/', candidatures_liste_view, name='candidatures_liste'),
-    path('candidatures/<int:candidature_id>/valider/', candidature_valider_view, name='candidature_valider'),
-    path('candidatures/<int:candidature_id>/refuser/', candidature_refuser_view, name='candidature_refuser'),
+    # path('candidatures/', candidatures_liste_view, name='candidatures_liste'),
+    # path('candidatures/<int:candidature_id>/valider/', candidature_valider_view, name='candidature_valider'),
+    # path('candidatures/<int:candidature_id>/refuser/', candidature_refuser_view, name='candidature_refuser'),
     
     # ═══════════════════════════════════════════════════
-    # 📊 CONSULTATION DÉCLARATIONS (Étape 4)
+    # 📊 CONSULTATION DÉCLARATIONS (Étape 4 - à venir)
     # ═══════════════════════════════════════════════════
-    path('declarations/', declarations_liste_view, name='declarations_liste'),
+    # path('declarations/', declarations_liste_view, name='declarations_liste'),
 ]

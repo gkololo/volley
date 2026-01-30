@@ -1,0 +1,348 @@
+{% extends "staff/base_staff.html" %}
+
+{% block title %}Gestion des Tournois - Staff{% endblock %}
+
+{% block content %}
+<!-- ═══════════════════════════════════════════════════
+     🗓️ HEADER GESTION TOURNOIS
+     ═══════════════════════════════════════════════════ -->
+<div class="staff-header">
+    <h1>🗓️ Gestion des Tournois</h1>
+    <p class="user-info">
+        {{ nb_total }} tournoi{{ nb_total|pluralize }} au total
+        ({{ nb_a_venir }} à venir, {{ nb_passes }} passé{{ nb_passes|pluralize }})
+    </p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     ➕ BOUTON CRÉER TOURNOI
+     ═══════════════════════════════════════════════════ -->
+<div class="action-bar">
+    <a href="{% url 'staff:tournoi_create' %}" class="btn btn-success">
+        ➕ Créer un nouveau tournoi
+    </a>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     🔍 FILTRES
+     ═══════════════════════════════════════════════════ -->
+<div class="filters-section">
+    <form method="get" class="filters-form">
+        <div class="filters-grid">
+            <!-- Filtre période -->
+            <div class="filter-group">
+                <label for="periode">Période :</label>
+                <select name="periode" id="periode" class="form-control" onchange="this.form.submit()">
+                    <option value="tous" {% if periode == 'tous' %}selected{% endif %}>Tous</option>
+                    <option value="a_venir" {% if periode == 'a_venir' %}selected{% endif %}>À venir</option>
+                    <option value="passes" {% if periode == 'passes' %}selected{% endif %}>Passés</option>
+                </select>
+            </div>
+            
+            <!-- Filtre statut -->
+            <div class="filter-group">
+                <label for="statut">Statut :</label>
+                <select name="statut" id="statut" class="form-control" onchange="this.form.submit()">
+                    <option value="tous" {% if statut == 'tous' %}selected{% endif %}>Tous</option>
+                    <option value="PLANIFIE" {% if statut == 'PLANIFIE' %}selected{% endif %}>Planifié</option>
+                    <option value="CONFIRME" {% if statut == 'CONFIRME' %}selected{% endif %}>Confirmé</option>
+                    <option value="ANNULE" {% if statut == 'ANNULE' %}selected{% endif %}>Annulé</option>
+                    <option value="TERMINE" {% if statut == 'TERMINE' %}selected{% endif %}>Terminé</option>
+                </select>
+            </div>
+            
+            <!-- Recherche -->
+            <div class="filter-group">
+                <label for="q">Recherche :</label>
+                <div class="search-input-group">
+                    <input type="text" name="q" id="q" class="form-control" 
+                           placeholder="Catégorie, club, lieu..." 
+                           value="{{ recherche }}">
+                    <button type="submit" class="btn btn-primary">🔍</button>
+                </div>
+            </div>
+        </div>
+        
+        {% if periode != 'tous' or statut != 'tous' or recherche %}
+        <div class="filter-reset">
+            <a href="{% url 'staff:tournois_liste' %}" class="btn btn-sm">
+                ❌ Réinitialiser les filtres
+            </a>
+        </div>
+        {% endif %}
+    </form>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     📋 LISTE DES TOURNOIS
+     ═══════════════════════════════════════════════════ -->
+{% if tournois %}
+    <div class="tournois-list">
+        {% for tournoi in tournois %}
+        <div class="tournoi-card-staff">
+            <div class="tournoi-header-staff">
+                <div class="tournoi-date-info">
+                    <h3>{{ tournoi.date|date:"l d F Y" }}</h3>
+                    <span class="tournoi-categorie">
+                        {{ tournoi.get_categorie_age_display }} - {{ tournoi.get_sexe_display }}
+                        {% if tournoi.zone %}
+                            <span class="tournoi-zone-badge">{{ tournoi.get_zone_display }}</span>
+                        {% endif %}
+                    </span>
+                </div>
+                
+                <span class="badge badge-{{ tournoi.statut|lower }}">
+                    {{ tournoi.get_statut_display }}
+                </span>
+            </div>
+            
+            <div class="tournoi-body-staff">
+                <!-- Organisateur -->
+                <div class="tournoi-info-row">
+                    <span class="info-label">🏢 Organisateur :</span>
+                    {% if tournoi.club_organisateur %}
+                        <span class="info-value">
+                            {{ tournoi.club_organisateur.nom }}
+                            {% if tournoi.lieu %}
+                                <span class="info-lieu">📍 {{ tournoi.lieu }}</span>
+                            {% endif %}
+                        </span>
+                    {% else %}
+                        <span class="info-value no-org">⏳ Recherche organisateur</span>
+                    {% endif %}
+                </div>
+                
+                <!-- Statistiques -->
+                <div class="tournoi-stats-staff">
+                    <span class="stat-item">
+                        📋 {{ tournoi.nb_candidatures_calculees }} candidature{{ tournoi.nb_candidatures_calculees|pluralize }}
+                        {% if tournoi.nb_candidatures_en_attente > 0 %}
+                            <span class="badge-warning-small">({{ tournoi.nb_candidatures_en_attente }} en attente)</span>
+                        {% endif %}
+                    </span>
+                    <span class="stat-item">
+                        📝 {{ tournoi.nb_declarations_calculees }} déclaration{{ tournoi.nb_declarations_calculees|pluralize }}
+                    </span>
+                    <span class="stat-item">
+                        👥 {{ tournoi.nb_equipes_calculees }} équipe{{ tournoi.nb_equipes_calculees|pluralize }}
+                    </span>
+                    <span class="stat-item">
+                        {% if tournoi.est_publie %}
+                            ✅ Publié
+                        {% else %}
+                            🔒 Non publié
+                        {% endif %}
+                    </span>
+                </div>
+                
+                <!-- Remarques -->
+                {% if tournoi.remarques %}
+                <div class="tournoi-remarques">
+                    💬 {{ tournoi.remarques|truncatewords:20 }}
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="tournoi-actions-staff">
+                <a href="{% url 'staff:tournoi_edit' tournoi.id %}" class="btn btn-sm btn-primary">
+                    ✏️ Modifier
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="no-data">
+        <p>🔭 Aucun tournoi trouvé.</p>
+        {% if periode != 'tous' or statut != 'tous' or recherche %}
+            <p><small>Essayez de modifier les filtres ou <a href="{% url 'staff:tournois_liste' %}">réinitialiser</a>.</small></p>
+        {% else %}
+            <p><small>Commencez par <a href="{% url 'staff:tournoi_create' %}">créer un nouveau tournoi</a>.</small></p>
+        {% endif %}
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Action bar */
+    .action-bar {
+        margin-bottom: 2rem;
+    }
+    
+    /* Filtres */
+    .filters-section {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .filters-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+    
+    .filter-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #213f7b;
+    }
+    
+    .search-input-group {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .search-input-group input {
+        flex: 1;
+    }
+    
+    .filter-reset {
+        margin-top: 1rem;
+        text-align: center;
+    }
+    
+    /* Tournois cards */
+    .tournois-list {
+        display: grid;
+        gap: 1.5rem;
+    }
+    
+    .tournoi-card-staff {
+        background: white;
+        border: 2px solid #e1e8ed;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        transition: all 0.3s;
+    }
+    
+    .tournoi-card-staff:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        border-color: #213f7b;
+    }
+    
+    .tournoi-header-staff {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f0f0f0;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    
+    .tournoi-date-info h3 {
+        margin: 0 0 0.5rem 0;
+        color: #213f7b;
+        font-size: 1.2rem;
+    }
+    
+    .tournoi-categorie {
+        font-size: 1.05rem;
+        color: #333;
+        font-weight: 500;
+    }
+    
+    .tournoi-zone-badge {
+        background: #e1e8ed;
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        color: #666;
+        margin-left: 0.5rem;
+    }
+    
+    .tournoi-body-staff {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .tournoi-info-row {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .info-label {
+        color: #666;
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+    
+    .info-value {
+        color: #333;
+        font-size: 0.95rem;
+    }
+    
+    .info-value.no-org {
+        color: #ffc107;
+        font-weight: 500;
+    }
+    
+    .info-lieu {
+        color: #666;
+        font-size: 0.9rem;
+        margin-left: 0.5rem;
+    }
+    
+    .tournoi-stats-staff {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        font-size: 0.95rem;
+        color: #666;
+    }
+    
+    .badge-warning-small {
+        background: #fff3cd;
+        color: #856404;
+        padding: 0.1rem 0.4rem;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        margin-left: 0.3rem;
+    }
+    
+    .tournoi-remarques {
+        background: #f8f9fa;
+        padding: 0.75rem;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        color: #666;
+        font-style: italic;
+    }
+    
+    .tournoi-actions-staff {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 2px solid #f0f0f0;
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .filters-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .tournoi-header-staff {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .tournoi-stats-staff {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+    }
+</style>
+{% endblock %}

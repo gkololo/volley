@@ -1,10 +1,10 @@
 /* ═══════════════════════════════════════════════════
    🏢 VOLLEYCHAMP - STYLES INTERFACE STAFF
    ═══════════════════════════════════════════════════
-   
+
    Styles spécifiques pour l'interface staff (/staff/)
    Réutilise les variables CSS définies dans style.css
-   
+
    ═══════════════════════════════════════════════════ */
 
 /* ═══════════════════════════════════════════════════
@@ -28,7 +28,7 @@
     background: linear-gradient(135deg, var(--staff-primary), #1a3260);
     padding: 1rem;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    position: sticky;
+    /* position: sticky; */
     top: 0;
     z-index: 1000;
 }
@@ -528,30 +528,30 @@
         flex-direction: column;
         align-items: stretch;
     }
-    
+
     .staff-nav-brand {
         margin-bottom: 0.5rem;
         text-align: center;
     }
-    
+
     .staff-nav-link {
         justify-content: center;
     }
-    
+
     .staff-nav-divider {
         display: none;
     }
-    
+
     /* Stats grid */
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
     }
-    
+
     /* Actions grid */
     .actions-grid {
         grid-template-columns: 1fr;
     }
-    
+
     /* Tournois / Candidatures */
     .tournoi-header,
     .candidature-header {
@@ -568,18 +568,18 @@
     .staff-nav {
         display: none;
     }
-    
+
     .staff-container {
         max-width: 100%;
         margin: 0;
         padding: 0;
     }
-    
+
     .action-card,
     .btn {
         display: none;
     }
-    
+
     .stat-card,
     .tournoi-card,
     .candidature-card {

@@ -1,0 +1,143 @@
+{% extends "staff/base_staff.html" %}
+
+{% block title %}Refuser Candidature - Staff VolleyChamp{% endblock %}
+
+{% block content %}
+<!-- ═══════════════════════════════════════════════════
+     ❌ HEADER REFUS
+     ═══════════════════════════════════════════════════ -->
+<div class="staff-header">
+    <h1>❌ Refus de Candidature</h1>
+    <p>Indiquer la raison du refus au club</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     📋 INFORMATIONS CANDIDATURE
+     ═══════════════════════════════════════════════════ -->
+<section class="dashboard-section">
+    <div class="form-container-staff">
+        <h2 class="section-title" style="margin-bottom: 1.5rem;">
+            📋 Candidature à refuser
+        </h2>
+        
+        <div class="tournoi-card" style="margin-bottom: 1.5rem;">
+            <div class="tournoi-header" style="background: linear-gradient(135deg, #dc3545, #c82333); color: white;">
+                <h3>{{ candidature.club.nom }}</h3>
+                <span class="badge" style="background: white; color: #dc3545;">À refuser</span>
+            </div>
+            
+            <div class="tournoi-body">
+                <!-- Tournoi concerné -->
+                <div style="padding: 1rem; background: #f8f9fa; border-radius: 6px; margin-bottom: 1rem;">
+                    <h4 style="margin-bottom: 0.5rem; color: #213f7b;">🗓️ Tournoi concerné</h4>
+                    <div style="font-size: 1.1rem;"><strong>{{ tournoi }}</strong></div>
+                    <div style="margin-top: 0.25rem; color: #666;">
+                        {{ tournoi.date|date:"l d F Y" }}
+                    </div>
+                </div>
+                
+                <!-- Lieu proposé -->
+                <div style="margin-bottom: 1rem;">
+                    <strong>📍 Lieu proposé :</strong> {{ candidature.lieu }}
+                </div>
+                
+                <!-- Contact -->
+                <div style="margin-bottom: 1rem;">
+                    <strong>👤 Contact :</strong> {{ candidature.declarant }} ({{ candidature.email_contact }})
+                </div>
+                
+                <!-- Remarques du club -->
+                {% if candidature.remarques %}
+                <div style="padding: 0.75rem; background: #f8f9fa; border-left: 4px solid #6c757d; border-radius: 4px; margin-bottom: 1rem;">
+                    <strong>💬 Motivations du club :</strong><br>
+                    <span style="font-style: italic;">{{ candidature.remarques }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Info importante -->
+        <div style="padding: 1rem; background: #f8d7da; border-left: 4px solid #dc3545; border-radius: 6px; margin-bottom: 1.5rem;">
+            <strong>ℹ️ Important :</strong> Le club sera informé du refus. Veuillez indiquer une raison claire et constructive.
+        </div>
+        
+        <!-- Formulaire refus -->
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-section" style="margin-bottom: 1.5rem;">
+                <label for="raison_refus" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #213f7b;">
+                    <span style="color: #dc3545;">*</span> Raison du refus
+                </label>
+                <textarea 
+                    name="raison_refus" 
+                    id="raison_refus" 
+                    rows="5" 
+                    required
+                    class="form-control"
+                    placeholder="Exemple : Le gymnase proposé n'a pas les dimensions réglementaires requises pour cette catégorie. Nous vous encourageons à candidater pour un autre tournoi avec un autre lieu."
+                    style="width: 100%; padding: 0.75rem; border: 2px solid #e1e8ed; border-radius: 6px; font-family: inherit;"
+                ></textarea>
+                <small style="display: block; margin-top: 0.5rem; color: #666;">
+                    💡 Conseil : Soyez précis et constructif. Le club pourra candidater à nouveau avec un autre lieu.
+                </small>
+            </div>
+            
+            <!-- Exemples de raisons -->
+            <details style="margin-bottom: 1.5rem; padding: 1rem; background: #f8f9fa; border-radius: 6px;">
+                <summary style="cursor: pointer; font-weight: 600; color: #213f7b;">
+                    💡 Exemples de raisons de refus
+                </summary>
+                <ul style="margin-top: 0.75rem; padding-left: 1.5rem;">
+                    <li>Le gymnase proposé n'est pas disponible à la date du tournoi (conflit avec un autre événement)</li>
+                    <li>Les dimensions du terrain ne correspondent pas aux normes pour cette catégorie</li>
+                    <li>Un autre club a déjà été validé pour ce tournoi</li>
+                    <li>Le lieu proposé est trop éloigné géographiquement pour la majorité des participants</li>
+                    <li>L'équipement proposé (filet, arbitrage, tables) n'est pas conforme aux exigences</li>
+                </ul>
+            </details>
+            
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
+                <button type="submit" class="btn btn-danger" style="min-width: 200px; font-size: 1.1rem;">
+                    ❌ Confirmer le refus
+                </button>
+                <a href="{% url 'staff:candidatures_liste' %}" class="btn btn-secondary" style="min-width: 200px; font-size: 1.1rem;">
+                    ↩️ Annuler
+                </a>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Responsive */
+    @media (max-width: 768px) {
+        .form-container-staff {
+            padding: 1rem;
+        }
+        
+        form > div:last-child {
+            flex-direction: column;
+        }
+        
+        form button,
+        form a {
+            width: 100%;
+        }
+    }
+    
+    /* Focus textarea */
+    textarea:focus {
+        outline: none;
+        border-color: #dc3545;
+        box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2);
+    }
+    
+    /* Details */
+    details[open] summary {
+        margin-bottom: 0.75rem;
+    }
+</style>
+{% endblock %}

@@ -19,7 +19,7 @@
      ═══════════════════════════════════════════════════ -->
 <section class="dashboard-section">
     <h2 class="section-title">📋 Candidatures à l'organisation</h2>
-    
+
     <div class="stats-grid">
         <div class="stat-card stat-warning">
             <div class="stat-icon">⏳</div>
@@ -28,7 +28,7 @@
                 <div class="stat-label">En attente</div>
             </div>
         </div>
-        
+
         <div class="stat-card stat-success">
             <div class="stat-icon">✅</div>
             <div class="stat-content">
@@ -36,7 +36,7 @@
                 <div class="stat-label">Validées</div>
             </div>
         </div>
-        
+
         <div class="stat-card stat-danger">
             <div class="stat-icon">❌</div>
             <div class="stat-content">
@@ -44,7 +44,7 @@
                 <div class="stat-label">Refusées</div>
             </div>
         </div>
-        
+
         <div class="stat-card">
             <div class="stat-icon">📊</div>
             <div class="stat-content">
@@ -60,7 +60,7 @@
      ═══════════════════════════════════════════════════ -->
 <section class="dashboard-section">
     <h2 class="section-title">🗓️ Tournois</h2>
-    
+
     <div class="stats-grid">
         <div class="stat-card stat-info">
             <div class="stat-icon">📅</div>
@@ -69,7 +69,7 @@
                 <div class="stat-label">À venir</div>
             </div>
         </div>
-        
+
         <div class="stat-card stat-warning">
             <div class="stat-icon">🕐</div>
             <div class="stat-content">
@@ -77,7 +77,7 @@
                 <div class="stat-label">Planifiés</div>
             </div>
         </div>
-        
+
         <div class="stat-card stat-success">
             <div class="stat-icon">✔️</div>
             <div class="stat-content">
@@ -85,7 +85,7 @@
                 <div class="stat-label">Confirmés</div>
             </div>
         </div>
-        
+
         <div class="stat-card">
             <div class="stat-icon">🏐</div>
             <div class="stat-content">
@@ -101,7 +101,7 @@
      ═══════════════════════════════════════════════════ -->
 <section class="dashboard-section">
     <h2 class="section-title">📊 Déclarations d'équipes</h2>
-    
+
     <div class="stats-grid">
         <div class="stat-card">
             <div class="stat-icon">📝</div>
@@ -110,7 +110,7 @@
                 <div class="stat-label">Déclarations</div>
             </div>
         </div>
-        
+
         <div class="stat-card">
             <div class="stat-icon">👥</div>
             <div class="stat-content">
@@ -118,7 +118,7 @@
                 <div class="stat-label">Équipes</div>
             </div>
         </div>
-        
+
         <div class="stat-card">
             <div class="stat-icon">🏢</div>
             <div class="stat-content">
@@ -134,32 +134,33 @@
      ═══════════════════════════════════════════════════ -->
 <section class="dashboard-section">
     <h2 class="section-title">🎯 Actions rapides</h2>
-    
+
     <div class="actions-grid">
-        <a href="#" class="action-card action-primary" title="Bientôt disponible - Étape 2">
+        <a href="{% url 'staff:tournoi_create' %}" class="action-card action-primary" title="Créer un tournoi">
+
             <div class="action-icon">➕</div>
             <div class="action-content">
                 <h3>Créer un tournoi</h3>
                 <p>Planifier un nouveau tournoi</p>
             </div>
         </a>
-        
-        <a href="#" class="action-card action-warning" title="Bientôt disponible - Étape 3">
+
+        <a href="{% url 'staff:candidatures_liste' %}" class="action-card action-warning">
             <div class="action-icon">📋</div>
             <div class="action-content">
                 <h3>Gérer les candidatures</h3>
                 <p>{{ nb_candidatures_en_attente }} en attente</p>
             </div>
         </a>
-        
-        <a href="#" class="action-card action-info" title="Bientôt disponible - Étape 4">
+
+        <a href="{% url 'staff:declarations_liste' %}" class="action-card action-info">
             <div class="action-icon">📊</div>
             <div class="action-content">
                 <h3>Consulter les déclarations</h3>
                 <p>Voir toutes les inscriptions</p>
             </div>
         </a>
-        
+
         <a href="{% url 'admin:index' %}" class="action-card" target="_blank">
             <div class="action-icon">⚙️</div>
             <div class="action-content">
@@ -176,7 +177,7 @@
 {% if prochains_tournois %}
 <section class="dashboard-section">
     <h2 class="section-title">📅 Prochains tournois ({{ prochains_tournois|length }})</h2>
-    
+
     <div class="tournois-list">
         {% for tournoi in prochains_tournois %}
         <div class="tournoi-card">
@@ -186,7 +187,7 @@
                     {{ tournoi.get_statut_display }}
                 </span>
             </div>
-            
+
             <div class="tournoi-body">
                 <div class="tournoi-info">
                     <strong>{{ tournoi.get_categorie_age_display }} - {{ tournoi.get_sexe_display }}</strong>
@@ -194,7 +195,7 @@
                         <span class="tournoi-zone">{{ tournoi.get_zone_display }}</span>
                     {% endif %}
                 </div>
-                
+
                 {% if tournoi.club_organisateur %}
                 <div class="tournoi-org">
                     <span class="label">Organisateur :</span>
@@ -208,7 +209,7 @@
                     <span class="label">⏳ Recherche organisateur</span>
                 </div>
                 {% endif %}
-                
+
                 <div class="tournoi-stats">
                     <span class="stat">
                         📋 {{ tournoi.nb_candidatures_calculees }} candidature{{ tournoi.nb_candidatures_calculees|pluralize }}
@@ -233,7 +234,7 @@
 {% if candidatures_recentes %}
 <section class="dashboard-section">
     <h2 class="section-title">🚨 Candidatures récentes en attente</h2>
-    
+
     <div class="candidatures-list">
         {% for candidature in candidatures_recentes %}
         <div class="candidature-card">
@@ -241,7 +242,7 @@
                 <h4>{{ candidature.club.nom }}</h4>
                 <span class="badge badge-warning">En attente</span>
             </div>
-            
+
             <div class="candidature-body">
                 <div class="candidature-tournoi">
                     🗓️ {{ candidature.tournoi }}
@@ -253,7 +254,7 @@
                     🕐 Déposée le {{ candidature.created_at|date:"d/m/Y à H:i" }}
                 </div>
             </div>
-            
+
             <div class="candidature-actions">
                 <button class="btn btn-sm btn-success" disabled title="Bientôt disponible - Étape 3">
                     ✅ Valider
@@ -265,7 +266,7 @@
         </div>
         {% endfor %}
     </div>
-    
+
     <div style="text-align: center; margin-top: 1rem;">
         <a href="#" class="btn btn-primary" title="Bientôt disponible - Étape 3">
             Voir toutes les candidatures →
@@ -274,305 +275,4 @@
 </section>
 {% endif %}
 
-<!-- ═══════════════════════════════════════════════════
-     🎨 CSS SPÉCIFIQUE DASHBOARD
-     ═══════════════════════════════════════════════════ -->
-<style>
-    .dashboard-section {
-        margin-bottom: 3rem;
-    }
-    
-    .section-title {
-        color: var(--staff-primary);
-        margin-bottom: 1.5rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 3px solid var(--staff-accent);
-        font-size: 1.5rem;
-    }
-    
-    /* Stats Grid */
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
-        margin-bottom: 2rem;
-    }
-    
-    .stat-card {
-        background: white;
-        border: 2px solid #e1e8ed;
-        border-radius: 12px;
-        padding: 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        transition: all 0.3s;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-    
-    .stat-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-    }
-    
-    .stat-card.stat-warning { border-left: 4px solid var(--staff-warning); }
-    .stat-card.stat-success { border-left: 4px solid var(--staff-success); }
-    .stat-card.stat-danger { border-left: 4px solid var(--staff-danger); }
-    .stat-card.stat-info { border-left: 4px solid #17a2b8; }
-    
-    .stat-icon {
-        font-size: 2.5rem;
-        line-height: 1;
-    }
-    
-    .stat-number {
-        font-size: 2.5rem;
-        font-weight: bold;
-        color: var(--staff-primary);
-        line-height: 1;
-    }
-    
-    .stat-label {
-        font-size: 0.95rem;
-        color: #666;
-        margin-top: 0.25rem;
-    }
-    
-    /* Actions Grid */
-    .actions-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5rem;
-    }
-    
-    .action-card {
-        background: white;
-        border: 2px solid #e1e8ed;
-        border-radius: 12px;
-        padding: 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        text-decoration: none;
-        color: inherit;
-        transition: all 0.3s;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-    
-    .action-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-        border-color: var(--staff-primary);
-    }
-    
-    .action-card.action-primary:hover { border-color: var(--staff-success); }
-    .action-card.action-warning:hover { border-color: var(--staff-warning); }
-    .action-card.action-info:hover { border-color: #17a2b8; }
-    
-    .action-icon {
-        font-size: 2.5rem;
-        line-height: 1;
-    }
-    
-    .action-content h3 {
-        margin: 0 0 0.25rem 0;
-        font-size: 1.1rem;
-        color: var(--staff-primary);
-    }
-    
-    .action-content p {
-        margin: 0;
-        font-size: 0.9rem;
-        color: #666;
-    }
-    
-    /* Tournois List */
-    .tournois-list {
-        display: grid;
-        gap: 1rem;
-    }
-    
-    .tournoi-card {
-        background: white;
-        border: 2px solid #e1e8ed;
-        border-radius: 12px;
-        padding: 1.5rem;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-    
-    .tournoi-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-    }
-    
-    .tournoi-header h3 {
-        margin: 0;
-        color: var(--staff-primary);
-        font-size: 1.2rem;
-    }
-    
-    .badge {
-        padding: 0.25rem 0.75rem;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 500;
-    }
-    
-    .badge-planifie { background: #fff3cd; color: #856404; }
-    .badge-confirme { background: #d4edda; color: #155724; }
-    .badge-warning { background: #fff3cd; color: #856404; }
-    
-    .tournoi-body {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-    }
-    
-    .tournoi-info {
-        color: var(--staff-primary);
-        font-size: 1.05rem;
-    }
-    
-    .tournoi-zone {
-        color: #666;
-        font-size: 0.9rem;
-        margin-left: 0.5rem;
-    }
-    
-    .tournoi-org {
-        font-size: 0.95rem;
-        color: #333;
-    }
-    
-    .tournoi-org .label {
-        color: #666;
-        font-size: 0.9rem;
-    }
-    
-    .tournoi-org .lieu {
-        color: #666;
-        font-size: 0.9rem;
-        margin-left: 0.5rem;
-    }
-    
-    .tournoi-org.no-org {
-        color: var(--staff-warning);
-        font-weight: 500;
-    }
-    
-    .tournoi-stats {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
-        font-size: 0.9rem;
-        color: #666;
-    }
-    
-    /* Candidatures List */
-    .candidatures-list {
-        display: grid;
-        gap: 1rem;
-    }
-    
-    .candidature-card {
-        background: white;
-        border: 2px solid #e1e8ed;
-        border-left: 4px solid var(--staff-warning);
-        border-radius: 12px;
-        padding: 1.5rem;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-    
-    .candidature-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-    }
-    
-    .candidature-header h4 {
-        margin: 0;
-        color: var(--staff-primary);
-        font-size: 1.1rem;
-    }
-    
-    .candidature-body {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        margin-bottom: 1rem;
-        font-size: 0.95rem;
-        color: #333;
-    }
-    
-    .candidature-actions {
-        display: flex;
-        gap: 0.5rem;
-        flex-wrap: wrap;
-    }
-    
-    .btn {
-        padding: 0.5rem 1rem;
-        border: none;
-        border-radius: 6px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s;
-        text-decoration: none;
-        display: inline-block;
-    }
-    
-    .btn:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-    }
-    
-    .btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-    
-    .btn-sm {
-        padding: 0.35rem 0.75rem;
-        font-size: 0.9rem;
-    }
-    
-    .btn-primary {
-        background: var(--staff-primary);
-        color: white;
-    }
-    
-    .btn-success {
-        background: var(--staff-success);
-        color: white;
-    }
-    
-    .btn-danger {
-        background: var(--staff-danger);
-        color: white;
-    }
-    
-    /* Responsive */
-    @media (max-width: 768px) {
-        .stats-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-        
-        .actions-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .tournoi-header,
-        .candidature-header {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-    }
-</style>
 {% endblock %}

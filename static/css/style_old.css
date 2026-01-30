@@ -1,7 +1,7 @@
 /* ===============================================
-   🏐 VOLLEYCHAMP - CSS UNIFIÉ V2 ULTRA-MODERNE
-   ✨ Public + Staff dans 1 fichier
-   📱 Mobile-first + Container Queries + clamp()
+   🎨 VOLLEYCHAMP - CSS V3 ULTRA-MODERNE 2025
+   ✨ Container Queries + CSS Nesting + :has() + color-mix()
+   📱 Mobile-first + Unités fluides clamp()
    =============================================== */
 
 /* 📄 RESET CSS MODERNE */
@@ -44,15 +44,18 @@ img {
 }
 
 /* ===============================================
-   🎯 VARIABLES CSS GLOBALES - MOBILE-FIRST
+   🎯 VARIABLES CSS AVEC COLOR-MIX
+   Une seule couleur primaire, toutes les variations auto !
    =============================================== */
 
 :root {
+  /* Mode clair uniquement */
+
   /* 🎨 Couleurs de base */
   --primary-base: #213f7b;
   --accent-base: #f6121b;
 
-  /* 🎨 Variations automatiques */
+  /* 🎨 Variations automatiques avec color-mix() */
   --primary-color: #213f7b;
   --primary-light: color-mix(in srgb, #213f7b 70%, white);
   --primary-lighter: color-mix(in srgb, #213f7b 50%, white);
@@ -71,15 +74,7 @@ img {
   --border-color-light: #f0f0f0;
   --border-color-strong: #d0d0d0;
 
-  /* 🎨 Couleurs staff */
-  --staff-primary: #213f7b;
-  --staff-accent: #f6121b;
-  --staff-success: #28a745;
-  --staff-warning: #ffc107;
-  --staff-danger: #dc3545;
-  --staff-info: #17a2b8;
-
-  /* 📏 Border radius fluide */
+  /* 📐 Border radius fluide */
   --border-radius: clamp(0.5rem, 1vw, 0.75rem);
 
   /* 📏 Espacements fluides (mobile → desktop) */
@@ -89,7 +84,7 @@ img {
   --spacing-lg: clamp(1.5rem, 3vw, 2.5rem);
   --spacing-xl: clamp(2rem, 4vw, 3.5rem);
 
-  /* 📤 Tailles de police fluides */
+  /* 🔤 Tailles de police fluides */
   --font-xs: clamp(0.875rem, 0.85rem + 0.15vw, 1rem);
   --font-sm: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
   --font-md: clamp(1.125rem, 1.05rem + 0.35vw, 1.25rem);
@@ -132,7 +127,7 @@ progress {
 }
 
 /* ===============================================
-   🏠 PAGE D'ACCUEIL PUBLIC
+   🏠 PAGE D'ACCUEIL - AVEC CSS NESTING
    =============================================== */
 
 .accueil-container {
@@ -144,10 +139,10 @@ progress {
   margin-block: clamp(0rem, 2vw, 2rem);
 }
 
-/* 🎯 Hero Section */
+/* 🎯 Hero Section avec nesting */
 .hero-section {
   text-align: center;
-  padding: var(--spacing-lg);
+  padding: clamp(1rem, 3vw, 2.5rem);
   background: var(--primary-color);
   color: white;
 
@@ -156,7 +151,7 @@ progress {
     margin-bottom: var(--spacing-sm);
     font-weight: bold;
     line-height: 1.2;
-    text-wrap: balance;
+    text-wrap: balance; /* ✨ Nouveau : Titres équilibrés */
   }
 
   h2 {
@@ -175,14 +170,15 @@ progress {
 }
 
 .content-section {
-  padding: var(--spacing-lg);
+  padding: clamp(1rem, 3vw, 2.5rem);
 }
 
 /* ===============================================
-   📊 STATISTIQUES PUBLIC - CONTAINER QUERIES
+   📊 STATISTIQUES - AVEC CONTAINER QUERIES
    =============================================== */
 
 .stats-section {
+  /* 🎯 Activation container queries */
   container-type: inline-size;
   container-name: stats;
 
@@ -194,7 +190,7 @@ progress {
 
 .stat-card {
   background: #f8f9fa;
-  padding: var(--spacing-md);
+  padding: clamp(0.75rem, 2vw, 1.25rem);
   border-radius: var(--border-radius);
   text-align: center;
   border: 2px solid #e1e8ed;
@@ -230,7 +226,7 @@ progress {
   }
 }
 
-/* Container query : si stats-section > 600px, agrandir icônes */
+/* 📦 Container query : si stats-section > 600px, agrandir icônes */
 @container stats (min-width: 600px) {
   .stat-card .stat-icon {
     font-size: 3.5rem;
@@ -238,7 +234,7 @@ progress {
 }
 
 /* ===============================================
-   🔗 NAVIGATION CARDS PUBLIC - CONTAINER QUERIES
+   🔗 NAVIGATION CARDS - AVEC CONTAINER QUERIES
    =============================================== */
 
 .nav-section {
@@ -256,10 +252,12 @@ progress {
 }
 
 .nav-grid {
+  /* 🎯 Activation container queries */
   container-type: inline-size;
   container-name: navgrid;
 
   display: grid;
+  /* Mobile : 1 colonne */
   grid-template-columns: 1fr;
   gap: var(--spacing-md);
 }
@@ -290,6 +288,7 @@ progress {
     }
   }
 
+  /* Styles spécifiques avec nesting */
   &.nav-primary:hover {
     background: linear-gradient(135deg,
       color-mix(in srgb, #4CAF50 10%, var(--surface)),
@@ -341,16 +340,16 @@ progress {
 
   .nav-arrow {
     position: absolute;
-    top: var(--spacing-md);
-    right: var(--spacing-md);
-    font-size: var(--font-lg);
+    top: clamp(0.75rem, 2vw, 1.5rem);
+    right: clamp(0.75rem, 2vw, 1.5rem);
+    font-size: clamp(1.25rem, 1.5vw, 1.75rem);
     color: #ccc;
     transition: all var(--transition-normal);
   }
 }
 
 /* ===============================================
-   ℹ️ SECTION INFORMATIONS PUBLIC
+   ℹ️ SECTION INFORMATIONS
    =============================================== */
 
 .info-section {
@@ -411,7 +410,7 @@ progress {
 }
 
 /* ===============================================
-   📋 FORMULAIRES PUBLIC
+   📋 FORMULAIRES - AVEC CSS NESTING
    =============================================== */
 
 .form-container {
@@ -468,10 +467,10 @@ input,
 select,
 textarea {
   width: 100%;
-  padding: var(--spacing-md);
+  padding: clamp(0.75rem, 1.5vw, 1rem);
   border: 2px solid #e1e8ed;
   border-radius: var(--border-radius);
-  font-size: var(--font-sm);
+  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
   box-sizing: border-box;
   transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
   min-height: clamp(44px, 6vw, 52px);
@@ -484,11 +483,13 @@ textarea {
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-color) 20%, transparent);
   }
 
+  /* ✨ :has() - Style parent si input invalide */
   &:invalid {
     border-color: color-mix(in srgb, red 70%, var(--border-color));
   }
 }
 
+/* 🎯 :has() - Form group avec erreur */
 .form-group:has(input:invalid:not(:focus)) {
   label {
     color: color-mix(in srgb, red 80%, var(--text-primary));
@@ -505,7 +506,7 @@ button,
   background: var(--primary-color);
   color: white;
   border: none;
-  padding: var(--spacing-md) var(--spacing-lg);
+  padding: clamp(0.75rem, 1.5vw, 1rem) clamp(1.25rem, 2.5vw, 2rem);
   font-size: var(--font-md);
   border-radius: var(--border-radius);
   cursor: pointer;
@@ -531,6 +532,7 @@ button,
     transform: translateY(0);
   }
 
+  /* Variantes avec nesting */
   &.btn-primary {
     background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
 
@@ -703,7 +705,7 @@ body.page-accueil .home-link-container {
 }
 
 /* ===============================================
-   📊 PAGES DE CONSULTATION PUBLIC
+   📊 PAGES DE CONSULTATION - AVEC NESTING
    =============================================== */
 
 .archives-title {
@@ -716,6 +718,7 @@ body.page-accueil .home-link-container {
   text-wrap: balance;
 }
 
+/* Bloc de tournoi */
 .tournoi-block {
   background: var(--surface);
   border-radius: var(--border-radius);
@@ -724,6 +727,7 @@ body.page-accueil .home-link-container {
   box-shadow: var(--shadow-md);
   animation: fadeInUp var(--transition-slow);
 
+  /* 🎯 :has() - Style différent si pas de données */
   &:has(.no-data) {
     opacity: 0.7;
     border: 2px dashed #e1e8ed;
@@ -783,6 +787,7 @@ body.page-accueil .home-link-container {
   margin: var(--spacing-xl) 0;
 }
 
+/* Section de synthèse */
 .synthese-section {
   margin-bottom: var(--spacing-xl);
 
@@ -797,6 +802,7 @@ body.page-accueil .home-link-container {
   }
 }
 
+/* Stats globales */
 .stats-global {
   background: color-mix(in srgb, var(--primary-color) 10%, var(--surface));
   padding: var(--spacing-md);
@@ -823,10 +829,11 @@ body.page-accueil .home-link-container {
 }
 
 /* ===============================================
-   📊 TABLEAUX PUBLIC - CONTAINER QUERIES
+   📊 TABLEAUX - AVEC CONTAINER QUERIES
    =============================================== */
 
 .tableau-synthese {
+  /* 🎯 Activation container queries pour tableaux */
   container-type: inline-size;
   container-name: tableau;
 
@@ -877,6 +884,7 @@ body.page-accueil .home-link-container {
   }
 }
 
+/* 📦 Container query : affichage spécial si tableau < 600px */
 @container tableau (max-width: 600px) {
   .tableau-synthese {
     thead {
@@ -917,6 +925,7 @@ body.page-accueil .home-link-container {
   }
 }
 
+/* Bouton détails */
 .btn-details {
   background: linear-gradient(135deg, var(--accent-color), var(--accent-dark));
   color: white;
@@ -939,7 +948,7 @@ body.page-accueil .home-link-container {
 }
 
 /* ===============================================
-   📋 SECTION DÉTAILS PUBLIC
+   📋 SECTION DÉTAILS - AVEC NESTING
    =============================================== */
 
 .details-section {
@@ -956,6 +965,7 @@ body.page-accueil .home-link-container {
   }
 }
 
+/* Bloc catégorie */
 .categorie-block {
   background: color-mix(in srgb, var(--primary-color) 5%, var(--surface));
   border-left: 4px solid var(--accent-color);
@@ -965,6 +975,7 @@ body.page-accueil .home-link-container {
   box-shadow: var(--shadow-sm);
   scroll-margin-top: var(--spacing-xl);
 
+  /* 🎯 :has() - Style si aucune déclaration */
   &:has(.declaration-list:empty) {
     opacity: 0.6;
     border-left-color: var(--text-secondary);
@@ -993,6 +1004,7 @@ body.page-accueil .home-link-container {
   }
 }
 
+/* Liste des déclarations */
 .declaration-list {
   list-style: none;
   padding: 0;
@@ -1062,6 +1074,7 @@ body.page-accueil .home-link-container {
   border-top: 2px solid #e1e8ed;
 }
 
+/* Message quand pas de données */
 .no-data {
   text-align: center;
   padding: var(--spacing-xl);
@@ -1082,615 +1095,8 @@ body.page-accueil .home-link-container {
   }
 }
 
-/* ═══════════════════════════════════════════════════
-   🏢 STYLES INTERFACE STAFF (MODERNE)
-   ═══════════════════════════════════════════════════ */
-
-/* 🧭 NAVIGATION STAFF */
-.staff-nav {
-  background: linear-gradient(135deg, var(--staff-primary), #1a3260);
-  padding: clamp(0.75rem, 2vw, 1rem);
-  box-shadow: var(--shadow-md);
-  /* Menu NON-sticky pour meilleur scroll mobile */
-  position: relative;
-  z-index: 1000;
-}
-
-.staff-nav-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-sm);
-  align-items: center;
-}
-
-.staff-nav-brand {
-  font-size: var(--font-lg);
-  font-weight: bold;
-  color: white;
-  margin-right: auto;
-  text-decoration: none;
-
-  &:hover {
-    color: white;
-    text-decoration: none;
-  }
-}
-
-.staff-nav-link {
-  color: white;
-  text-decoration: none;
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--border-radius);
-  font-weight: 500;
-  transition: all var(--transition-fast);
-  display: inline-flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  font-size: var(--font-sm);
-  min-height: 44px;
-
-  &:hover {
-    background: rgba(255,255,255,0.15);
-    transform: translateY(-1px);
-    text-decoration: none;
-    color: white;
-  }
-
-  &.active {
-    background: var(--staff-accent);
-  }
-}
-
-.staff-nav-divider {
-  width: 1px;
-  height: 24px;
-  background: rgba(255,255,255,0.2);
-}
-
-/* 📦 CONTAINER PRINCIPAL STAFF */
-.staff-container {
-  max-width: 1400px;
-  margin: var(--spacing-lg) auto;
-  padding: 0 var(--spacing-md);
-}
-
-.staff-header {
-  margin-bottom: var(--spacing-lg);
-
-  h1 {
-    color: var(--staff-primary);
-    margin-bottom: var(--spacing-sm);
-    font-size: var(--font-xxl);
-    text-wrap: balance;
-  }
-
-  p {
-    margin: 0;
-  }
-
-  .user-info {
-    color: var(--text-secondary);
-    font-size: var(--font-sm);
-  }
-}
-
-/* 🚨 MESSAGES STAFF */
-.staff-messages {
-  margin-bottom: var(--spacing-lg);
-}
-
-.staff-alert {
-  padding: var(--spacing-md);
-  border-radius: var(--border-radius);
-  margin-bottom: var(--spacing-sm);
-  border-left: 4px solid;
-  animation: slideIn var(--transition-normal);
-}
-
-.staff-alert-success {
-  background: #d4edda;
-  border-color: var(--staff-success);
-  color: #155724;
-}
-
-.staff-alert-warning {
-  background: #fff3cd;
-  border-color: var(--staff-warning);
-  color: #856404;
-}
-
-.staff-alert-error,
-.staff-alert-danger {
-  background: #f8d7da;
-  border-color: var(--staff-danger);
-  color: #721c24;
-}
-
-.staff-alert-info {
-  background: #d1ecf1;
-  border-color: var(--staff-info);
-  color: #0c5460;
-}
-
-/* 📊 DASHBOARD SECTIONS */
-.dashboard-section {
-  margin-bottom: var(--spacing-xl);
-}
-
-.section-title {
-  color: var(--staff-primary);
-  margin-bottom: var(--spacing-lg);
-  padding-bottom: var(--spacing-sm);
-  border-bottom: 3px solid var(--staff-accent);
-  font-size: var(--font-xl);
-  text-wrap: balance;
-}
-
-/* 📈 STATS GRID STAFF - CONTAINER QUERIES */
-.stats-grid {
-  container-type: inline-size;
-  container-name: statsgrid;
-
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-lg);
-}
-
-.stat-card.stat-warning {
-  border-left: 4px solid var(--staff-warning);
-}
-
-.stat-card.stat-success {
-  border-left: 4px solid var(--staff-success);
-}
-
-.stat-card.stat-danger {
-  border-left: 4px solid var(--staff-danger);
-}
-
-.stat-card.stat-info {
-  border-left: 4px solid var(--staff-info);
-}
-
-.stat-content {
-  flex: 1;
-}
-
-@container statsgrid (min-width: 600px) {
-  .stat-icon {
-    font-size: 3rem;
-  }
-}
-
-/* 🎯 ACTIONS GRID STAFF */
-.actions-grid {
-  container-type: inline-size;
-  container-name: actionsgrid;
-
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
-  gap: var(--spacing-lg);
-}
-
-.action-card {
-  background: white;
-  border: 2px solid #e1e8ed;
-  border-radius: var(--border-radius);
-  padding: var(--spacing-lg);
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-  text-decoration: none;
-  color: inherit;
-  transition: all var(--transition-normal);
-  box-shadow: var(--shadow-sm);
-  min-height: 80px;
-
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-lg);
-    border-color: var(--staff-primary);
-    text-decoration: none;
-  }
-
-  &.action-primary:hover {
-    border-color: var(--staff-success);
-  }
-
-  &.action-warning:hover {
-    border-color: var(--staff-warning);
-  }
-
-  &.action-info:hover {
-    border-color: var(--staff-info);
-  }
-
-  .action-icon {
-    font-size: clamp(2rem, 3vw, 2.5rem);
-    line-height: 1;
-  }
-
-  .action-content {
-    flex: 1;
-
-    h3 {
-      margin: 0 0 var(--spacing-xs) 0;
-      font-size: var(--font-md);
-      color: var(--staff-primary);
-      text-wrap: balance;
-    }
-
-    p {
-      margin: 0;
-      font-size: var(--font-sm);
-      color: var(--text-secondary);
-    }
-  }
-}
-
-/* 🗓️ TOURNOIS CARDS STAFF */
-.tournois-list {
-  display: grid;
-  gap: var(--spacing-md);
-}
-
-.tournoi-card {
-  background: white;
-  border: 2px solid #e1e8ed;
-  border-radius: var(--border-radius);
-  padding: var(--spacing-lg);
-  box-shadow: var(--shadow-sm);
-  transition: box-shadow var(--transition-fast);
-
-  &:hover {
-    box-shadow: var(--shadow-md);
-  }
-
-  .tournoi-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-md);
-    flex-wrap: wrap;
-    gap: var(--spacing-sm);
-
-    h3 {
-      margin: 0;
-      color: var(--staff-primary);
-      font-size: var(--font-lg);
-      text-wrap: balance;
-    }
-  }
-
-  .tournoi-body {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm);
-  }
-
-  .tournoi-info {
-    color: var(--staff-primary);
-    font-size: var(--font-md);
-  }
-
-  .tournoi-zone {
-    color: var(--text-secondary);
-    font-size: var(--font-sm);
-    margin-left: var(--spacing-xs);
-  }
-
-  .tournoi-org {
-    font-size: var(--font-sm);
-    color: var(--text-primary);
-
-    .label {
-      color: var(--text-secondary);
-      font-size: var(--font-sm);
-    }
-
-    .lieu {
-      color: var(--text-secondary);
-      font-size: var(--font-sm);
-      margin-left: var(--spacing-xs);
-    }
-
-    &.no-org {
-      color: var(--staff-warning);
-      font-weight: 500;
-    }
-  }
-
-  .tournoi-stats {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--spacing-md);
-    font-size: var(--font-sm);
-    color: var(--text-secondary);
-  }
-}
-
-/* 🏷️ BADGES STAFF */
-.badge {
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: 20px;
-  font-size: var(--font-xs);
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-/* Statuts tournois */
-.badge-planifie {
-  background: #fff3cd;
-  color: #856404;
-}
-
-.badge-confirme {
-  background: #d4edda;
-  color: #155724;
-}
-
-.badge-annule {
-  background: #f8d7da;
-  color: #721c24;
-}
-
-.badge-termine {
-  background: #d1ecf1;
-  color: #0c5460;
-}
-
-.badge-warning {
-  background: #fff3cd;
-  color: #856404;
-}
-
-/* Statuts candidatures */
-.badge-en_attente {
-  background: linear-gradient(135deg, #ffc107, #ff9800);
-  color: white;
-}
-
-.badge-validee {
-  background: linear-gradient(135deg, #28a745, #20c997);
-  color: white;
-}
-
-.badge-refusee {
-  background: linear-gradient(135deg, #dc3545, #c82333);
-  color: white;
-}
-
-.badge-retiree {
-  background: linear-gradient(135deg, #6c757d, #5a6268);
-  color: white;
-}
-
-/* Catégories */
-.badge-m11 {
-  background: linear-gradient(135deg, #17a2b8, #138496);
-  color: white;
-}
-
-.badge-m13 {
-  background: linear-gradient(135deg, #28a745, #20c997);
-  color: white;
-}
-
-.badge-m15 {
-  background: linear-gradient(135deg, #ffc107, #ff9800);
-  color: white;
-}
-
-.badge-m18 {
-  background: linear-gradient(135deg, #dc3545, #c82333);
-  color: white;
-}
-
-/* 📋 CANDIDATURES STAFF */
-.candidatures-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-}
-
-.candidature-card {
-  background: white;
-  border: 2px solid #e1e8ed;
-  border-left: 4px solid var(--staff-warning);
-  border-radius: var(--border-radius);
-  padding: var(--spacing-lg);
-  box-shadow: var(--shadow-sm);
-
-  .candidature-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-md);
-    flex-wrap: wrap;
-    gap: var(--spacing-sm);
-
-    h4 {
-      margin: 0;
-      color: var(--staff-primary);
-      font-size: var(--font-md);
-      text-wrap: balance;
-    }
-  }
-
-  .candidature-body {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs);
-    margin-bottom: var(--spacing-md);
-    font-size: var(--font-sm);
-    color: var(--text-primary);
-  }
-
-  .candidature-actions {
-    display: flex;
-    gap: var(--spacing-sm);
-    flex-wrap: wrap;
-  }
-}
-
-/* 📊 DÉCLARATIONS STAFF */
-.declarations-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-}
-
-/* 📝 FORMULAIRES STAFF */
-.form-container-staff {
-  background: white;
-  border-radius: var(--border-radius);
-  padding: var(--spacing-lg);
-  box-shadow: var(--shadow-md);
-}
-
-.form-section {
-  margin-bottom: var(--spacing-lg);
-
-  h4 {
-    color: var(--staff-primary);
-    margin-bottom: var(--spacing-sm);
-    font-size: var(--font-md);
-    text-wrap: balance;
-  }
-}
-
-.form-group-staff {
-  margin-bottom: var(--spacing-lg);
-
-  label {
-    display: block;
-    margin-bottom: var(--spacing-xs);
-    font-weight: 600;
-    color: var(--staff-primary);
-    font-size: var(--font-sm);
-  }
-
-  input,
-  select,
-  textarea {
-    min-height: 44px;
-  }
-}
-
-.form-control {
-  width: 100%;
-  padding: var(--spacing-sm);
-  border: 2px solid #e1e8ed;
-  border-radius: var(--border-radius);
-  font-size: var(--font-sm);
-  transition: border-color var(--transition-fast);
-  min-height: 44px;
-
-  &:focus {
-    outline: none;
-    border-color: var(--staff-primary);
-    box-shadow: 0 0 0 3px rgba(33, 63, 123, 0.1);
-  }
-}
-
-.radio-group,
-.checkbox-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-md);
-}
-
-.radio-label,
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  cursor: pointer;
-  padding: var(--spacing-sm);
-  border-radius: var(--border-radius);
-  transition: background var(--transition-fast);
-  min-height: 44px;
-
-  &:hover {
-    background: rgba(33, 63, 123, 0.05);
-  }
-}
-
-/* 🔍 FILTRES STAFF */
-.filters-section {
-  background: #f8f9fa;
-  padding: var(--spacing-lg);
-  border-radius: var(--border-radius);
-  margin-bottom: var(--spacing-lg);
-  border: 2px solid #e1e8ed;
-}
-
-.filters-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-md);
-  align-items: flex-end;
-}
-
-.filter-group {
-  flex: 1;
-  min-width: 150px;
-
-  label {
-    display: block;
-    margin-bottom: var(--spacing-xs);
-    font-weight: 600;
-    color: var(--staff-primary);
-    font-size: var(--font-sm);
-  }
-}
-
-/* 🔘 BOUTONS STAFF */
-.btn-sm {
-  padding: var(--spacing-xs) var(--spacing-md);
-  font-size: var(--font-sm);
-  min-height: 36px;
-}
-
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.btn-danger {
-  background: var(--staff-danger);
-  color: white;
-
-  &:hover:not(:disabled) {
-    background: #c82333;
-    color: white;
-  }
-}
-
-.btn-warning {
-  background: var(--staff-warning);
-  color: #212529;
-
-  &:hover:not(:disabled) {
-    background: #e0a800;
-  }
-}
-
-.btn-info {
-  background: var(--staff-info);
-  color: white;
-
-  &:hover:not(:disabled) {
-    background: #138496;
-    color: white;
-  }
-}
-
 /* ===============================================
-   📱 RESPONSIVE MOBILE-FIRST
+   📱 MEDIA QUERIES - LAYOUT UNIQUEMENT
    =============================================== */
 
 /* Navigation horizontale sur écrans moyens */
@@ -1705,6 +1111,7 @@ body.page-accueil .home-link-container {
     }
   }
 
+  /* 🎯 Nav-cards en 2 colonnes sur tablette et desktop */
   .nav-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1725,81 +1132,9 @@ body.page-accueil .home-link-container {
   .home-link-container {
     text-align: left;
   }
-
-  /* Staff navigation desktop */
-  .staff-nav-container {
-    flex-direction: row;
-  }
 }
 
-/* Mobile staff */
-@media (max-width: 768px) {
-  .staff-nav {
-    padding: var(--spacing-sm);
-  }
-
-  .staff-nav-container {
-    flex-direction: column;
-    align-items: stretch;
-    gap: var(--spacing-xs);
-  }
-
-  .staff-nav-brand {
-    margin: 0 0 var(--spacing-xs) 0;
-    text-align: center;
-    font-size: var(--font-md);
-  }
-
-  .staff-nav-link {
-    justify-content: center;
-    width: 100%;
-  }
-
-  .staff-nav-divider {
-    display: none;
-  }
-
-  .staff-container {
-    margin: var(--spacing-md) auto;
-    padding: 0 var(--spacing-sm);
-  }
-
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--spacing-sm);
-  }
-
-  .actions-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .tournoi-header,
-  .candidature-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .filters-row {
-    flex-direction: column;
-  }
-
-  .filter-group {
-    width: 100%;
-  }
-
-  .form-container-staff {
-    padding: var(--spacing-md);
-  }
-}
-
-/* Tablettes */
-@media (min-width: 769px) and (max-width: 1024px) {
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* Desktop alignment */
+/* Alignement centré colonnes sur desktop */
 @media screen and (min-width: 1024px) {
   .tableau-synthese {
     th:nth-child(4),
@@ -1811,6 +1146,28 @@ body.page-accueil .home-link-container {
       text-align: center;
     }
   }
+}
+
+/* ===============================================
+   🎯 UTILITIES
+   =============================================== */
+
+@media screen and (max-width: 767px) {
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .hide-desktop {
+    display: none !important;
+  }
+}
+
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* ===============================================
@@ -1830,19 +1187,11 @@ body.page-accueil .home-link-container {
   .home-link-container,
   .navigation-links,
   .btn-details,
-  button,
-  .staff-nav,
-  .staff-messages,
-  .filters-section,
-  .action-card,
-  .candidature-actions {
-    display: none !important;
+  button {
+    display: none;
   }
 
-  .tournoi-block,
-  .stat-card,
-  .tournoi-card,
-  .candidature-card {
+  .tournoi-block {
     page-break-inside: avoid;
     box-shadow: none;
     border: 1px solid #333;
@@ -1855,13 +1204,12 @@ body.page-accueil .home-link-container {
   .categorie-block {
     page-break-inside: avoid;
   }
-
-  .staff-container {
-    max-width: 100%;
-    margin: 0;
-    padding: 0;
-  }
 }
+
+/* ===============================================
+   🌓 PRÉFÉRENCE UTILISATEUR MODE SOMBRE
+   Respecte le choix système de l'utilisateur
+   =============================================== */
 
 /* ===============================================
    ♿ ACCESSIBILITÉ
@@ -1888,41 +1236,8 @@ body.page-accueil .home-link-container {
   body {
     font-weight: 500;
   }
-
-  .stat-card,
-  .action-card,
-  .tournoi-card,
-  .candidature-card {
-    border-width: 3px;
-  }
-
-  .btn {
-    border: 2px solid currentColor;
-  }
 }
 
 /* ===============================================
-   🎨 UTILITIES
-   =============================================== */
-
-@media screen and (max-width: 767px) {
-  .hide-mobile {
-    display: none !important;
-  }
-}
-
-@media screen and (min-width: 768px) {
-  .hide-desktop {
-    display: none !important;
-  }
-}
-
-.text-truncate {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* ===============================================
-   🎨 FIN DU CSS ULTRA-MODERNE UNIFIÉ
+   🎨 FIN DU CSS ULTRA-MODERNE
    =============================================== */

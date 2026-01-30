@@ -5,7 +5,7 @@
 
 Toutes les URLs commençant par /staff/
 
-VERSION 4 : Ajout route consultation déclarations (Étape 4)
+VERSION 3 : Ajout routes candidatures (Étape 3)
 """
 
 from django.urls import path
@@ -22,9 +22,6 @@ from .views_staff import (
     candidatures_liste_view,
     candidature_valider_view,
     candidature_refuser_view,
-    
-    # Consultation Déclarations (Étape 4)
-    declarations_liste_view,
 )
 
 # Namespace pour les URLs staff
@@ -51,7 +48,7 @@ urlpatterns = [
     path('candidatures/<int:candidature_id>/refuser/', candidature_refuser_view, name='candidature_refuser'),
     
     # ═══════════════════════════════════════════════════
-    # 📊 CONSULTATION DÉCLARATIONS (Étape 4)
+    # 📊 CONSULTATION DÉCLARATIONS (Étape 4 - à venir)
     # ═══════════════════════════════════════════════════
-    path('declarations/', declarations_liste_view, name='declarations_liste'),
+    # path('declarations/', declarations_liste_view, name='declarations_liste'),
 ]
