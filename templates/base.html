@@ -16,7 +16,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Volley Réunion">
 
-    <!-- 🏐 Favicon et icônes -->
+    <!-- 🌐 Favicon et icônes -->
     <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
     <link rel="apple-touch-icon" href="{% static 'icon-192.png' %}">
 
@@ -26,7 +26,7 @@
     <!-- 🎨 CSS principal -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
-    <!-- 🔤 Police système optimisée -->
+    <!-- 📤 Police système optimisée -->
     <style>
         /* Police de fallback si problème de chargement */
         body {
@@ -51,16 +51,150 @@
             padding: 2rem;
             color: #666;
         }
+
+        /* ═══════════════════════════════════════════════════
+           🔐 HEADER CONNEXION (NOUVEAU)
+           ═══════════════════════════════════════════════════ */
+        
+        .auth-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            padding: clamp(0.5rem, 1.5vw, 0.75rem) clamp(0.75rem, 2vw, 2rem);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .auth-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .auth-info {
+            color: white;
+            font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .auth-info strong {
+            font-weight: 600;
+        }
+
+        .auth-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .auth-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn-auth {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-height: 36px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-login {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .btn-login:hover {
+            background: rgba(255,255,255,0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+        .btn-logout {
+            background: rgba(246,18,27,0.9);
+            color: white;
+        }
+
+        .btn-logout:hover {
+            background: #dc3545;
+            color: white;
+            text-decoration: none;
+            transform: translateY(-1px);
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .auth-container {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
+            }
+
+            .auth-info {
+                justify-content: center;
+                text-align: center;
+            }
+
+            .auth-actions {
+                justify-content: center;
+            }
+        }
     </style>
 
     <!-- 📊 CSS additionnels par page -->
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <!-- 🔄 Loading minimal -->
+    <!-- 🔐 HEADER CONNEXION (NOUVEAU) -->
+    <div class="auth-header">
+        <div class="auth-container">
+            {% if user.is_authenticated %}
+                <!-- Utilisateur connecté -->
+                <div class="auth-info">
+                    <span>👤 Connecté en tant que</span>
+                    <strong>{{ user.get_full_name|default:user.username }}</strong>
+                    {% if user.is_superuser %}
+                        <span class="auth-badge">🔑 Superadmin</span>
+                    {% elif user.is_staff %}
+                        <span class="auth-badge">🏢 Staff</span>
+                    {% endif %}
+                </div>
+                <div class="auth-actions">
+                    <a href="{% url 'logout' %}" class="btn-auth btn-logout">
+                        🚪 Déconnexion
+                    </a>
+                </div>
+            {% else %}
+                <!-- Non connecté -->
+                <div class="auth-info">
+                    <span>🏐 Championnat Volleyball Jeunes</span>
+                </div>
+                <div class="auth-actions">
+                    <a href="{% url 'admin:login' %}?next={{ request.path }}" class="btn-auth btn-login">
+                        🔐 Connexion Staff
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- 📄 Loading minimal -->
     <noscript>
         <div class="loading">
-            <p>🏐 Chargement...</p>
+            <p>🌀 Chargement...</p>
         </div>
     </noscript>
 
@@ -70,7 +204,7 @@
         {% if request.resolver_match.url_name != 'accueil' %}
             <div class="home-link-container">
                 <a href="{% url 'accueil' %}" class="home-link">
-                    🏐 Retour à l'accueil
+                    🏠 Retour à l'accueil
                 </a>
             </div>
         {% endif %}
@@ -96,7 +230,7 @@
 
     <!-- 📱 JavaScript pour interactions mobiles -->
     <script>
-        // 🔄 Améliore l'expérience tactile
+        // 📄 Améliore l'expérience tactile
         document.addEventListener('DOMContentLoaded', function() {
             // Évite le double-tap zoom sur les boutons
             const buttons = document.querySelectorAll('button, .btn');
@@ -130,9 +264,6 @@
 
         window.addEventListener('orientationchange', handleOrientationChange);
         window.addEventListener('resize', handleOrientationChange);
-
-        // 🎯 Analytics (si nécessaire plus tard)
-        // Google Analytics ou autres outils de tracking ici
     </script>
 
     <!-- 📊 JavaScript additionnel par page -->

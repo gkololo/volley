@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.contrib import messages
+from django.contrib.auth import logout
 from datetime import datetime, timedelta
 from django.http import Http404
 
@@ -274,3 +275,13 @@ def mes_candidatures_view(request):
         'candidatures_retirees': retirees,
         'total': candidatures.count(),
     })
+
+def logout_view(request):
+    """Déconnexion utilisateur"""
+    username = request.user.get_full_name() or request.user.username if request.user.is_authenticated else None
+    logout(request)
+    if username:
+        messages.success(request, f"👋 Au revoir {username} ! Vous êtes maintenant déconnecté.")
+    else:
+        messages.success(request, "👋 Vous êtes maintenant déconnecté.")
+    return redirect('accueil')

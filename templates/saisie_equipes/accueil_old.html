@@ -45,11 +45,6 @@
                 <h2 class="nav-title">🧭 Que souhaitez-vous faire ?</h2>
 
                 <div class="nav-grid">
-                    <!-- ═══════════════════════════════════════════════════
-                         📋 ACTIONS PUBLIQUES
-                         Toujours visibles pour TOUS (connecté ou non)
-                         ═══════════════════════════════════════════════════ -->
-                    
                     <!-- Nouvelle déclaration -->
                     <a href="{% url 'declaration' %}" class="nav-card nav-primary">
                         <div class="nav-icon">➕</div>
@@ -83,22 +78,15 @@
                     </a>
 
                     <!-- ═══════════════════════════════════════════════════
-                         🔐 ZONE SÉCURISÉE : STAFF / ADMIN
-                         
-                         SÉCURITÉ : Cards INVISIBLES si non connecté
-                         - Public : Ne voit RIEN (4 cards publiques seulement)
-                         - Staff : Voit Dashboard Staff
-                         - Superuser : Voit Dashboard Staff + Admin Django
-                         
-                         ✅ Scénario de Laurent implémenté
+                         🔐 ACCÈS STAFF / ADMIN (CONDITIONNEL)
                          ═══════════════════════════════════════════════════ -->
                     
                     {% if user.is_authenticated %}
-                        <!-- Dashboard Staff (visible si is_staff OU is_superuser) -->
+                        <!-- Interface Staff (visible si is_staff OU is_superuser) -->
                         {% if user.is_staff or user.is_superuser %}
                         <a href="{% url 'staff:dashboard' %}" class="nav-card nav-info">
                             <div class="nav-icon">🏢</div>
-                            <h3 class="nav-card-title">Dashboard Staff</h3>
+                            <h3 class="nav-card-title">Interface Staff</h3>
                             <p class="nav-card-desc">Gestion tournois & candidatures</p>
                             <div class="nav-arrow">→</div>
                         </a>
@@ -108,18 +96,20 @@
                         {% if user.is_superuser %}
                         <a href="{% url 'admin:index' %}" class="nav-card nav-admin" target="_blank">
                             <div class="nav-icon">⚙️</div>
-                            <h3 class="nav-card-title">Administration Django</h3>
-                            <p class="nav-card-desc">Console d'administration complète</p>
+                            <h3 class="nav-card-title">Administration</h3>
+                            <p class="nav-card-desc">Console Django complète (superadmin)</p>
                             <div class="nav-arrow">↗</div>
                         </a>
                         {% endif %}
+                    {% else %}
+                        <!-- Non connecté → Lien de connexion -->
+                        <a href="{% url 'admin:login' %}?next={% url 'accueil' %}" class="nav-card nav-admin">
+                            <div class="nav-icon">🔐</div>
+                            <h3 class="nav-card-title">Connexion Staff</h3>
+                            <p class="nav-card-desc">Accès réservé au personnel</p>
+                            <div class="nav-arrow">→</div>
+                        </a>
                     {% endif %}
-                    <!-- 
-                        🔒 Fin zone sécurisée
-                        
-                        Si non connecté : Aucune card admin visible !
-                        Le bouton "Connexion Staff" est dans le header (base.html)
-                    -->
                 </div>
             </div>
 
