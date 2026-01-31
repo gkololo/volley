@@ -46,6 +46,13 @@ class Tournoi(models.Model):
     Un tournoi = 1 date + 1 catégorie + 1 sexe (+ optionnel zone)
     """
 
+    titre = models.CharField(
+    "Titre du tournoi",
+    max_length=100,
+    blank=True,
+    help_text="Ex: 'Journée 2', 'FINALITÉ'"
+)
+
     date = models.DateField(
         "Date du tournoi",
         help_text="Date à laquelle le tournoi aura lieu"

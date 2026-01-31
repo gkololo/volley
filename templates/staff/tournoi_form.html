@@ -95,6 +95,28 @@
                     {% endif %}
                 </div>
                 
+                <!-- ═══════════════════════════════════════════════════
+                     🆕 NOUVEAU CHAMP TITRE
+                     ═══════════════════════════════════════════════════ -->
+                <div class="form-group">
+                    <label for="{{ form.titre.id_for_label }}">
+                        {{ form.titre.label }}
+                    </label>
+                    {{ form.titre }}
+                    {% if form.titre.help_text %}
+                        <div class="form-help-text">{{ form.titre.help_text }}</div>
+                    {% endif %}
+                    {% if form.titre.errors %}
+                        <div class="form-errors">
+                            {% for error in form.titre.errors %}
+                                <div class="error-message">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="form-row">
                 <div class="form-group">
                     <label for="{{ form.categorie_age.id_for_label }}" class="required">
                         {{ form.categorie_age.label }}
@@ -108,9 +130,7 @@
                         </div>
                     {% endif %}
                 </div>
-            </div>
-            
-            <div class="form-row">
+                
                 <div class="form-group">
                     <label class="required">{{ form.sexe.label }}</label>
                     <div class="radio-group">
@@ -129,7 +149,9 @@
                         </div>
                     {% endif %}
                 </div>
-                
+            </div>
+            
+            <div class="form-row">
                 <div class="form-group">
                     <label for="{{ form.zone.id_for_label }}">
                         {{ form.zone.label }}

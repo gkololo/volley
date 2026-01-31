@@ -82,7 +82,19 @@
         <div class="tournoi-card-staff">
             <div class="tournoi-header-staff">
                 <div class="tournoi-date-info">
-                    <h3>{{ tournoi.date|date:"l d F Y" }}</h3>
+                    <!-- ═══════════════════════════════════════════════════
+                         🆕 AFFICHAGE TITRE SI PRÉSENT
+                         ═══════════════════════════════════════════════════ -->
+                    {% if tournoi.titre %}
+                        <h3>
+                            🏷️ {{ tournoi.titre }} 
+                            <span class="tournoi-date-small">{{ tournoi.date|date:"d/m/Y" }}</span>
+                        </h3>
+                        <p class="tournoi-date-full">{{ tournoi.date|date:"l d F Y" }}</p>
+                    {% else %}
+                        <h3>{{ tournoi.date|date:"l d F Y" }}</h3>
+                    {% endif %}
+                    
                     <span class="tournoi-categorie">
                         {{ tournoi.get_categorie_age_display }} - {{ tournoi.get_sexe_display }}
                         {% if tournoi.zone %}
@@ -242,6 +254,21 @@
         margin: 0 0 0.5rem 0;
         color: #213f7b;
         font-size: 1.2rem;
+    }
+    
+    /* 🆕 Styles pour le titre */
+    .tournoi-date-small {
+        font-size: 0.85rem;
+        color: #666;
+        font-weight: normal;
+        margin-left: 0.5rem;
+    }
+    
+    .tournoi-date-full {
+        font-size: 0.95rem;
+        color: #666;
+        margin: 0.3rem 0 0 0;
+        font-weight: normal;
     }
     
     .tournoi-categorie {
