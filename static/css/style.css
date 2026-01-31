@@ -410,6 +410,25 @@ progress {
   }
 }
 
+.stat-highlight {
+    border-color: var(--primary-color);
+    background: linear-gradient(135deg,
+        color-mix(in srgb, var(--primary-color) 10%, white),
+        white);
+}
+
+.stat-highlight:hover {
+    border-color: var(--accent-color);
+    transform: translateY(-5px);
+}
+
+.stat-highlight .stat-number {
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
+
+
 /* ===============================================
    📋 FORMULAIRES PUBLIC
    =============================================== */

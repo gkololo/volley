@@ -20,44 +20,53 @@
 
         <!-- CONTENU PRINCIPAL -->
         <div class="content-section">
+            <h2 class="nav-title">📊 Consulter les informations :</h2>
             <!-- 📊 STATISTIQUES RAPIDES -->
-            <h2 class="nav-title">📊 Vue d'ensemble :</h2>
             <div class="stats-section">
-                <a href="{% url 'consultation' %}" class="stat-card stat-highlight">
+                <a href="{% url 'consultation' %}" class="stat-card">
                     <div class="stat-icon">🗓️</div>
                     <div class="stat-number">{{ tournois_a_venir }}</div>
                     <div class="stat-label">Tournoi{{ tournois_a_venir|pluralize }} à venir</div>
                 </a>
-
                 <a href="{% url 'consultation_archive' %}" class="stat-card">
                     <div class="stat-icon">⏰</div>
                     <div class="stat-number">{{ tournois_passes }}</div>
                     <div class="stat-label">Tournoi{{ tournois_passes|pluralize }} terminé{{ tournois_passes|pluralize }}</div>
                 </a>
+                <div class="stat-card">
+                    <div class="stat-icon">📋</div>
+                    <div class="stat-number">{{ total_declarations }}</div>
+                    <div class="stat-label">Engagement{{ total_declarations|pluralize }} total{{ total_declarations|pluralize:"es" }}</div>
+                </div>
             </div>
 
             <!-- 🎯 NAVIGATION PRINCIPALE -->
             <div class="nav-section">
-                <h2 class="nav-title">🧭 Actions rapides :</h2>
+                <h2 class="nav-title">🧭 Que souhaitez-vous faire ?</h2>
 
                 <div class="nav-grid">
-                    <!-- Engagement d'équipe -->
+                    <!-- ═══════════════════════════════════════════════════
+                         📋 ACTIONS PUBLIQUES
+                         Toujours visibles pour TOUS (connecté ou non)
+                         ═══════════════════════════════════════════════════ -->
+
+                    <!-- Nouvelle déclaration -->
                     <a href="{% url 'declaration' %}" class="nav-card nav-primary">
                         <div class="nav-icon">➕</div>
-                        <h3 class="nav-card-title">Engager une équipe</h3>
-                        <p class="nav-card-desc">Inscrire votre équipe à un tournoi</p>
+                        <h3 class="nav-card-title">Engagement d'équipes</h3>
+                        <p class="nav-card-desc">Déclarer une équipe pour un tournoi</p>
                         <div class="nav-arrow">→</div>
                     </a>
 
-                    <!-- Candidature organisation -->
+                    <!-- Candidater pour organiser -->
                     <a href="{% url 'candidature_liste' %}" class="nav-card nav-info">
-                        <div class="nav-icon">🏢</div>
-                        <h3 class="nav-card-title">Organiser un tournoi</h3>
-                        <p class="nav-card-desc">Proposer votre club comme organisateur</p>
+                        <div class="nav-icon">📋</div>
+                        <h3 class="nav-card-title">Candidater pour organiser</h3>
+                        <p class="nav-card-desc">Proposer votre club pour organiser un tournoi</p>
                         <div class="nav-arrow">→</div>
                     </a>
 
-                    <!-- Tournois à venir -->
+                    <!-- Consultation tournois à venir -->
                     <a href="{% url 'consultation' %}" class="nav-card nav-info">
                         <div class="nav-icon">👁️</div>
                         <h3 class="nav-card-title">Tournois à venir</h3>
@@ -73,8 +82,19 @@
                         <div class="nav-arrow">→</div>
                     </a>
 
-                    <!-- Dashboard Staff -->
+                    <!-- ═══════════════════════════════════════════════════
+                         🔐 ZONE SÉCURISÉE : STAFF / ADMIN
+
+                         SÉCURITÉ : Cards INVISIBLES si non connecté
+                         - Public : Ne voit RIEN (4 cards publiques seulement)
+                         - Staff : Voit Dashboard Staff
+                         - Superuser : Voit Dashboard Staff + Admin Django
+
+                         ✅ Scénario 
+                         ═══════════════════════════════════════════════════ -->
+
                     {% if user.is_authenticated %}
+                        <!-- Dashboard Staff (visible si is_staff OU is_superuser) -->
                         {% if user.is_staff or user.is_superuser %}
                         <a href="{% url 'staff:dashboard' %}" class="nav-card nav-info">
                             <div class="nav-icon">🏢</div>
@@ -83,10 +103,8 @@
                             <div class="nav-arrow">→</div>
                         </a>
                         {% endif %}
-                    {% endif %}
 
-                    <!-- Administration Django -->
-                    {% if user.is_authenticated %}
+                        <!-- Administration Django (visible UNIQUEMENT si superuser) -->
                         {% if user.is_superuser %}
                         <a href="{% url 'admin:index' %}" class="nav-card nav-admin" target="_blank">
                             <div class="nav-icon">⚙️</div>
@@ -96,6 +114,12 @@
                         </a>
                         {% endif %}
                     {% endif %}
+                    <!--
+                        🔒 Fin zone sécurisée
+
+                        Si non connecté : Aucune card admin visible !
+                        Le bouton "Connexion Staff" est dans le header (base.html)
+                    -->
                 </div>
             </div>
 
@@ -106,7 +130,7 @@
                     <div class="info-card">
                         <div class="info-icon">📋</div>
                         <div class="info-content">
-                            <h4>Comment engager mon équipe ?</h4>
+                            <h4>Comment déclarer ?</h4>
                             <p>Remplissez le formulaire avec les informations de votre équipe. Une confirmation vous sera envoyée.</p>
                         </div>
                     </div>
@@ -114,7 +138,7 @@
                         <div class="info-icon">📅</div>
                         <div class="info-content">
                             <h4>Dates limites</h4>
-                            <p>Les engagements doivent être faits avant la date du tournoi. Vérifiez les dates dans la consultation.</p>
+                            <p>Les engagements doivent être faits avant la date fixée pour le tournoi. Vérifiez les dates dans la consultation.</p>
                         </div>
                     </div>
                     <div class="info-card">
