@@ -14,120 +14,6 @@
     </p>
 </div>
 
-<!-- ═══════════════════════════════════════════════════
-     📊 STATISTIQUES CANDIDATURES
-     ═══════════════════════════════════════════════════ -->
-<section class="dashboard-section">
-    <h2 class="section-title">📋 Candidatures à l'organisation</h2>
-
-    <div class="stats-grid">
-        <div class="stat-card stat-warning">
-            <div class="stat-icon">⏳</div>
-            <div class="stat-content">
-                <div class="stat-number">{{ nb_candidatures_en_attente }}</div>
-                <div class="stat-label">En attente</div>
-            </div>
-        </div>
-
-        <div class="stat-card stat-success">
-            <div class="stat-icon">✅</div>
-            <div class="stat-content">
-                <div class="stat-number">{{ nb_candidatures_validees }}</div>
-                <div class="stat-label">Validées</div>
-            </div>
-        </div>
-
-        <div class="stat-card stat-danger">
-            <div class="stat-icon">❌</div>
-            <div class="stat-content">
-                <div class="stat-number">{{ nb_candidatures_refusees }}</div>
-                <div class="stat-label">Refusées</div>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon">📊</div>
-            <div class="stat-content">
-                <div class="stat-number">{{ nb_candidatures_total }}</div>
-                <div class="stat-label">Total</div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════
-     🗓️ STATISTIQUES TOURNOIS
-     ═══════════════════════════════════════════════════ -->
-<section class="dashboard-section">
-    <h2 class="section-title">🗓️ Tournois</h2>
-
-    <div class="stats-grid">
-        <div class="stat-card stat-info">
-            <div class="stat-icon">📅</div>
-            <div class="stat-content">
-                <div class="stat-number">{{ nb_tournois_a_venir }}</div>
-                <div class="stat-label">À venir</div>
-            </div>
-        </div>
-
-        <div class="stat-card stat-warning">
-            <div class="stat-icon">🕐</div>
-            <div class="stat-content">
-                <div class="stat-number">{{ nb_tournois_planifies }}</div>
-                <div class="stat-label">Planifiés</div>
-            </div>
-        </div>
-
-        <div class="stat-card stat-success">
-            <div class="stat-icon">✔️</div>
-            <div class="stat-content">
-                <div class="stat-number">{{ nb_tournois_confirmes }}</div>
-                <div class="stat-label">Confirmés</div>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon">🏐</div>
-            <div class="stat-content">
-                <div class="stat-number">{{ nb_tournois_total }}</div>
-                <div class="stat-label">Total</div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════
-     📊 STATISTIQUES DÉCLARATIONS
-     ═══════════════════════════════════════════════════ -->
-<section class="dashboard-section">
-    <h2 class="section-title">📊 Déclarations d'équipes</h2>
-
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-icon">📝</div>
-            <div class="stat-content">
-                <div class="stat-number">{{ nb_declarations_total }}</div>
-                <div class="stat-label">Déclarations</div>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon">👥</div>
-            <div class="stat-content">
-                <div class="stat-number">{{ nb_equipes_total }}</div>
-                <div class="stat-label">Équipes</div>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon">🏢</div>
-            <div class="stat-content">
-                <div class="stat-number">{{ nb_clubs_declarants }}</div>
-                <div class="stat-label">Clubs</div>
-            </div>
-        </div>
-    </div>
-</section>
 
 <!-- ═══════════════════════════════════════════════════
      🎯 ACTIONS RAPIDES
@@ -170,6 +56,124 @@
         </a>
     </div>
 </section>
+<!-- ═══════════════════════════════════════════════════
+     🗓️ STATISTIQUES TOURNOIS
+     ═══════════════════════════════════════════════════ -->
+<section class="dashboard-section">
+    <h2 class="section-title">🗓️ Tournois</h2>
+
+    <div class="stats-grid">
+        <div class="stat-card stat-info">
+            <div class="stat-icon">📅</div>
+            <div class="stat-content">
+                <div class="stat-number">{{ nb_tournois_a_venir }}</div>
+                <div class="stat-label">À venir</div>
+            </div>
+        </div>
+
+        <div class="stat-card stat-warning">
+            <div class="stat-icon">🕐</div>
+            <div class="stat-content">
+                <div class="stat-number">{{ nb_tournois_planifies }}</div>
+                <div class="stat-label">Planifiés</div>
+            </div>
+        </div>
+
+        <div class="stat-card stat-success">
+            <div class="stat-icon">✔️</div>
+            <div class="stat-content">
+                <div class="stat-number">{{ nb_tournois_confirmes }}</div>
+                <div class="stat-label">Confirmés</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">🏐</div>
+            <div class="stat-content">
+                <div class="stat-number">{{ nb_tournois_total }}</div>
+                <div class="stat-label">Total</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     📊 STATISTIQUES CANDIDATURES
+     ═══════════════════════════════════════════════════ -->
+<section class="dashboard-section">
+    <h2 class="section-title">📋 Candidatures à l'organisation</h2>
+
+    <div class="stats-grid">
+        <div class="stat-card stat-warning">
+            <div class="stat-icon">⏳</div>
+            <div class="stat-content">
+                <div class="stat-number">{{ nb_candidatures_en_attente }}</div>
+                <div class="stat-label">En attente</div>
+            </div>
+        </div>
+
+        <div class="stat-card stat-success">
+            <div class="stat-icon">✅</div>
+            <div class="stat-content">
+                <div class="stat-number">{{ nb_candidatures_validees }}</div>
+                <div class="stat-label">Validées</div>
+            </div>
+        </div>
+
+        <div class="stat-card stat-danger">
+            <div class="stat-icon">❌</div>
+            <div class="stat-content">
+                <div class="stat-number">{{ nb_candidatures_refusees }}</div>
+                <div class="stat-label">Refusées</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-content">
+                <div class="stat-number">{{ nb_candidatures_total }}</div>
+                <div class="stat-label">Total</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<!-- ═══════════════════════════════════════════════════
+     📊 STATISTIQUES DÉCLARATIONS
+     ═══════════════════════════════════════════════════ -->
+<section class="dashboard-section">
+    <h2 class="section-title">📊 Engagements d'équipes</h2>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">📝</div>
+            <div class="stat-content">
+                <div class="stat-number">{{ nb_declarations_total }}</div>
+                <div class="stat-label">Engagements</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-content">
+                <div class="stat-number">{{ nb_equipes_total }}</div>
+                <div class="stat-label">Équipes</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">🏢</div>
+            <div class="stat-content">
+                <div class="stat-number">{{ nb_clubs_declarants }}</div>
+                <div class="stat-label">Clubs</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
 
 <!-- ═══════════════════════════════════════════════════
      📅 PROCHAINS TOURNOIS
