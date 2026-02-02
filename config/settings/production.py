@@ -32,7 +32,7 @@ DATABASES = {
 
 # Configuration des fichiers statiques pour production
 STATIC_ROOT = '/home/GkoProd/mysite/staticfiles'
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 # Configuration email pour production
 
