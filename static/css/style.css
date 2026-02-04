@@ -1951,8 +1951,8 @@ body.page-accueil .home-link-container {
 /* ⭐ STAT CARD HIGHLIGHT - Mise en valeur "Tournois à venir" */
 .stat-highlight {
   border-color: var(--primary-color);
-  background: linear-gradient(135deg, 
-    color-mix(in srgb, var(--primary-color) 10%, white), 
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--primary-color) 10%, white),
     white);
 
   &:hover {
@@ -1992,7 +1992,7 @@ body.page-accueil .home-link-container {
 }
 
 .staff-link {
-  background: linear-gradient(135deg, 
+  background: linear-gradient(135deg,
     color-mix(in srgb, var(--primary-color) 5%, white),
     white);
   padding: var(--spacing-lg);
@@ -2003,13 +2003,13 @@ body.page-accueil .home-link-container {
   transition: all var(--transition-normal);
   position: relative;
   overflow: hidden;
-  
+
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: var(--spacing-md);
   min-height: clamp(90px, 12vw, 110px);
-  
+
   &:hover {
     transform: translateY(-3px);
     box-shadow: var(--shadow-lg);
@@ -2022,7 +2022,7 @@ body.page-accueil .home-link-container {
 
   &.staff-link-primary {
     border-left: 6px solid var(--primary-color);
-    
+
     &:hover {
       .staff-link-icon {
         transform: scale(1.1);
@@ -2033,13 +2033,13 @@ body.page-accueil .home-link-container {
 
   &.staff-link-admin {
     border-left: 6px solid #ff9800;
-    
+
     &:hover {
       background: linear-gradient(135deg,
         color-mix(in srgb, #ff9800 10%, white),
         white);
       border-color: #ff9800;
-      
+
       .staff-link-icon {
         transform: scale(1.1);
         filter: drop-shadow(0 4px 8px rgba(255, 152, 0, 0.3));
@@ -2106,28 +2106,156 @@ body.page-accueil .home-link-container {
   .staff-links-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .staff-link {
     min-height: 90px;
     padding: var(--spacing-md);
-    
+
     .staff-link-icon {
       width: 60px;
       height: 60px;
       font-size: 2rem;
     }
-    
+
     .staff-link-content {
       h4 {
         font-size: var(--font-md);
       }
-      
+
       p {
         font-size: var(--font-xs);
       }
     }
   }
 }
+
+/* Police de fallback si problème de chargement */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+                 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji',
+                 'Segoe UI Emoji', 'Segoe UI Symbol';
+}
+
+/* Évite le flash de contenu non stylé */
+.container {
+    opacity: 0;
+    animation: fadeIn 0.3s ease-in forwards;
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+/* Loading state */
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+}
+
+/* ===============================================
+   🔐 HEADER CONNEXION
+   =============================================== */
+
+.auth-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    padding: clamp(0.5rem, 1.5vw, 0.75rem) clamp(0.75rem, 2vw, 2rem);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.auth-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.auth-info {
+    color: white;
+    font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.auth-info strong {
+    font-weight: 600;
+}
+
+.auth-badge {
+    background: rgba(255,255,255,0.2);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.auth-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.btn-auth {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+    font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 36px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-login {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+.btn-login:hover {
+    background: rgba(255,255,255,0.3);
+    color: white;
+    text-decoration: none;
+}
+
+.btn-logout {
+    background: rgba(246,18,27,0.9);
+    color: white;
+}
+
+.btn-logout:hover {
+    background: #dc3545;
+    color: white;
+    text-decoration: none;
+    transform: translateY(-1px);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .auth-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+
+    .auth-info {
+        justify-content: center;
+        text-align: center;
+    }
+
+    .auth-actions {
+        justify-content: center;
+    }
+}
+
+
+
 
 /* ===============================================
    🎨 FIN DU CSS ULTRA-MODERNE UNIFIÉ

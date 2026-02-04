@@ -1,5 +1,7 @@
 from django.urls import path, include
-from .views import  accueil_view, declaration_view, confirmation_view, consultation_view, consultation_passee_view, candidature_liste_view, mes_candidatures_view, candidature_form_view, logout_view  # non de la def dans views.py,
+from .views import  accueil_view, declaration_view, confirmation_view, consultation_view, consultation_passee_view, candidature_liste_view, mes_candidatures_view, candidature_form_view   # non de la def dans views.py,
+from .auth_views import login_view, logout_view
+
 
 urlpatterns = [
     path("", accueil_view, name="accueil"),  # Page d'accueil
@@ -10,8 +12,10 @@ urlpatterns = [
     path("candidature/", candidature_liste_view, name="candidature_liste"),
     path("candidature/<int:tournoi_id>/", candidature_form_view, name="candidature_form"),
     path("candidature/mes-candidatures/", mes_candidatures_view, name="mes_candidatures"),
-    path('staff/', include('saisie_equipes.urls_staff')),
+    path("login/", login_view, name="login"),
     path("logout/", logout_view, name="logout"),
+    path('staff/', include('saisie_equipes.urls_staff')),
+
 
 
 ]

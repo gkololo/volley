@@ -276,12 +276,3 @@ def mes_candidatures_view(request):
         'total': candidatures.count(),
     })
 
-def logout_view(request):
-    """Déconnexion utilisateur"""
-    username = request.user.get_full_name() or request.user.username if request.user.is_authenticated else None
-    logout(request)
-    if username:
-        messages.success(request, f"👋 Au revoir {username} ! Vous êtes maintenant déconnecté.")
-    else:
-        messages.success(request, "👋 Vous êtes maintenant déconnecté.")
-    return redirect('accueil')

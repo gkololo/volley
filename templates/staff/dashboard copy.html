@@ -56,135 +56,126 @@
         </a>
     </div>
 </section>
-
-Dashboard tournois cliquable · HTML
-Copier
-
 <!-- ═══════════════════════════════════════════════════
-     🗓️ STATISTIQUES TOURNOIS - VERSION CLIQUABLE
+     🗓️ STATISTIQUES TOURNOIS
      ═══════════════════════════════════════════════════ -->
 <section class="dashboard-section">
     <h2 class="section-title">🗓️ Tournois</h2>
 
+
     <div class="stats-grid">
-        <!-- À venir → Filtre période=a_venir -->
-        <a href="{% url 'staff:tournois_liste' %}?periode=a_venir" class="stat-card stat-info stat-clickable" title="Voir les tournois à venir">
+        <div class="stat-card stat-info">
             <div class="stat-icon">📅</div>
             <div class="stat-content">
                 <div class="stat-number">{{ nb_tournois_a_venir }}</div>
                 <div class="stat-label">À venir</div>
             </div>
-        </a>
+        </div>
 
-        <!-- Planifiés → Filtre statut=PLANIFIE -->
-        <a href="{% url 'staff:tournois_liste' %}?statut=PLANIFIE" class="stat-card stat-warning stat-clickable" title="Voir les tournois planifiés">
+
+        <div class="stat-card stat-warning">
             <div class="stat-icon">🕐</div>
             <div class="stat-content">
                 <div class="stat-number">{{ nb_tournois_planifies }}</div>
                 <div class="stat-label">Planifiés</div>
             </div>
-        </a>
+        </div>
 
-        <!-- Confirmés → Filtre statut=CONFIRME -->
-        <a href="{% url 'staff:tournois_liste' %}?statut=CONFIRME" class="stat-card stat-success stat-clickable" title="Voir les tournois confirmés">
+        <div class="stat-card stat-success">
             <div class="stat-icon">✔️</div>
             <div class="stat-content">
                 <div class="stat-number">{{ nb_tournois_confirmes }}</div>
                 <div class="stat-label">Confirmés</div>
             </div>
-        </a>
+        </div>
 
-        <!-- Total → Liste complète sans filtre -->
-        <a href="{% url 'staff:tournois_liste' %}" class="stat-card stat-clickable" title="Voir tous les tournois">
+        <div class="stat-card">
             <div class="stat-icon">🏐</div>
             <div class="stat-content">
                 <div class="stat-number">{{ nb_tournois_total }}</div>
                 <div class="stat-label">Total</div>
             </div>
-        </a>
+        </div>
     </div>
 </section>
 
 <!-- ═══════════════════════════════════════════════════
-     📊 STATISTIQUES CANDIDATURES - VERSION CLIQUABLE
+     📊 STATISTIQUES CANDIDATURES
      ═══════════════════════════════════════════════════ -->
 <section class="dashboard-section">
     <h2 class="section-title">📋 Candidatures à l'organisation</h2>
 
     <div class="stats-grid">
-        <!-- En attente → Filtre statut=EN_ATTENTE -->
-        <a href="{% url 'staff:candidatures_liste' %}?statut=EN_ATTENTE" class="stat-card stat-warning stat-clickable" title="Voir les candidatures en attente">
+        <div class="stat-card stat-warning">
             <div class="stat-icon">⏳</div>
             <div class="stat-content">
                 <div class="stat-number">{{ nb_candidatures_en_attente }}</div>
                 <div class="stat-label">En attente</div>
             </div>
-        </a>
+        </div>
 
-        <!-- Validées → Filtre statut=VALIDEE -->
-        <a href="{% url 'staff:candidatures_liste' %}?statut=VALIDEE" class="stat-card stat-success stat-clickable" title="Voir les candidatures validées">
+        <div class="stat-card stat-success">
             <div class="stat-icon">✅</div>
             <div class="stat-content">
                 <div class="stat-number">{{ nb_candidatures_validees }}</div>
                 <div class="stat-label">Validées</div>
             </div>
-        </a>
+        </div>
 
-        <!-- Refusées → Filtre statut=REFUSEE -->
-        <a href="{% url 'staff:candidatures_liste' %}?statut=REFUSEE" class="stat-card stat-danger stat-clickable" title="Voir les candidatures refusées">
+        <div class="stat-card stat-danger">
             <div class="stat-icon">❌</div>
             <div class="stat-content">
                 <div class="stat-number">{{ nb_candidatures_refusees }}</div>
                 <div class="stat-label">Refusées</div>
             </div>
-        </a>
+        </div>
 
-        <!-- Total → Liste complète sans filtre -->
-        <a href="{% url 'staff:candidatures_liste' %}" class="stat-card stat-clickable" title="Voir toutes les candidatures">
+        <div class="stat-card">
             <div class="stat-icon">📊</div>
             <div class="stat-content">
                 <div class="stat-number">{{ nb_candidatures_total }}</div>
                 <div class="stat-label">Total</div>
             </div>
-        </a>
+        </div>
     </div>
 </section>
 
+
+
 <!-- ═══════════════════════════════════════════════════
-     📊 STATISTIQUES DÉCLARATIONS - VERSION CLIQUABLE
+     📊 STATISTIQUES DÉCLARATIONS
      ═══════════════════════════════════════════════════ -->
 <section class="dashboard-section">
     <h2 class="section-title">📊 Engagements d'équipes</h2>
 
     <div class="stats-grid">
-        <!-- Total déclarations → Liste déclarations -->
-        <a href="{% url 'staff:declarations_liste' %}" class="stat-card stat-clickable" title="Voir toutes les déclarations">
+        <div class="stat-card">
             <div class="stat-icon">📝</div>
             <div class="stat-content">
                 <div class="stat-number">{{ nb_declarations_total }}</div>
                 <div class="stat-label">Engagements</div>
             </div>
-        </a>
+        </div>
 
-        <!-- Total équipes → Liste déclarations (même lien) -->
-        <a href="{% url 'staff:declarations_liste' %}" class="stat-card stat-clickable" title="Voir toutes les déclarations">
+        <div class="stat-card">
             <div class="stat-icon">👥</div>
             <div class="stat-content">
                 <div class="stat-number">{{ nb_equipes_total }}</div>
                 <div class="stat-label">Équipes</div>
             </div>
-        </a>
+        </div>
 
-        <!-- Clubs participants → Liste déclarations -->
-        <a href="{% url 'staff:declarations_liste' %}" class="stat-card stat-clickable" title="Voir les clubs participants">
+        <div class="stat-card">
             <div class="stat-icon">🏢</div>
             <div class="stat-content">
                 <div class="stat-number">{{ nb_clubs_declarants }}</div>
                 <div class="stat-label">Clubs</div>
             </div>
-        </a>
+        </div>
     </div>
 </section>
+
+
 
 <!-- ═══════════════════════════════════════════════════
      📅 PROCHAINS TOURNOIS

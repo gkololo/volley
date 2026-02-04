@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Connexion - VolleyChamp{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="form-container">
+        <!-- ═══════════════════════════════════════════════════
+             🏐 HEADER AVEC LOGO
+             ═══════════════════════════════════════════════════ -->
+        <div class="login-header">
+            <div class="login-logo">
+                <!-- 📷 VERSION TEMPORAIRE : Emoji -->
+                <span class="logo-emoji">🏐</span>
+                
+                <!-- 📷 VERSION FINALE : Ton logo 
+                     Décommenter cette ligne quand ton logo sera en place :
+                <img src="{% static 'images/logo.png' %}" alt="VolleyChamp Logo" class="logo-img">
+                -->
+            </div>
+            <h1 class="form-title">Connexion</h1>
+            <p class="login-subtitle">Espace Administrateur VolleyChamp</p>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════
+             📝 FORMULAIRE DE CONNEXION
+             ═══════════════════════════════════════════════════ -->
+        <form method="post" class="login-form">
+            {% csrf_token %}
+            
+            <!-- Champ next pour redirection après login -->
+            {% if next %}
+                <input type="hidden" name="next" value="{{ next }}">
+            {% endif %}
+
+            <!-- Champ Identifiant -->
+            <div class="form-group">
+                <label for="username">
+                    👤 Identifiant
+                </label>
+                <input 
+                    type="text" 
+                    id="username" 
+                    name="username" 
+                    placeholder="Votre nom d'utilisateur"
+                    required
+                    autofocus
+                    autocomplete="username"
+                >
+            </div>
+
+            <!-- Champ Mot de passe -->
+            <div class="form-group">
+                <label for="password">
+                    🔒 Mot de passe
+                </label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    placeholder="Votre mot de passe"
+                    required
+                    autocomplete="current-password"
+                >
+            </div>
+
+            <!-- Bouton de connexion -->
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    🔐 Se connecter
+                </button>
+            </div>
+        </form>
+
+        <!-- ═══════════════════════════════════════════════════
+             ℹ️ AIDE ET NAVIGATION
+             ═══════════════════════════════════════════════════ -->
+        <div class="form-navigation">
+            <p class="login-help">
+                ℹ️ Accès réservé au personnel autorisé
+            </p>
+            <a href="{% url 'accueil' %}">← Retour à l'accueil</a>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     🎨 CSS ADDITIONNEL POUR LOGIN (utilise les variables du style.css)
+     ═══════════════════════════════════════════════════ -->
+<style>
+/* Container login - utilise les classes existantes */
+.login-header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-lg);
+    border-bottom: 3px solid var(--primary-color);
+}
+
+/* Logo */
+.login-logo {
+    margin-bottom: var(--spacing-lg);
+}
+
+.logo-emoji {
+    font-size: clamp(4rem, 8vw, 5rem);
+    display: inline-block;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+/* Si tu utilises une image pour le logo */
+.logo-img {
+    max-width: 180px;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+}
+
+/* Animation rebond pour l'emoji */
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+/* Sous-titre */
+.login-subtitle {
+    color: var(--text-secondary);
+    font-size: var(--font-md);
+    margin-top: var(--spacing-xs);
+}
+
+/* Formulaire login */
+.login-form {
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Aide */
+.login-help {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: var(--font-sm);
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: color-mix(in srgb, var(--primary-color) 10%, var(--surface));
+    border-radius: var(--border-radius);
+}
+
+/* Responsive - désactiver animation si préférence utilisateur */
+@media (prefers-reduced-motion: reduce) {
+    .logo-emoji {
+        animation: none;
+    }
+}
+</style>
+{% endblock %}
