@@ -401,9 +401,8 @@ class CandidatureForm(AntiSpamFormMixin, forms.ModelForm):
                 'class': 'form-control'
             }),
             'lieu': forms.TextInput(attrs={
-                'placeholder': 'Nom du gymnase proposé',
                 'class': 'form-control',
-                'required': True
+                'placeholder': 'Exemple: Gymnase de Saint-Denis (optionnel)'
             }),
             'remarques': forms.Textarea(attrs={
                 'placeholder': 'Motivations, disponibilités, équipements...',
@@ -580,7 +579,7 @@ class TournoiForm(AntiSpamFormMixin, forms.ModelForm):
             'zone': 'Zone géographique',
             'statut': 'Statut',
             'club_organisateur': 'Club organisateur',
-            'lieu': 'Lieu / Gymnase',
+            'lieu': 'Lieu / Gymnase (optionnel)',
             'est_publie': 'Publié (visible publiquement)',
             'remarques': 'Remarques internes'
         }
@@ -609,7 +608,7 @@ class TournoiForm(AntiSpamFormMixin, forms.ModelForm):
         lieu = self.cleaned_data.get('lieu', '')
 
         if not lieu:  # Optionnel
-            return ''
+            return 'À définir'
 
         if len(lieu.strip()) < 3:
             raise forms.ValidationError("Le nom du lieu semble trop court")
