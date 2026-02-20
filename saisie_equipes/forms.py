@@ -198,8 +198,6 @@ class DeclarationForm(AntiSpamFormMixin, forms.ModelForm):
             }),
         }
 
-    # 🆕 SUPPRIMÉ : clean_date_tournoi() — plus nécessaire, la date vient du tournoi
-
     def clean_tournoi(self):
         """🆕 Validation du tournoi sélectionné"""
         tournoi = self.cleaned_data.get('tournoi')
@@ -496,7 +494,23 @@ class TournoiForm(AntiSpamFormMixin, forms.ModelForm):
     """
     Formulaire de création/modification de tournoi
     Réservé au staff uniquement
+
+    Note : poules_disponibles est un JSONField (liste de strings).
+    On utilise un MultipleChoiceField avec CheckboxSelectMultiple
+    pour le rendre en checkboxes, et on gère la conversion dans
+    __init__() et save().
     """
+
+    # 🆕 Champ personnalisé pour les poules (pas géré nativement par ModelForm pour JSONField)
+    poules_disponibles = forms.MultipleChoiceField(
+        choices=Poule.choices,
+        widget=forms.CheckboxSelectMultiple(attrs={
+            'class': 'poule-checkbox',
+        }),
+        required=False,
+        label='🏆 Poules disponibles',
+        help_text='Cochez les poules que les clubs pourront choisir pour ce tournoi. Laissez vide si pas de poules.'
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -507,12 +521,17 @@ class TournoiForm(AntiSpamFormMixin, forms.ModelForm):
         self.fields['lieu'].required = False
         self.fields['remarques'].required = False
 
+        # 🆕 Pré-remplir les poules depuis l'instance existante (modification)
+        if self.instance and self.instance.pk and self.instance.poules_disponibles:
+            self.initial['poules_disponibles'] = self.instance.poules_disponibles
+
     class Meta:
         model = Tournoi
         fields = [
             'date', 'titre', 'categorie_age', 'sexe', 'zone',
             'statut', 'club_organisateur', 'lieu',
             'est_publie', 'remarques'
+            # Note : poules_disponibles est géré via le champ personnalisé ci-dessus
         ]
         widgets = {
             'date': forms.DateInput(attrs={
@@ -648,3 +667,16 @@ class TournoiForm(AntiSpamFormMixin, forms.ModelForm):
             self.add_error('lieu', "Veuillez préciser le lieu si un organisateur est défini")
 
         return cleaned_data
+
+    def save(self, commit=True):
+        """🆕 Sauvegarder avec les poules disponibles"""
+        instance = super().save(commit=False)
+
+        # 🆕 Convertir le MultipleChoiceField en liste JSON
+        # cleaned_data['poules_disponibles'] = ['HAUTE', 'BASSE'] ou []
+        instance.poules_disponibles = self.cleaned_data.get('poules_disponibles', [])
+
+        if commit:
+            instance.save()
+
+        return instance

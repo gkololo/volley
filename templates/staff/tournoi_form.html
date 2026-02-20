@@ -171,6 +171,33 @@
             </div>
         </div>
         
+        <!-- 🆕 Poules -->
+        <div class="form-section">
+            <h3 class="section-title">🏆 Poules</h3>
+            
+            <div class="form-group">
+                <label>{{ form.poules_disponibles.label }}</label>
+                <div class="poules-checkboxes">
+                    {% for checkbox in form.poules_disponibles %}
+                        <label class="checkbox-poule-label">
+                            {{ checkbox.tag }}
+                            <span>{{ checkbox.choice_label }}</span>
+                        </label>
+                    {% endfor %}
+                </div>
+                {% if form.poules_disponibles.help_text %}
+                    <div class="form-help-text">{{ form.poules_disponibles.help_text }}</div>
+                {% endif %}
+                {% if form.poules_disponibles.errors %}
+                    <div class="form-errors">
+                        {% for error in form.poules_disponibles.errors %}
+                            <div class="error-message">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
         <!-- Organisation -->
         <div class="form-section">
             <h3 class="section-title">🏢 Organisation</h3>
@@ -437,6 +464,45 @@
         .form-actions-staff .btn {
             width: 100%;
         }
+    }
+
+    /* 🆕 Poules checkboxes */
+    .poules-checkboxes {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 0.5rem;
+    }
+
+    .checkbox-poule-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.25rem;
+        background: #f8f9fa;
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-weight: 500;
+    }
+
+    .checkbox-poule-label:hover {
+        border-color: #213f7b;
+        background: #eef2f9;
+    }
+
+    .checkbox-poule-label:has(input:checked) {
+        border-color: #213f7b;
+        background: #eef2f9;
+        color: #213f7b;
+        font-weight: 600;
+    }
+
+    .checkbox-poule-label input[type="checkbox"] {
+        width: 1.1rem;
+        height: 1.1rem;
+        accent-color: #213f7b;
     }
 </style>
 {% endblock %}
