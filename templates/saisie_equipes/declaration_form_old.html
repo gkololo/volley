@@ -62,11 +62,5 @@
 
 {# 🆕 NOUVEAU : Block extra_js AU MÊME NIVEAU que block content #}
 {% block extra_js %}
-<!-- 🆕 Données des poules par tournoi (pour JavaScript) -->
-<script>
-window.TOURNOIS_POULES = {{ tournois_poules_json|safe }};
-</script>
-
-<!-- JavaScript pour noms et poules équipes -->
 <script src="{% static 'js/noms_equipes.js' %}"></script>
 {% endblock %}

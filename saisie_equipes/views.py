@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import logout
 from datetime import datetime, timedelta
 from django.http import Http404
+import json  # 🆕 Pour sérialiser les poules en JSON
 
 from .forms import DeclarationForm, CandidatureForm
 from .models import Declaration, Tournoi, Candidature
@@ -41,6 +42,12 @@ def accueil_view(request):
 
 def declaration_view(request):
     """Formulaire de déclaration d'équipe"""
+
+    # 🆕 Préparer les données des poules par tournoi (nécessaire pour GET et POST)
+    tournois_poules = {}
+    for tournoi in Tournoi.objects.filter(est_publie=True):
+        tournois_poules[tournoi.id] = tournoi.poules_disponibles or []
+
     if request.method == "POST":
         # 🕐 VÉRIFICATION TEMPORELLE - Anti-robot
         form_start_time = request.session.get('form_start_time')
@@ -72,7 +79,7 @@ def declaration_view(request):
             messages.error(request, "🚫 Vous avez atteint la limite de déclarations pour cette session. Réessayez plus tard.")
             return redirect("declaration")
 
-        # 📝 TRAITEMENT DU FORMULAIRE
+        # 🔍 TRAITEMENT DU FORMULAIRE
         form = DeclarationForm(request.POST)
         if form.is_valid():
             try:
@@ -107,7 +114,13 @@ def declaration_view(request):
         request.session['form_start_time'] = timezone.now().replace(tzinfo=None).isoformat()
         form = DeclarationForm()
 
-    return render(request, "saisie_equipes/declaration_form.html", {"form": form})
+    # 🆕 Contexte enrichi avec les poules par tournoi
+    context = {
+        "form": form,
+        "tournois_poules_json": json.dumps(tournois_poules),  # 🆕 Pour window.TOURNOIS_POULES
+    }
+
+    return render(request, "saisie_equipes/declaration_form.html", context)
 
 
 def confirmation_view(request):
@@ -276,3 +289,12 @@ def mes_candidatures_view(request):
         'total': candidatures.count(),
     })
 
+def logout_view(request):
+    """Déconnexion utilisateur"""
+    username = request.user.get_full_name() or request.user.username if request.user.is_authenticated else None
+    logout(request)
+    if username:
+        messages.success(request, f"👋 Au revoir {username} ! Vous êtes maintenant déconnecté.")
+    else:
+        messages.success(request, "👋 Vous êtes maintenant déconnecté.")
+    return redirect('accueil')

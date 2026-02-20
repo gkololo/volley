@@ -20,6 +20,13 @@ class Zone(models.TextChoices):
     SUD = "S", "Zone Sud"
     AUCUNE = "", "Pas de zone"
 
+class Poule(models.TextChoices):
+    """Choix de poule pour une équipe"""
+    HAUTE = "HAUTE", "Poule Haute"
+    BASSE = "BASSE", "Poule Basse"
+    UNIQUE = "UNIQUE", "Poule Unique"
+    # Vide = pas de poule (pour tournois sans poules)
+
 class StatutTournoi(models.TextChoices):
     """Statut d'un tournoi"""
     PLANIFIE = "PLANIFIE", "Planifié"
@@ -95,6 +102,13 @@ class Tournoi(models.Model):
         max_length=200,
         blank=True,
         help_text="Nom du gymnase (défini après validation candidature)"
+    )
+    # 🆕 NOUVEAU : Poules disponibles pour ce tournoi
+    poules_disponibles = models.JSONField(
+        "Poules disponibles",
+        default=list,
+        blank=True,
+        help_text="Liste des poules disponibles pour ce tournoi (ex: ['HAUTE', 'BASSE'] ou ['UNIQUE'])"
     )
 
     statut = models.CharField(
@@ -411,6 +425,21 @@ class Declaration(models.Model):
         "Nombre d'équipes",
         validators=[MaxValueValidator(10)]
     )
+
+    # 🆕 NOUVEAU : Noms des équipes
+    noms_equipes = models.JSONField(
+        "Noms des équipes",
+        default=list,
+        blank=True,
+        help_text="Liste des noms d'équipes (ex: ['TGV A', 'TGV B'])"
+    )
+    # 🆕 NOUVEAU : Poules des équipes
+    poules_equipes = models.JSONField(
+        "Poules des équipes",
+        default=list,
+        blank=True,
+        help_text="Liste des poules assignées à chaque équipe (ex: ['HAUTE', 'BASSE', ''])"
+    )
     # ⚠️ GARDER TEMPORAIREMENT pour migration
     date_tournoi = models.DateField("Date du tournoi", default=datetime.date.today)
 
@@ -438,7 +467,49 @@ class Declaration(models.Model):
     date_declaration = models.DateTimeField("Date de déclaration", auto_now_add=True)
 
     def __str__(self):
-        return f"{self.declarant} ({self.club}) - {self.nombre_equipes} équipe(s) - {self.get_categorie_age_display()} {self.get_sexe_display()} {self.get_zone_display()}"
+        equipes_str = ", ".join(self.noms_equipes) if self.noms_equipes else f"{self.nombre_equipes} équipe(s)"
+        return f"{self.declarant} ({self.club}) - {equipes_str} - {self.get_categorie_age_display()} {self.get_sexe_display()} {self.get_zone_display()}"
+
+    def get_noms_equipes_formatte(self):
+        """Retourne les noms d'équipes formatés pour affichage"""
+        if self.noms_equipes:
+            return ", ".join(self.noms_equipes)
+        return f"{self.nombre_equipes} équipe(s)"
+
+    def get_equipes_avec_poules(self):
+        """Retourne les équipes avec leurs poules formatées pour affichage"""
+        if not self.noms_equipes:
+            return []
+
+        equipes = []
+        for i, nom in enumerate(self.noms_equipes):
+            poule = ""
+            if self.poules_equipes and i < len(self.poules_equipes):
+                poule = self.poules_equipes[i] or ""
+
+            equipes.append({
+                'nom': nom,
+                'poule': poule,
+                'poule_display': dict(Poule.choices).get(poule, "Aucune") if poule else "Aucune"
+            })
+
+        return equipes
+
+    def get_equipes_par_poule(self):
+        """Retourne les équipes groupées par poule"""
+        if not self.noms_equipes:
+            return {}
+
+        equipes_par_poule = {}
+        for i, nom in enumerate(self.noms_equipes):
+            poule = self.poules_equipes[i] if i < len(self.poules_equipes) and self.poules_equipes[i] else "AUCUNE"
+
+            if poule not in equipes_par_poule:
+                equipes_par_poule[poule] = []
+
+            equipes_par_poule[poule].append(nom)
+
+        return equipes_par_poule
 
     class Meta:
         verbose_name = "Déclaration"

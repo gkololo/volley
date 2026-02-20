@@ -1,6 +1,6 @@
 from django import forms
 from django.utils import timezone
-from .models import Declaration, Candidature, Tournoi, Club
+from .models import Declaration, Candidature, Tournoi, Club, Poule  # 🆕 Ajout de Poule
 
 
 # ═══════════════════════════════════════════════════
@@ -115,7 +115,13 @@ class AntiSpamFormMixin:
 
 
 # ═══════════════════════════════════════════════════
-# 📝 FORMULAIRE DE DÉCLARATION D'ÉQUIPES
+# 📝 FORMULAIRE DE DÉCLARATION D'ÉQUIPES - VERSION SIMPLIFIÉE
+# ═══════════════════════════════════════════════════
+#
+# L'utilisateur choisit un TOURNOI → la catégorie, le sexe, la zone
+# et la date sont automatiquement déduits du tournoi sélectionné.
+# Seuls les tournois à venir et publiés sont proposés.
+#
 # ═══════════════════════════════════════════════════
 
 class DeclarationForm(AntiSpamFormMixin, forms.ModelForm):
@@ -125,11 +131,53 @@ class DeclarationForm(AntiSpamFormMixin, forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.add_honeypot()
 
+        # 🆕 Filtrer les tournois : uniquement à venir + publiés
+        today = timezone.now().date()
+        self.fields['tournoi'].queryset = Tournoi.objects.filter(
+            date__gte=today,
+            est_publie=True
+        ).order_by('date', 'categorie_age', 'sexe')
+
+        # 🆕 Rendre le champ tournoi obligatoire avec un label clair
+        self.fields['tournoi'].required = True
+        self.fields['tournoi'].label = "Tournoi"
+        self.fields['tournoi'].help_text = "Sélectionnez le tournoi pour lequel vous déclarez vos équipes"
+        self.fields['tournoi'].empty_label = "— Choisir un tournoi —"
+        self.fields['tournoi'].widget.attrs.update({
+            'class': 'form-control',
+            'id': 'id_tournoi',
+        })
+
+        # 🆕 Attribut data pour le JavaScript (noms d'équipes)
+        self.fields['nombre_equipes'].widget.attrs.update({
+            'id': 'id_nombre_equipes',
+            'data-trigger': 'noms-equipes'
+        })
+
+        # 🆕 Ordre des champs pour une UX logique
+        # Tournoi → Club → Nombre d'équipes → Déclarant → Email → Remarques
+        self.order_fields([
+            'tournoi', 'club', 'nombre_equipes',
+            'declarant', 'email_club', 'remarques',
+        ])
+
     class Meta:
         model = Declaration
-        exclude = ['date_declaration']
+        # 🆕 SIMPLIFIÉ : on masque les champs redondants avec le tournoi
+        exclude = [
+            'date_declaration',
+            'noms_equipes',
+            'poules_equipes',
+            'date_tournoi',       # 🆕 Déduit du tournoi
+            'categorie_age',      # 🆕 Déduit du tournoi
+            'sexe',               # 🆕 Déduit du tournoi
+            'zone',               # 🆕 Déduit du tournoi
+        ]
+
         widgets = {
-            "date_tournoi": forms.DateInput(attrs={"type": "date"}),
+            "club": forms.Select(attrs={
+                "class": "form-control",
+            }),
             "declarant": forms.TextInput(attrs={
                 "placeholder": "Exemple: Jean Dupont",
                 "class": "form-control"
@@ -147,15 +195,26 @@ class DeclarationForm(AntiSpamFormMixin, forms.ModelForm):
                 "min": "1",
                 "max": "10",
                 "class": "form-control"
-            })
+            }),
         }
 
-    def clean_date_tournoi(self):
-        """Validation date tournoi"""
-        date = self.cleaned_data["date_tournoi"]
-        if date < timezone.now().date():
-            raise forms.ValidationError("La date du tournoi ne peut pas être dans le passé.")
-        return date
+    # 🆕 SUPPRIMÉ : clean_date_tournoi() — plus nécessaire, la date vient du tournoi
+
+    def clean_tournoi(self):
+        """🆕 Validation du tournoi sélectionné"""
+        tournoi = self.cleaned_data.get('tournoi')
+
+        if not tournoi:
+            raise forms.ValidationError("Veuillez sélectionner un tournoi.")
+
+        # Vérifier que le tournoi peut encore recevoir des déclarations
+        if not tournoi.peut_recevoir_declarations():
+            raise forms.ValidationError(
+                "Ce tournoi n'accepte plus de déclarations "
+                "(soit il est passé, soit il a été annulé)."
+            )
+
+        return tournoi
 
     def clean_declarant(self):
         """Validation du nom du déclarant - utilise le mixin"""
@@ -188,14 +247,91 @@ class DeclarationForm(AntiSpamFormMixin, forms.ModelForm):
         return self.validate_remarques(remarques, max_length=500)
 
     def clean(self):
-        """Validation globale du formulaire"""
+        """🆕 Validation globale + validation des noms d'équipes + poules"""
         cleaned_data = super().clean()
 
-        # Vérification croisée : cohérence des données
+        # Récupérer le nombre d'équipes
+        nombre_equipes = cleaned_data.get('nombre_equipes')
+
+        if nombre_equipes:
+            # 🆕 Récupérer les noms d'équipes depuis les champs POST
+            noms_equipes = []
+            # 🆕 Récupérer les poules depuis les champs POST
+            poules_equipes = []
+
+            # 🆕 Liste des valeurs de poule autorisées
+            poules_valides = [choix[0] for choix in Poule.choices]  # ['HAUTE', 'BASSE', 'UNIQUE']
+
+            for i in range(1, nombre_equipes + 1):
+                # === NOMS D'ÉQUIPES ===
+                nom_field = f'nom_equipe_{i}'
+                nom = self.data.get(nom_field, '').strip()
+
+                # ✅ VALIDATION : Le nom est OBLIGATOIRE
+                if not nom:
+                    raise forms.ValidationError(
+                        f"Le nom de l'équipe {i} est obligatoire. "
+                        f"Vous pouvez garder le nom pré-rempli ou le personnaliser."
+                    )
+
+                # ✅ VALIDATION : Longueur minimum
+                if len(nom) < 2:
+                    raise forms.ValidationError(
+                        f"Le nom de l'équipe {i} est trop court (minimum 2 caractères)."
+                    )
+
+                # ✅ VALIDATION : Longueur maximum
+                if len(nom) > 100:
+                    raise forms.ValidationError(
+                        f"Le nom de l'équipe {i} est trop long (maximum 100 caractères)."
+                    )
+
+                # ✅ VALIDATION : Pas de caractères suspects
+                mots_suspects = ['http://', 'https://', 'www.', '<script', 'javascript:']
+                if any(mot in nom.lower() for mot in mots_suspects):
+                    raise forms.ValidationError(
+                        f"Le nom de l'équipe {i} contient des caractères interdits."
+                    )
+
+                noms_equipes.append(nom)
+
+                # === 🆕 POULES D'ÉQUIPES ===
+                poule_field = f'poule_equipe_{i}'
+                poule = self.data.get(poule_field, '').strip()
+
+                # ✅ VALIDATION : La poule est facultative, mais si remplie doit être valide
+                if poule and poule not in poules_valides:
+                    raise forms.ValidationError(
+                        f"La poule de l'équipe {i} ('{poule}') n'est pas valide. "
+                        f"Valeurs autorisées : {', '.join(poules_valides)} ou vide."
+                    )
+
+                poules_equipes.append(poule)
+
+            # ✅ VALIDATION : Vérifier qu'on a bien le bon nombre de noms
+            if len(noms_equipes) != nombre_equipes:
+                raise forms.ValidationError(
+                    f"Erreur : {nombre_equipes} équipes déclarées mais seulement "
+                    f"{len(noms_equipes)} noms fournis."
+                )
+
+            # ✅ VALIDATION : Pas de doublons (optionnel mais recommandé)
+            noms_lower = [nom.lower() for nom in noms_equipes]
+            if len(noms_lower) != len(set(noms_lower)):
+                raise forms.ValidationError(
+                    "Deux équipes ne peuvent pas avoir exactement le même nom."
+                )
+
+            # ✅ Stocker les noms validés dans cleaned_data
+            cleaned_data['noms_equipes'] = noms_equipes
+
+            # 🆕 Stocker les poules validées dans cleaned_data
+            cleaned_data['poules_equipes'] = poules_equipes
+
+        # Vérification croisée : cohérence des données (déjà existant)
         declarant = cleaned_data.get('declarant', '')
         email = cleaned_data.get('email_club', '')
 
-        # Si l'email contient le nom du déclarant, c'est normal
         if declarant and email:
             nom_parties = declarant.lower().split()
             for partie in nom_parties:
@@ -203,6 +339,31 @@ class DeclarationForm(AntiSpamFormMixin, forms.ModelForm):
                     pass  # C'est normal, pas d'erreur
 
         return cleaned_data
+
+    def save(self, commit=True):
+        """🆕 Sauvegarder avec auto-remplissage depuis le tournoi"""
+        instance = super().save(commit=False)
+
+        # 🆕 AUTO-REMPLISSAGE depuis le tournoi sélectionné
+        # Ces champs sont masqués du formulaire mais requis par le modèle
+        if instance.tournoi:
+            instance.categorie_age = instance.tournoi.categorie_age
+            instance.sexe = instance.tournoi.sexe
+            instance.zone = instance.tournoi.zone
+            instance.date_tournoi = instance.tournoi.date
+
+        # ✅ Récupérer les noms validés depuis cleaned_data
+        if 'noms_equipes' in self.cleaned_data:
+            instance.noms_equipes = self.cleaned_data['noms_equipes']
+
+        # ✅ Récupérer les poules validées depuis cleaned_data
+        if 'poules_equipes' in self.cleaned_data:
+            instance.poules_equipes = self.cleaned_data['poules_equipes']
+
+        if commit:
+            instance.save()
+
+        return instance
 
 
 # ═══════════════════════════════════════════════════
@@ -218,37 +379,56 @@ class CandidatureForm(AntiSpamFormMixin, forms.ModelForm):
 
     class Meta:
         model = Candidature
-        fields = ['tournoi', 'club', 'declarant', 'email_contact', 'telephone_contact', 'lieu', 'remarques']
+        fields = ['tournoi', 'club', 'declarant', 'email_contact',
+                  'telephone_contact', 'lieu', 'remarques']
+
         widgets = {
-            'tournoi': forms.HiddenInput(),  # Caché car déjà sélectionné
+            'tournoi': forms.HiddenInput(),
             'club': forms.Select(attrs={
                 'class': 'form-control',
                 'required': True
             }),
             'declarant': forms.TextInput(attrs={
-                'placeholder': 'Exemple: Jean Dupont',
+                'placeholder': 'Votre nom et prénom',
                 'class': 'form-control',
                 'required': True
             }),
             'email_contact': forms.EmailInput(attrs={
-                'placeholder': 'votre.email@monclub.re',
+                'placeholder': 'votre.email@club.re',
                 'class': 'form-control',
                 'required': True
             }),
             'telephone_contact': forms.TextInput(attrs={
-                'placeholder': '0692123456 (optionnel)',
+                'placeholder': '0692 XX XX XX',
                 'class': 'form-control'
             }),
             'lieu': forms.TextInput(attrs={
-                'placeholder': 'Exemple: Gymnase Municipal de Saint-Denis',
+                'placeholder': 'Nom du gymnase proposé',
                 'class': 'form-control',
                 'required': True
             }),
             'remarques': forms.Textarea(attrs={
-                'placeholder': 'Motivations, équipements disponibles, expérience... (optionnel)',
+                'placeholder': 'Motivations, disponibilités, équipements...',
                 'rows': 4,
                 'class': 'form-control'
             })
+        }
+
+        labels = {
+            'club': 'Votre club',
+            'declarant': 'Personne de contact',
+            'email_contact': 'Email de contact',
+            'telephone_contact': 'Téléphone (optionnel)',
+            'lieu': 'Lieu proposé (gymnase)',
+            'remarques': 'Remarques / Motivations'
+        }
+
+        help_texts = {
+            'club': 'Sélectionnez votre club',
+            'declarant': 'Nom et prénom de la personne responsable',
+            'email_contact': 'Vous serez contacté à cette adresse',
+            'lieu': 'Nom du gymnase où vous proposez d\'organiser',
+            'remarques': 'Informations complémentaires sur votre candidature'
         }
 
     def clean_declarant(self):

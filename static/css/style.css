@@ -1,10 +1,10 @@
 /* ===============================================
-   🏐 VOLLEYCHAMP - CSS UNIFIÉ V2 ULTRA-MODERNE
-   ✨ Public + Staff dans 1 fichier
-   📱 Mobile-first + Container Queries + clamp()
+   ðŸ VOLLEYCHAMP - CSS UNIFIÃ‰ V2 ULTRA-MODERNE
+   âœ¨ Public + Staff dans 1 fichier
+   ðŸ“± Mobile-first + Container Queries + clamp()
    =============================================== */
 
-/* 📄 RESET CSS MODERNE */
+/* ðŸ“„ RESET CSS MODERNE */
 *,
 *::before,
 *::after {
@@ -44,15 +44,15 @@ img {
 }
 
 /* ===============================================
-   🎯 VARIABLES CSS GLOBALES - MOBILE-FIRST
+   ðŸŽ¯ VARIABLES CSS GLOBALES - MOBILE-FIRST
    =============================================== */
 
 :root {
-  /* 🎨 Couleurs de base */
+  /* ðŸŽ¨ Couleurs de base */
   --primary-base: #213f7b;
   --accent-base: #f6121b;
 
-  /* 🎨 Variations automatiques */
+  /* ðŸŽ¨ Variations automatiques */
   --primary-color: #213f7b;
   --primary-light: color-mix(in srgb, #213f7b 70%, white);
   --primary-lighter: color-mix(in srgb, #213f7b 50%, white);
@@ -62,7 +62,7 @@ img {
   --accent-light: color-mix(in srgb, var(--accent-base) 70%, white);
   --accent-dark: color-mix(in srgb, var(--accent-base) 85%, black);
 
-  /* 🎨 Palette de couleurs */
+  /* ðŸŽ¨ Palette de couleurs */
   --background: #f4f4f4;
   --surface: white;
   --text-primary: #333;
@@ -71,7 +71,7 @@ img {
   --border-color-light: #f0f0f0;
   --border-color-strong: #d0d0d0;
 
-  /* 🎨 Couleurs staff */
+  /* ðŸŽ¨ Couleurs staff */
   --staff-primary: #213f7b;
   --staff-accent: #f6121b;
   --staff-success: #28a745;
@@ -79,17 +79,17 @@ img {
   --staff-danger: #dc3545;
   --staff-info: #17a2b8;
 
-  /* 📏 Border radius fluide */
+  /* ðŸ“ Border radius fluide */
   --border-radius: clamp(0.5rem, 1vw, 0.75rem);
 
-  /* 📏 Espacements fluides (mobile → desktop) */
+  /* ðŸ“ Espacements fluides (mobile â†’ desktop) */
   --spacing-xs: clamp(0.5rem, 1vw, 0.625rem);
   --spacing-sm: clamp(0.75rem, 1.5vw, 1rem);
   --spacing-md: clamp(1rem, 2vw, 1.5rem);
   --spacing-lg: clamp(1.5rem, 3vw, 2.5rem);
   --spacing-xl: clamp(2rem, 4vw, 3.5rem);
 
-  /* 📤 Tailles de police fluides */
+  /* ðŸ“¤ Tailles de police fluides */
   --font-xs: clamp(0.875rem, 0.85rem + 0.15vw, 1rem);
   --font-sm: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
   --font-md: clamp(1.125rem, 1.05rem + 0.35vw, 1.25rem);
@@ -97,19 +97,19 @@ img {
   --font-xl: clamp(1.5rem, 1.3rem + 1vw, 2rem);
   --font-xxl: clamp(1.75rem, 1.5rem + 1.25vw, 2.5rem);
 
-  /* 🎭 Ombres fluides */
+  /* ðŸŽ­ Ombres fluides */
   --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
   --shadow-md: 0 4px 6px rgba(0,0,0,0.08);
   --shadow-lg: 0 6px 12px rgba(0,0,0,0.12);
 
-  /* ⏱️ Transitions */
+  /* â±ï¸ Transitions */
   --transition-fast: 0.2s ease;
   --transition-normal: 0.3s ease;
   --transition-slow: 0.5s ease;
 }
 
 /* ===============================================
-   🎨 ACCENT-COLOR POUR INPUTS NATIFS
+   ðŸŽ¨ ACCENT-COLOR POUR INPUTS NATIFS
    =============================================== */
 
 input[type="checkbox"],
@@ -120,7 +120,7 @@ progress {
 }
 
 /* ===============================================
-   📱 CONTENEUR PRINCIPAL - MOBILE FIRST
+   ðŸ“± CONTENEUR PRINCIPAL - MOBILE FIRST
    =============================================== */
 
 .container {
@@ -132,7 +132,7 @@ progress {
 }
 
 /* ===============================================
-   🏠 PAGE D'ACCUEIL PUBLIC
+   ðŸ  PAGE D'ACCUEIL PUBLIC
    =============================================== */
 
 .accueil-container {
@@ -144,7 +144,7 @@ progress {
   margin-block: clamp(0rem, 2vw, 2rem);
 }
 
-/* 🎯 Hero Section */
+/* ðŸŽ¯ Hero Section */
 .hero-section {
   text-align: center;
   padding: var(--spacing-lg);
@@ -179,7 +179,7 @@ progress {
 }
 
 /* ===============================================
-   📊 STATISTIQUES PUBLIC - CONTAINER QUERIES
+   ðŸ“Š STATISTIQUES PUBLIC - CONTAINER QUERIES
    =============================================== */
 
 .stats-section {
@@ -230,7 +230,7 @@ progress {
   }
 }
 
-/* Container query : si stats-section > 600px, agrandir icônes */
+/* Container query : si stats-section > 600px, agrandir icÃ´nes */
 @container stats (min-width: 600px) {
   .stat-card .stat-icon {
     font-size: 3.5rem;
@@ -238,7 +238,7 @@ progress {
 }
 
 /* ===============================================
-   🔗 NAVIGATION CARDS PUBLIC - CONTAINER QUERIES
+   ðŸ”— NAVIGATION CARDS PUBLIC - CONTAINER QUERIES
    =============================================== */
 
 .nav-section {
@@ -350,7 +350,7 @@ progress {
 }
 
 /* ===============================================
-   ℹ️ SECTION INFORMATIONS PUBLIC
+   â„¹ï¸ SECTION INFORMATIONS PUBLIC
    =============================================== */
 
 .info-section {
@@ -430,7 +430,7 @@ progress {
 
 
 /* ===============================================
-   📋 FORMULAIRES PUBLIC
+   ðŸ“‹ FORMULAIRES PUBLIC
    =============================================== */
 
 .form-container {
@@ -625,7 +625,7 @@ button,
 }
 
 /* ===============================================
-   🚨 MESSAGES D'ALERTE DJANGO
+   ðŸš¨ MESSAGES D'ALERTE DJANGO
    =============================================== */
 
 .messages-container {
@@ -679,7 +679,7 @@ button,
 }
 
 /* ===============================================
-   🏠 LIEN RETOUR ACCUEIL
+   ðŸ  LIEN RETOUR ACCUEIL
    =============================================== */
 
 .home-link-container {
@@ -722,7 +722,7 @@ body.page-accueil .home-link-container {
 }
 
 /* ===============================================
-   📊 PAGES DE CONSULTATION PUBLIC
+   ðŸ“Š PAGES DE CONSULTATION PUBLIC
    =============================================== */
 
 .archives-title {
@@ -842,7 +842,7 @@ body.page-accueil .home-link-container {
 }
 
 /* ===============================================
-   📊 TABLEAUX PUBLIC - CONTAINER QUERIES
+   ðŸ“Š TABLEAUX PUBLIC - CONTAINER QUERIES
    =============================================== */
 
 .tableau-synthese {
@@ -958,7 +958,7 @@ body.page-accueil .home-link-container {
 }
 
 /* ===============================================
-   📋 SECTION DÉTAILS PUBLIC
+   ðŸ“‹ SECTION DÃ‰TAILS PUBLIC
    =============================================== */
 
 .details-section {
@@ -1069,7 +1069,7 @@ body.page-accueil .home-link-container {
 }
 
 /* ===============================================
-   🔗 NAVIGATION LINKS (bas de page)
+   ðŸ”— NAVIGATION LINKS (bas de page)
    =============================================== */
 
 .navigation-links {
@@ -1101,11 +1101,11 @@ body.page-accueil .home-link-container {
   }
 }
 
-/* ═══════════════════════════════════════════════════
-   🏢 STYLES INTERFACE STAFF (MODERNE)
-   ═══════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   ðŸ¢ STYLES INTERFACE STAFF (MODERNE)
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
-/* 🧭 NAVIGATION STAFF */
+/* ðŸ§­ NAVIGATION STAFF */
 .staff-nav {
   background: linear-gradient(135deg, var(--staff-primary), #1a3260);
   padding: clamp(0.75rem, 2vw, 1rem);
@@ -1168,7 +1168,7 @@ body.page-accueil .home-link-container {
   background: rgba(255,255,255,0.2);
 }
 
-/* 📦 CONTAINER PRINCIPAL STAFF */
+/* ðŸ“¦ CONTAINER PRINCIPAL STAFF */
 .staff-container {
   max-width: 1400px;
   margin: var(--spacing-lg) auto;
@@ -1195,7 +1195,7 @@ body.page-accueil .home-link-container {
   }
 }
 
-/* 🚨 MESSAGES STAFF */
+/* ðŸš¨ MESSAGES STAFF */
 .staff-messages {
   margin-bottom: var(--spacing-lg);
 }
@@ -1233,7 +1233,7 @@ body.page-accueil .home-link-container {
   color: #0c5460;
 }
 
-/* 📊 DASHBOARD SECTIONS */
+/* ðŸ“Š DASHBOARD SECTIONS */
 .dashboard-section {
   margin-bottom: var(--spacing-xl);
 }
@@ -1247,7 +1247,7 @@ body.page-accueil .home-link-container {
   text-wrap: balance;
 }
 
-/* 📈 STATS GRID STAFF - CONTAINER QUERIES */
+/* ðŸ“ˆ STATS GRID STAFF - CONTAINER QUERIES */
 .stats-grid {
   container-type: inline-size;
   container-name: statsgrid;
@@ -1284,7 +1284,7 @@ body.page-accueil .home-link-container {
   }
 }
 
-/* 🎯 ACTIONS GRID STAFF */
+/* ðŸŽ¯ ACTIONS GRID STAFF */
 .actions-grid {
   container-type: inline-size;
   container-name: actionsgrid;
@@ -1350,7 +1350,7 @@ body.page-accueil .home-link-container {
   }
 }
 
-/* 🗓️ TOURNOIS CARDS STAFF */
+/* ðŸ—“ï¸ TOURNOIS CARDS STAFF */
 .tournois-list {
   display: grid;
   gap: var(--spacing-md);
@@ -1431,7 +1431,7 @@ body.page-accueil .home-link-container {
   }
 }
 
-/* 🏷️ BADGES STAFF */
+/* ðŸ·ï¸ BADGES STAFF */
 .badge {
   padding: var(--spacing-xs) var(--spacing-sm);
   border-radius: 20px;
@@ -1487,7 +1487,7 @@ body.page-accueil .home-link-container {
   color: white;
 }
 
-/* Catégories */
+/* CatÃ©gories */
 .badge-m11 {
   background: linear-gradient(135deg, #17a2b8, #138496);
   color: white;
@@ -1508,7 +1508,7 @@ body.page-accueil .home-link-container {
   color: white;
 }
 
-/* 📋 CANDIDATURES STAFF */
+/* ðŸ“‹ CANDIDATURES STAFF */
 .candidatures-list {
   display: flex;
   flex-direction: column;
@@ -1555,14 +1555,14 @@ body.page-accueil .home-link-container {
   }
 }
 
-/* 📊 DÉCLARATIONS STAFF */
+/* ðŸ“Š DÃ‰CLARATIONS STAFF */
 .declarations-list {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
 }
 
-/* 📝 FORMULAIRES STAFF */
+/* ðŸ“ FORMULAIRES STAFF */
 .form-container-staff {
   background: white;
   border-radius: var(--border-radius);
@@ -1638,7 +1638,7 @@ body.page-accueil .home-link-container {
   }
 }
 
-/* 🔍 FILTRES STAFF */
+/* ðŸ” FILTRES STAFF */
 .filters-section {
   background: #f8f9fa;
   padding: var(--spacing-lg);
@@ -1667,7 +1667,7 @@ body.page-accueil .home-link-container {
   }
 }
 
-/* 🔘 BOUTONS STAFF */
+/* ðŸ”˜ BOUTONS STAFF */
 .btn-sm {
   padding: var(--spacing-xs) var(--spacing-md);
   font-size: var(--font-sm);
@@ -1709,10 +1709,10 @@ body.page-accueil .home-link-container {
 }
 
 /* ===============================================
-   📱 RESPONSIVE MOBILE-FIRST
+   ðŸ“± RESPONSIVE MOBILE-FIRST
    =============================================== */
 
-/* Navigation horizontale sur écrans moyens */
+/* Navigation horizontale sur Ã©crans moyens */
 @media screen and (min-width: 480px) {
   .navigation-links {
     flex-direction: row;
@@ -1833,7 +1833,7 @@ body.page-accueil .home-link-container {
 }
 
 /* ===============================================
-   🖨️ STYLES POUR L'IMPRESSION
+   ðŸ–¨ï¸ STYLES POUR L'IMPRESSION
    =============================================== */
 
 @media print {
@@ -1883,10 +1883,10 @@ body.page-accueil .home-link-container {
 }
 
 /* ===============================================
-   ♿ ACCESSIBILITÉ
+   â™¿ ACCESSIBILITÃ‰
    =============================================== */
 
-/* Respecte la préférence de mouvement réduit */
+/* Respecte la prÃ©fÃ©rence de mouvement rÃ©duit */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -1898,7 +1898,7 @@ body.page-accueil .home-link-container {
   }
 }
 
-/* Améliore la lisibilité pour dyslexie */
+/* AmÃ©liore la lisibilitÃ© pour dyslexie */
 @media (prefers-contrast: more) {
   :root {
     --border-color: #333;
@@ -1921,7 +1921,7 @@ body.page-accueil .home-link-container {
 }
 
 /* ===============================================
-   🎨 UTILITIES
+   ðŸŽ¨ UTILITIES
    =============================================== */
 
 @media screen and (max-width: 767px) {
@@ -1948,7 +1948,7 @@ body.page-accueil .home-link-container {
 }
 
 
-/* ⭐ STAT CARD HIGHLIGHT - Mise en valeur "Tournois à venir" */
+/* â­ STAT CARD HIGHLIGHT - Mise en valeur "Tournois Ã  venir" */
 .stat-highlight {
   border-color: var(--primary-color);
   background: linear-gradient(135deg,
@@ -1967,7 +1967,7 @@ body.page-accueil .home-link-container {
 }
 
 /* ===============================================
-   🔐 ACCÈS STAFF RAPIDE - VERSION CARDS VISUELLES
+   ðŸ” ACCÃˆS STAFF RAPIDE - VERSION CARDS VISUELLES
    =============================================== */
 
 .staff-quick-access {
@@ -2101,7 +2101,7 @@ body.page-accueil .home-link-container {
   }
 }
 
-/* 📱 RESPONSIVE - Section staff mobile */
+/* ðŸ“± RESPONSIVE - Section staff mobile */
 @media (max-width: 768px) {
   .staff-links-grid {
     grid-template-columns: 1fr;
@@ -2129,14 +2129,14 @@ body.page-accueil .home-link-container {
   }
 }
 
-/* Police de fallback si problème de chargement */
+/* Police de fallback si problÃ¨me de chargement */
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
                  'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji',
                  'Segoe UI Emoji', 'Segoe UI Symbol';
 }
 
-/* Évite le flash de contenu non stylé */
+/* Ã‰vite le flash de contenu non stylÃ© */
 .container {
     opacity: 0;
     animation: fadeIn 0.3s ease-in forwards;
@@ -2154,7 +2154,7 @@ body {
 }
 
 /* ===============================================
-   🔐 HEADER CONNEXION
+   ðŸ” HEADER CONNEXION
    =============================================== */
 
 .auth-header {
@@ -2254,7 +2254,326 @@ body {
     }
 }
 
+/* ===============================================
+   ðŸ NOMS D'Ã‰QUIPES - Champs dynamiques
+   =============================================== */
 
+/* Conteneur principal */
+#noms-equipes-container {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    border: 2px solid var(--primary-color);
+    display: none;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+#noms-equipes-container.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Titre de section */
+.noms-equipes-titre {
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.noms-equipes-titre h3 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.noms-equipes-titre .icon {
+    font-size: 1.8rem;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.noms-equipes-titre .help-text {
+    color: #6c757d;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* Grille des champs */
+.noms-equipes-grille {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+/* Chaque champ */
+.nom-equipe-item {
+    background: white;
+    padding: 1.25rem;
+    border-radius: 8px;
+    border: 2px solid #dee2e6;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nom-equipe-item:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 12px rgba(33, 63, 123, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Label */
+.nom-equipe-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: var(--primary-dark);
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+}
+
+.numero-equipe {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.required {
+    color: var(--danger-color, #dc3545);
+    font-weight: bold;
+}
+
+/* Input */
+.nom-equipe-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    background: white;
+}
+
+.nom-equipe-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(33, 63, 123, 0.1);
+}
+
+/* Validation visuelle */
+.nom-equipe-input.input-valide {
+    border-color: #28a745;
+    background: linear-gradient(to right, white 95%, rgba(40, 167, 69, 0.1) 100%);
+}
+
+.nom-equipe-input.input-invalide {
+    border-color: #dc3545;
+    background: linear-gradient(to right, white 95%, rgba(220, 53, 69, 0.1) 100%);
+}
+
+/* Texte d'aide */
+.nom-equipe-item .help-text {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    #noms-equipes-container {
+        padding: 1rem;
+    }
+
+    .noms-equipes-grille {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .nom-equipe-item {
+        padding: 1rem;
+    }
+
+    .noms-equipes-titre h3 {
+        font-size: 1.25rem;
+    }
+}
+
+/* AccessibilitÃ© - mode rÃ©duit */
+@media (prefers-reduced-motion: reduce) {
+    #noms-equipes-container {
+        transition: none;
+    }
+
+    .noms-equipes-titre .icon {
+        animation: none;
+    }
+
+    .nom-equipe-item:hover {
+        transform: none;
+    }
+}
+
+/* Print - masquer les effets */
+@media print {
+    #noms-equipes-container {
+        background: white;
+        border: 1px solid #000;
+    }
+
+    .nom-equipe-item {
+        break-inside: avoid;
+    }
+}
+
+
+/* ===============================================
+   🏆 POULES D'ÉQUIPES - Selects dynamiques
+   =============================================== */
+
+/* Bloc poule dans chaque item équipe */
+.poule-equipe-bloc {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px dashed #dee2e6;
+}
+
+.poule-equipe-label {
+    display: block;
+    font-weight: 600;
+    color: var(--primary-dark);
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+}
+
+/* Select poule */
+.poule-equipe-select {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    border: 2px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    appearance: auto;
+}
+
+.poule-equipe-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(33, 63, 123, 0.1);
+}
+
+/* Item avec poule : légèrement plus grand */
+.nom-equipe-item.avec-poule {
+    padding-bottom: 1.25rem;
+}
+
+/* ═══════════════════════════════════════════
+   🎨 Bordures colorées selon la poule choisie
+   ═══════════════════════════════════════════ */
+
+.nom-equipe-item.poule-haute {
+    border-color: #dc3545;
+    border-left: 5px solid #dc3545;
+    background: linear-gradient(to right, rgba(220, 53, 69, 0.04) 0%, white 30%);
+}
+
+.nom-equipe-item.poule-haute .poule-equipe-select {
+    border-color: #dc3545;
+    color: #dc3545;
+    font-weight: 600;
+}
+
+.nom-equipe-item.poule-basse {
+    border-color: #0d6efd;
+    border-left: 5px solid #0d6efd;
+    background: linear-gradient(to right, rgba(13, 110, 253, 0.04) 0%, white 30%);
+}
+
+.nom-equipe-item.poule-basse .poule-equipe-select {
+    border-color: #0d6efd;
+    color: #0d6efd;
+    font-weight: 600;
+}
+
+.nom-equipe-item.poule-unique {
+    border-color: #198754;
+    border-left: 5px solid #198754;
+    background: linear-gradient(to right, rgba(25, 135, 84, 0.04) 0%, white 30%);
+}
+
+.nom-equipe-item.poule-unique .poule-equipe-select {
+    border-color: #198754;
+    color: #198754;
+    font-weight: 600;
+}
+
+.nom-equipe-item.poule-aucune {
+    border-color: #dee2e6;
+    border-left: 5px solid #dee2e6;
+}
+
+/* ═══════════════════════════════════════════
+   📱 Responsive poules
+   ═══════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+    .poule-equipe-select {
+        font-size: 1rem;
+        padding: 0.75rem;
+    }
+
+    .poule-equipe-bloc {
+        margin-top: 0.5rem;
+        padding-top: 0.5rem;
+    }
+}
+
+/* Accessibilité - mode réduit */
+@media (prefers-reduced-motion: reduce) {
+    .nom-equipe-item.poule-haute,
+    .nom-equipe-item.poule-basse,
+    .nom-equipe-item.poule-unique {
+        transition: none;
+    }
+}
+
+/* Print - poules lisibles */
+@media print {
+    .poule-equipe-select {
+        border: 1px solid #000;
+        -webkit-appearance: none;
+        appearance: none;
+    }
+
+    .nom-equipe-item.poule-haute,
+    .nom-equipe-item.poule-basse,
+    .nom-equipe-item.poule-unique {
+        border-left: 3px solid #000;
+        background: white;
+    }
+}
 
 
 /* ===============================================
