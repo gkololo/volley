@@ -50,10 +50,11 @@ SECURE_HSTS_SECONDS = 31536000  # 1 an
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
-# Uniquement si vous avez HTTPS configuré
+
+# HTTPS (PythonAnywhere gère la redirection, ne PAS activer SSL_REDIRECT)
 # SECURE_SSL_REDIRECT = True
-# SESSION_COOKIE_SECURE = True
-# CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 # Configuration de cache avec Redis (si disponible)
 # CACHES = {
