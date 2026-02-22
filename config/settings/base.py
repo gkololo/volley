@@ -1,5 +1,6 @@
 """
 Configuration Django de base pour le projet Volleyball
+Paramètres communs à tous les environnements (dev + prod)
 """
 import os
 from pathlib import Path
@@ -7,10 +8,64 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'your-development-key-here')
+# ═══════════════════════════════════════════════════
+# 🔐 SÉCURITÉ
+# ═══════════════════════════════════════════════════
 
-# Application definition
+# SECRET_KEY : DOIT être définie dans l'environnement, pas de fallback
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+if not SECRET_KEY:
+    # En dev seulement : fallback pour ne pas bloquer le développement
+    # En prod : la variable DOIT exister (sinon crash voulu)
+    import warnings
+    warnings.warn(
+        "⚠️ DJANGO_SECRET_KEY non définie ! "
+        "Utilisation d'une clé de développement temporaire. "
+        "Ne JAMAIS utiliser en production.",
+        UserWarning
+    )
+    SECRET_KEY = 'dev-only-insecure-key-change-me-in-production'
+
+# ═══════════════════════════════════════════════════
+# 🔐 SESSIONS & DÉCONNEXION AUTOMATIQUE
+# ═══════════════════════════════════════════════════
+
+# Durée max de session : 2 heures (en secondes)
+# Après 2h d'inactivité, l'utilisateur staff est déconnecté
+SESSION_COOKIE_AGE = 7200  # 2h = 7200 secondes
+
+# Fermer la session quand le navigateur est fermé
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+# Renouveler la session à chaque requête (le compteur de 2h repart à zéro)
+SESSION_SAVE_EVERY_REQUEST = True
+
+# Nom du cookie de session (identifiable pour debug)
+SESSION_COOKIE_NAME = 'volleychamp_session'
+
+# HttpOnly : empêche JavaScript d'accéder au cookie de session
+SESSION_COOKIE_HTTPONLY = True
+
+# SameSite : protection contre les attaques CSRF cross-site
+SESSION_COOKIE_SAMESITE = 'Lax'
+
+# ═══════════════════════════════════════════════════
+# 🔐 AUTHENTIFICATION
+# ═══════════════════════════════════════════════════
+
+# URL de login pour les redirections automatiques
+LOGIN_URL = '/login/'
+
+# Après connexion, rediriger vers le dashboard staff
+LOGIN_REDIRECT_URL = '/staff/'
+
+# Après déconnexion, rediriger vers l'accueil
+LOGOUT_REDIRECT_URL = '/'
+
+# ═══════════════════════════════════════════════════
+# 📦 APPLICATION
+# ═══════════════════════════════════════════════════
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -69,13 +124,19 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Internationalization
+# ═══════════════════════════════════════════════════
+# 🌍 INTERNATIONALISATION
+# ═══════════════════════════════════════════════════
+
 LANGUAGE_CODE = 'fr-FR'
 TIME_ZONE = 'Indian/Reunion'
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
+# ═══════════════════════════════════════════════════
+# 📁 FICHIERS STATIQUES
+# ═══════════════════════════════════════════════════
+
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
@@ -83,7 +144,10 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Configuration des messages Django
+# ═══════════════════════════════════════════════════
+# 💬 MESSAGES DJANGO
+# ═══════════════════════════════════════════════════
+
 from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
     messages.DEBUG: 'debug',
@@ -93,7 +157,10 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
-# Logging de base (simplifié pour éviter les erreurs de dossier)
+# ═══════════════════════════════════════════════════
+# 📝 LOGGING
+# ═══════════════════════════════════════════════════
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
