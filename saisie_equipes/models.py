@@ -54,11 +54,11 @@ class Tournoi(models.Model):
     """
 
     titre = models.CharField(
-    "Titre du tournoi",
-    max_length=100,
-    blank=True,
-    help_text="Ex: 'Journée 2', 'FINALITÉ'"
-)
+        "Titre du tournoi",
+        max_length=100,
+        blank=True,
+        help_text="Ex: 'Journée 2', 'FINALITÉ'"
+        )
 
     date = models.DateField(
         "Date du tournoi",
@@ -455,15 +455,16 @@ class Declaration(models.Model):
     )
 
     remarques = models.TextField(blank=True)
+
     declarant = models.CharField(
         "Déclarant",
         max_length=200,
-        default="Vos Nom et Prénom"
     )
     email_club = models.EmailField(
+        "Email du club",
         validators=[EmailValidator(message="Email non valide")],
-        default="votre_email@exemple.com"
     )
+
     date_declaration = models.DateTimeField("Date de déclaration", auto_now_add=True)
 
     def __str__(self):

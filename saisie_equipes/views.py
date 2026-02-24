@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.contrib import messages
-from django.contrib.auth import logout
 from datetime import datetime, timedelta
 from django.http import Http404
 import json  # 🆕 Pour sérialiser les poules en JSON
+import logging
+logger = logging.getLogger('saisie_equipes')
 
 from .forms import DeclarationForm, CandidatureForm
 from .models import Declaration, Tournoi, Candidature
@@ -106,7 +107,7 @@ def declaration_view(request):
 
             except Exception as e:
                 messages.error(request, "❌ Erreur lors de l'enregistrement. Veuillez réessayer.")
-                print(f"Erreur sauvegarde déclaration: {e}")
+                logger.error(f"Erreur sauvegarde déclaration: {e}", exc_info=True)
         else:
             messages.error(request, "❌ Veuillez corriger les erreurs signalées ci-dessous.")
     else:
@@ -248,7 +249,7 @@ def candidature_form_view(request, tournoi_id):
 
             except Exception as e:
                 messages.error(request, "❌ Erreur lors de l'enregistrement. Veuillez réessayer.")
-                print(f"Erreur sauvegarde candidature: {e}")
+                logger.error(f"Erreur sauvegarde candidature: {e}", exc_info=True)
         else:
             messages.error(request, "❌ Veuillez corriger les erreurs signalées ci-dessous.")
     else:
@@ -289,12 +290,4 @@ def mes_candidatures_view(request):
         'total': candidatures.count(),
     })
 
-def logout_view(request):
-    """Déconnexion utilisateur"""
-    username = request.user.get_full_name() or request.user.username if request.user.is_authenticated else None
-    logout(request)
-    if username:
-        messages.success(request, f"👋 Au revoir {username} ! Vous êtes maintenant déconnecté.")
-    else:
-        messages.success(request, "👋 Vous êtes maintenant déconnecté.")
-    return redirect('accueil')
+

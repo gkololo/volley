@@ -103,13 +103,11 @@ def dashboard_view(request):
     prochains_tournois = Tournoi.objects.filter(
         date__gte=today,
         est_publie=True
-    ).select_related('club_organisateur').order_by('date')[:5]
-
-    # Enrichir avec le nombre de déclarations
-    for tournoi in prochains_tournois:
-        tournoi.nb_declarations_calculees = tournoi.get_nb_declarations()
-        tournoi.nb_equipes_calculees = tournoi.get_nb_equipes_total()
-        tournoi.nb_candidatures_calculees = tournoi.get_nb_candidatures()
+    ).select_related('club_organisateur').annotate(
+        nb_declarations_calculees=Count('declarations', distinct=True),
+        nb_equipes_calculees=Sum('declarations__nombre_equipes'),
+        nb_candidatures_calculees=Count('candidatures', distinct=True),
+    ).order_by('date')[:5]
 
     # ═══════════════════════════════════════════════════
     # 🚨 CANDIDATURES EN ATTENTE (TOP 5)
@@ -196,11 +194,16 @@ def tournois_liste_view(request):
     # ENRICHISSEMENT DES DONNÉES
     # ═══════════════════════════════════════════════════
 
-    for tournoi in tournois:
-        tournoi.nb_declarations_calculees = tournoi.get_nb_declarations()
-        tournoi.nb_equipes_calculees = tournoi.get_nb_equipes_total()
-        tournoi.nb_candidatures_calculees = tournoi.get_nb_candidatures()
-        tournoi.nb_candidatures_en_attente = tournoi.get_candidatures_en_attente().count()
+    tournois = tournois.annotate(
+        nb_declarations_calculees=Count('declarations', distinct=True),
+        nb_equipes_calculees=Sum('declarations__nombre_equipes'),
+        nb_candidatures_calculees=Count('candidatures', distinct=True),
+        nb_candidatures_en_attente=Count(
+            'candidatures',
+            filter=Q(candidatures__statut='EN_ATTENTE'),
+            distinct=True
+        ),
+    )
 
     # ═══════════════════════════════════════════════════
     # STATISTIQUES
