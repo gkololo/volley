@@ -15,25 +15,7 @@
 
         <!-- CONTENU PRINCIPAL -->
         <div class="content-section">
-            <!-- 📊 VUE D'ENSEMBLE -->
-            <h2 class="nav-title">📊 Vue d'ensemble :</h2>
-            
-            <!-- Stats publiques -->
-            <div class="stats-section">
-                <a href="{% url 'consultation' %}" class="stat-card stat-highlight">
-                    <div class="stat-icon">🗓️</div>
-                    <div class="stat-number">{{ tournois_a_venir }}</div>
-                    <div class="stat-label">Tournoi{{ tournois_a_venir|pluralize }} à venir</div>
-                </a>
-                
-                <a href="{% url 'consultation_archive' %}" class="stat-card">
-                    <div class="stat-icon">⏰</div>
-                    <div class="stat-number">{{ tournois_passes }}</div>
-                    <div class="stat-label">Tournoi{{ tournois_passes|pluralize }} terminé{{ tournois_passes|pluralize }}</div>
-                </a>
-            </div>
-
-            <!-- 🔐 ACCÈS STAFF -->
+                        <!-- 🔐 ACCÈS STAFF -->
             {% if user.is_authenticated %}
                 {% if user.is_staff or user.is_superuser %}
                 <div class="staff-quick-access">
@@ -62,6 +44,28 @@
                 </div>
                 {% endif %}
             {% endif %}
+
+
+
+            <!-- 📊 VUE D'ENSEMBLE -->
+            <h2 class="nav-title">📊 Vue d'ensemble :</h2>
+
+            <!-- Stats publiques -->
+            <div class="stats-section">
+                <a href="{% url 'consultation' %}" class="stat-card stat-highlight">
+                    <div class="stat-icon">🗓️</div>
+                    <div class="stat-number">{{ tournois_a_venir }}</div>
+                    <div class="stat-label">Tournoi{{ tournois_a_venir|pluralize }} à venir</div>
+                </a>
+
+                <a href="{% url 'consultation_archive' %}" class="stat-card">
+                    <div class="stat-icon">⏰</div>
+                    <div class="stat-number">{{ tournois_passes }}</div>
+                    <div class="stat-label">Tournoi{{ tournois_passes|pluralize }} terminé{{ tournois_passes|pluralize }}</div>
+                </a>
+            </div>
+
+
 
             <!-- 🧭 ACTIONS PUBLIQUES -->
             <div class="nav-section">
