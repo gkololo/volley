@@ -4,7 +4,8 @@ from django.contrib import admin, messages
 from django.shortcuts import render, redirect
 from django.urls import path
 from django.http import HttpResponse
-from .models import Declaration, CategorieAge, Sexe, Zone, Club, Tournoi, Candidature
+from .models import Declaration, Club, Tournoi, Candidature, StatutCandidature
+
 
 # ═══════════════════════════════════════════════════
 # 🎨 PERSONNALISATION DU TITRE DE L'ADMIN
@@ -21,21 +22,17 @@ class DeclarationAdmin(admin.ModelAdmin):
         "club",
         "declarant",
         "nombre_equipes",
-        "categorie_age",
-        "sexe",
-        "zone",
-        "get_tournoi_display",  # ← NOUVEAU : Affiche le tournoi lié
-        "date_tournoi"  # ← ANCIEN : À garder temporairement
+        "get_tournoi_display",
+        "date_declaration",
     )
     list_filter = (
-        "tournoi",  # ← NOUVEAU : Filtre par tournoi
-        "categorie_age",
-        "sexe",
-        "zone",
-        "date_tournoi"
+        "tournoi",
+        "tournoi__categorie_age",
+        "tournoi__sexe",
+        "tournoi__zone",
     )
     search_fields = ("club__nom", "declarant", "tournoi__lieu")
-    date_hierarchy = "date_tournoi"
+    date_hierarchy = "date_declaration"
 
     def get_tournoi_display(self, obj):
         """Affiche le tournoi avec un lien cliquable"""
@@ -44,7 +41,7 @@ class DeclarationAdmin(admin.ModelAdmin):
             from django.utils.html import format_html
             url = reverse("admin:saisie_equipes_tournoi_change", args=[obj.tournoi.pk])
             return format_html('<a href="{}">{}</a>', url, obj.tournoi)
-        return "⚠️ Non lié"
+        return "—"
     get_tournoi_display.short_description = "🏆 Tournoi"
 
 @admin.register(Club)

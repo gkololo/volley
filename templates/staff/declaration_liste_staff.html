@@ -23,7 +23,7 @@
                 <div class="stat-label">Déclaration{{ nb_total|pluralize }}</div>
             </div>
         </div>
-        
+
         <div class="stat-card stat-success">
             <div class="stat-icon">🏐</div>
             <div class="stat-content">
@@ -31,7 +31,7 @@
                 <div class="stat-label">Équipe{{ nb_equipes_total|pluralize }} inscrite{{ nb_equipes_total|pluralize }}</div>
             </div>
         </div>
-        
+
         <div class="stat-card stat-info">
             <div class="stat-icon">🏛️</div>
             <div class="stat-content">
@@ -39,7 +39,7 @@
                 <div class="stat-label">Club{{ nb_clubs|pluralize }} participant{{ nb_clubs|pluralize }}</div>
             </div>
         </div>
-        
+
         <div class="stat-card stat-warning">
             <div class="stat-icon">🗓️</div>
             <div class="stat-content">
@@ -60,7 +60,7 @@
         {% for cat in repartition_categories %}
         <div style="background: #f8f9fa; padding: 1rem; border-radius: 6px; text-align: center; border-left: 4px solid #213f7b;">
             <div style="font-size: 1.5rem; font-weight: bold; color: #213f7b;">{{ cat.equipes }}</div>
-            <div style="color: #666; font-size: 0.9rem;">{{ cat.categorie_age }}</div>
+            <div style="color: #666; font-size: 0.9rem;">{{ cat.tournoi__categorie_age }}</div>
             <div style="color: #999; font-size: 0.8rem;">{{ cat.count }} déclaration{{ cat.count|pluralize }}</div>
         </div>
         {% endfor %}
@@ -86,7 +86,7 @@
                     {% endfor %}
                 </select>
             </div>
-            
+
             <!-- Filtre Club -->
             <div class="filter-group">
                 <label for="club">Club</label>
@@ -99,7 +99,7 @@
                     {% endfor %}
                 </select>
             </div>
-            
+
             <!-- Filtre Catégorie -->
             <div class="filter-group">
                 <label for="categorie">Catégorie</label>
@@ -111,7 +111,7 @@
                     <option value="M18" {% if categorie == 'M18' %}selected{% endif %}>M18</option>
                 </select>
             </div>
-            
+
             <!-- Filtre Sexe -->
             <div class="filter-group">
                 <label for="sexe">Sexe</label>
@@ -121,7 +121,7 @@
                     <option value="F" {% if sexe == 'F' %}selected{% endif %}>Féminin</option>
                 </select>
             </div>
-            
+
             <!-- Filtre Zone -->
             <div class="filter-group">
                 <label for="zone">Zone</label>
@@ -132,20 +132,20 @@
                     <option value="" {% if zone == '' %}selected{% endif %}>Aucune</option>
                 </select>
             </div>
-            
+
             <!-- Recherche -->
             <div class="filter-group">
                 <label for="q">Recherche</label>
-                <input 
-                    type="text" 
-                    name="q" 
-                    id="q" 
-                    value="{{ recherche }}" 
+                <input
+                    type="text"
+                    name="q"
+                    id="q"
+                    value="{{ recherche }}"
                     placeholder="Club, déclarant..."
                     class="form-control"
                 >
             </div>
-            
+
             <!-- Boutons -->
             <div class="filter-group" style="display: flex; gap: 0.5rem; align-items: flex-end; flex-wrap: wrap;">
                 <button type="submit" class="btn btn-primary">
@@ -169,14 +169,14 @@
         <h2 class="section-title" style="margin: 0;">
             📋 Déclarations ({{ declarations.count }})
         </h2>
-        
+
         {% if declarations %}
         <a href="?{% for key, value in request.GET.items %}{% if key != 'export' %}{{ key }}={{ value }}&{% endif %}{% endfor %}export=csv" class="btn btn-success btn-sm">
             📥 Exporter CSV
         </a>
         {% endif %}
     </div>
-    
+
     {% if declarations %}
         <div class="declarations-list">
             {% for declaration in declarations %}
@@ -193,17 +193,17 @@
                         </div>
                     </div>
                     <div style="text-align: right;">
-                        <div class="badge badge-{{ declaration.categorie_age|lower }}">
-                            {{ declaration.get_categorie_age_display }} {{ declaration.get_sexe_display }}
+                        <div class="badge badge-{{ declaration.tournoi.categorie_age|lower }}">
+                            {{ declaration.tournoi.get_categorie_age_display }} {{ declaration.tournoi.get_sexe_display }}
                         </div>
-                        {% if declaration.zone %}
+                        {% if declaration.tournoi.zone %}
                             <div class="badge" style="margin-top: 0.25rem; background: #6c757d;">
-                                {{ declaration.get_zone_display }}
+                                {{ declaration.tournoi.get_zone_display }}
                             </div>
                         {% endif %}
                     </div>
                 </div>
-                
+
                 <div class="tournoi-body">
                     <!-- Informations déclaration -->
                     <div class="tournoi-info">
@@ -219,7 +219,7 @@
                             </div>
                         {% endif %}
                     </div>
-                    
+
                     <!-- Date déclaration -->
                     <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e1e8ed; font-size: 0.85rem; color: #666;">
                         <div>🕐 Déclarée le {{ declaration.date_declaration|date:"d/m/Y à H:i" }}</div>
@@ -258,35 +258,35 @@
         background: linear-gradient(135deg, #17a2b8, #138496);
         color: white;
     }
-    
+
     .badge-m13 {
         background: linear-gradient(135deg, #28a745, #20c997);
         color: white;
     }
-    
+
     .badge-m15 {
         background: linear-gradient(135deg, #ffc107, #ff9800);
         color: white;
     }
-    
+
     .badge-m18 {
         background: linear-gradient(135deg, #dc3545, #c82333);
         color: white;
     }
-    
+
     /* Liste déclarations */
     .declarations-list {
         display: flex;
         flex-direction: column;
         gap: 1rem;
     }
-    
+
     /* Responsive */
     @media (max-width: 768px) {
         .filters-row {
             flex-direction: column;
         }
-        
+
         .filter-group {
             width: 100%;
         }

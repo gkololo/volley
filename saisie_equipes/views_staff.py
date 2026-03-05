@@ -550,17 +550,17 @@ def declarations_liste_view(request):
     # Filtre catégorie
     categorie = request.GET.get('categorie', '')
     if categorie:
-        declarations = declarations.filter(categorie_age=categorie)
+        declarations = declarations.filter(tournoi__categorie_age=categorie)
 
     # Filtre sexe
     sexe = request.GET.get('sexe', '')
     if sexe:
-        declarations = declarations.filter(sexe=sexe)
+        declarations = declarations.filter(tournoi__sexe=sexe)
 
     # Filtre zone
     zone = request.GET.get('zone', '')
     if zone:
-        declarations = declarations.filter(zone=zone)
+        declarations = declarations.filter(tournoi__zone=zone)
 
     # Filtre recherche
     recherche = request.GET.get('q', '')
@@ -607,11 +607,11 @@ def declarations_liste_view(request):
                 d.club.nom,
                 d.declarant,
                 d.email_club,
-                str(d.tournoi) if d.tournoi else d.date_tournoi.strftime('%d/%m/%Y'),
-                d.tournoi.date.strftime('%d/%m/%Y') if d.tournoi else d.date_tournoi.strftime('%d/%m/%Y'),
-                d.get_categorie_age_display(),
-                d.get_sexe_display(),
-                d.get_zone_display() if d.zone else 'Toutes zones',
+                str(d.tournoi),
+                d.tournoi.date.strftime('%d/%m/%Y'),
+                d.tournoi.get_categorie_age_display(),
+                d.tournoi.get_sexe_display(),
+                d.tournoi.get_zone_display() if d.tournoi.zone else 'Toutes zones',
                 d.nombre_equipes,
                 d.remarques if d.remarques else ''
             ])
@@ -636,10 +636,10 @@ def declarations_liste_view(request):
     nb_tournois = declarations.values('tournoi').distinct().count()
 
     # Répartition par catégorie
-    repartition_categories = declarations.values('categorie_age').annotate(
+    repartition_categories = declarations.values('tournoi__categorie_age').annotate(
         count=Count('id'),
         equipes=Sum('nombre_equipes')
-    ).order_by('categorie_age')
+    ).order_by('tournoi__categorie_age')
 
     # ═══════════════════════════════════════════════════
     # LISTES POUR FILTRES

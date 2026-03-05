@@ -1,4 +1,3 @@
-import datetime
 from django.db import models
 from django.core.validators import MaxValueValidator, EmailValidator
 from django.contrib.auth.models import User
@@ -402,53 +401,29 @@ class Declaration(models.Model):
         on_delete=models.CASCADE,
         verbose_name="Club affilié"
     )
-    categorie_age = models.CharField(
-        max_length=3,
-        choices=CategorieAge.choices,
-        default=CategorieAge.M11,
-        verbose_name="Catégorie d'âge"
-    )
-    sexe = models.CharField(
-        max_length=1,
-        choices=Sexe.choices,
-        default=Sexe.MASCULIN,
-        verbose_name="Sexe"
-    )
-    zone = models.CharField(
-        max_length=1,
-        choices=Zone.choices,
-        default=Zone.AUCUNE,
-        blank=True,
-        verbose_name="Zone géographique si applicable"
-    )
+
     nombre_equipes = models.PositiveSmallIntegerField(
         "Nombre d'équipes",
         validators=[MaxValueValidator(10)]
     )
 
-    # 🆕 NOUVEAU : Noms des équipes
     noms_equipes = models.JSONField(
         "Noms des équipes",
         default=list,
         blank=True,
         help_text="Liste des noms d'équipes (ex: ['TGV A', 'TGV B'])"
     )
-    # 🆕 NOUVEAU : Poules des équipes
+
     poules_equipes = models.JSONField(
         "Poules des équipes",
         default=list,
         blank=True,
-        help_text="Liste des poules assignées à chaque équipe (ex: ['HAUTE', 'BASSE', ''])"
+        help_text="Liste des poules assignées à chaque équipe"
     )
-    # ⚠️ GARDER TEMPORAIREMENT pour migration
-    date_tournoi = models.DateField("Date du tournoi", default=datetime.date.today)
 
-    # 🆕 NOUVEAU CHAMP
     tournoi = models.ForeignKey(
         'Tournoi',
         on_delete=models.CASCADE,
-        null=True,  # ⚠️ Important pour migration !
-        blank=True,
         related_name='declarations',
         verbose_name="Tournoi",
         help_text="Tournoi pour lequel l'équipe est déclarée"
@@ -469,7 +444,7 @@ class Declaration(models.Model):
 
     def __str__(self):
         equipes_str = ", ".join(self.noms_equipes) if self.noms_equipes else f"{self.nombre_equipes} équipe(s)"
-        return f"{self.declarant} ({self.club}) - {equipes_str} - {self.get_categorie_age_display()} {self.get_sexe_display()} {self.get_zone_display()}"
+        return f"{self.declarant} ({self.club}) - {equipes_str} - {self.tournoi}"
 
     def get_noms_equipes_formatte(self):
         """Retourne les noms d'équipes formatés pour affichage"""
