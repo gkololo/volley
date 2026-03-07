@@ -7,6 +7,7 @@ from django.utils import timezone
 class Sexe(models.TextChoices):
     MASCULIN = "M", "Masculin"
     FEMININ = "F", "Féminin"
+    MIXTE    = "X", "Féminin et Masculin"
 
 class CategorieAge(models.TextChoices):
     M11 = "M11", "Moins de 11 ans"
