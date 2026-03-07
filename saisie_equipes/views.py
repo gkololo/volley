@@ -99,7 +99,7 @@ def declaration_view(request):
                     "declarant": declaration.declarant,
                     "club": str(declaration.club),
                     "nombre_equipes": declaration.nombre_equipes,
-                    "categorie_age": declaration.get_categorie_age_display(),
+                    "categorie_age": declaration.tournoi.get_categorie_age_display(),
                 }
 
                 messages.success(request, f"✅ Déclaration enregistrée avec succès pour {declaration.club}!")
@@ -274,6 +274,9 @@ def mes_candidatures_view(request):
         'tournoi',
         'club',
         'traite_par'
+    ).defer(
+        'email_contact',     # RGPD : coordonnées personnelles, inutiles en consultation publique
+        'telephone_contact'  # RGPD : idem
     ).order_by('-created_at')
 
     # Grouper par statut

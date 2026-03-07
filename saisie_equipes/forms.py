@@ -168,10 +168,7 @@ class DeclarationForm(AntiSpamFormMixin, forms.ModelForm):
             'date_declaration',
             'noms_equipes',
             'poules_equipes',
-            'date_tournoi',       # 🆕 Déduit du tournoi
-            'categorie_age',      # 🆕 Déduit du tournoi
-            'sexe',               # 🆕 Déduit du tournoi
-            'zone',               # 🆕 Déduit du tournoi
+            # date_tournoi, categorie_age, sexe, zone supprimés en Sprint 3b
         ]
 
         widgets = {
@@ -339,16 +336,8 @@ class DeclarationForm(AntiSpamFormMixin, forms.ModelForm):
         return cleaned_data
 
     def save(self, commit=True):
-        """🆕 Sauvegarder avec auto-remplissage depuis le tournoi"""
+        """Sauvegarder la déclaration avec noms et poules d'équipes"""
         instance = super().save(commit=False)
-
-        # 🆕 AUTO-REMPLISSAGE depuis le tournoi sélectionné
-        # Ces champs sont masqués du formulaire mais requis par le modèle
-        if instance.tournoi:
-            instance.categorie_age = instance.tournoi.categorie_age
-            instance.sexe = instance.tournoi.sexe
-            instance.zone = instance.tournoi.zone
-            instance.date_tournoi = instance.tournoi.date
 
         # ✅ Récupérer les noms validés depuis cleaned_data
         if 'noms_equipes' in self.cleaned_data:

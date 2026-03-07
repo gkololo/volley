@@ -185,11 +185,7 @@
                     <div>
                         <h3>{{ declaration.club.nom }}</h3>
                         <div style="margin-top: 0.25rem; font-size: 0.9rem; color: #666;">
-                            {% if declaration.tournoi %}
-                                🗓️ {{ declaration.tournoi }}
-                            {% else %}
-                                🗓️ Tournoi du {{ declaration.date_tournoi|date:"d/m/Y" }}
-                            {% endif %}
+                            🗓️ {{ declaration.tournoi }}
                         </div>
                     </div>
                     <div style="text-align: right;">

@@ -4,6 +4,7 @@ from django.contrib import admin, messages
 from django.shortcuts import render, redirect
 from django.urls import path
 from django.http import HttpResponse
+from django.db.models import Count, Sum, Q
 from .models import Declaration, Club, Tournoi, Candidature, StatutCandidature
 
 
@@ -240,27 +241,53 @@ class TournoiAdmin(admin.ModelAdmin):
 
     readonly_fields = ('created_at', 'updated_at')
 
+    def get_queryset(self, request):
+        """Surcharge pour annoter tous les compteurs en une seule requête SQL"""
+        qs = super().get_queryset(request)
+        return qs.annotate(
+            _nb_declarations=Count('declarations', distinct=True),
+            _nb_equipes=Sum('declarations__nombre_equipes'),
+            _nb_cand_total=Count('candidatures', distinct=True),
+            _nb_cand_en_attente=Count(
+                'candidatures',
+                filter=Q(candidatures__statut=StatutCandidature.EN_ATTENTE),
+                distinct=True
+            ),
+            _nb_cand_validees=Count(
+                'candidatures',
+                filter=Q(candidatures__statut=StatutCandidature.VALIDEE),
+                distinct=True
+            ),
+            _nb_cand_refusees=Count(
+                'candidatures',
+                filter=Q(candidatures__statut=StatutCandidature.REFUSEE),
+                distinct=True
+            ),
+        )
+
     def get_nb_declarations(self, obj):
-        """Affiche le nombre de déclarations"""
-        return obj.get_nb_declarations()
+        """Utilise la valeur annotée — zéro requête supplémentaire"""
+        return obj._nb_declarations or 0
     get_nb_declarations.short_description = '🏐 Clubs'
+    get_nb_declarations.admin_order_field = '_nb_declarations'
 
     def get_nb_equipes_total(self, obj):
-        """Affiche le nombre total d'équipes"""
-        return obj.get_nb_equipes_total()
+        """Utilise la valeur annotée — zéro requête supplémentaire"""
+        return obj._nb_equipes or 0
     get_nb_equipes_total.short_description = '👥 Équipes'
+    get_nb_equipes_total.admin_order_field = '_nb_equipes'
 
     def get_nb_candidatures_display(self, obj):
-        """Affiche le nombre de candidatures avec détails"""
+        """Utilise les valeurs annotées — zéro requête supplémentaire"""
         from django.utils.html import format_html
 
-        total = obj.candidatures.count()
+        total = obj._nb_cand_total or 0
         if total == 0:
             return "—"
 
-        en_attente = obj.candidatures.filter(statut='EN_ATTENTE').count()
-        validees = obj.candidatures.filter(statut='VALIDEE').count()
-        refusees = obj.candidatures.filter(statut='REFUSEE').count()
+        en_attente = obj._nb_cand_en_attente or 0
+        validees   = obj._nb_cand_validees or 0
+        refusees   = obj._nb_cand_refusees or 0
 
         details = []
         if en_attente > 0:
@@ -270,9 +297,10 @@ class TournoiAdmin(admin.ModelAdmin):
         if refusees > 0:
             details.append(f'<span style="color: red;">{refusees} refusée(s)</span>')
 
-        return format_html(f'<strong>{total}</strong> ({", ".join(details)})')
+        return format_html('<strong>{}</strong> ({})', total, ', '.join(details) if details else '—')
 
     get_nb_candidatures_display.short_description = '📋 Candidatures'
+    get_nb_candidatures_display.admin_order_field = '_nb_cand_total'
 
     def save_model(self, request, obj, form, change):
         """Enregistre le tournoi en ajoutant l'utilisateur créateur"""
@@ -334,7 +362,7 @@ class CandidatureAdmin(admin.ModelAdmin):
     def valider_candidatures(self, request, queryset):
         """Action pour valider des candidatures"""
         nb_validees = 0
-        for candidature in queryset.filter(statut='EN_ATTENTE'):
+        for candidature in queryset.filter(statut=StatutCandidature.EN_ATTENTE):
             candidature.valider(request.user)
             nb_validees += 1
 
@@ -348,7 +376,7 @@ class CandidatureAdmin(admin.ModelAdmin):
         """Action pour refuser des candidatures"""
         # Note : Pour une vraie utilisation, il faudrait un formulaire pour saisir la raison
         nb_refusees = 0
-        for candidature in queryset.filter(statut='EN_ATTENTE'):
+        for candidature in queryset.filter(statut=StatutCandidature.EN_ATTENTE):
             candidature.refuser(request.user, "Refusé par action groupée")
             nb_refusees += 1
 
