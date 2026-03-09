@@ -77,7 +77,7 @@ class Tournoi(models.Model):
         max_length=1,
         choices=Sexe.choices,
         default=Sexe.MIXTE,
-        help_text="Masculin ou Féminin ou les deux"
+        help_text="Masculin ou Féminin ou les deux catégories"
     )
 
     zone = models.CharField(
