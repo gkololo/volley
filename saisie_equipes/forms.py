@@ -490,14 +490,17 @@ class TournoiForm(AntiSpamFormMixin, forms.ModelForm):
     """
 
     # 🆕 Champ personnalisé pour les poules (pas géré nativement par ModelForm pour JSONField)
-    poules_disponibles = forms.MultipleChoiceField(
-        choices=Poule.choices,
-        widget=forms.CheckboxSelectMultiple(attrs={
-            'class': 'poule-checkbox',
-        }),
-        required=False,
-        label='🏆 Poules disponibles',
-        help_text='Cochez les poules que les clubs pourront choisir pour ce tournoi. Laissez vide si pas de poules.'
+    poules_disponibles = forms.ChoiceField(
+    choices=[
+        ('UNIQUE', 'Poule Unique'),
+        ('HAUTE',  'Poule Haute'),
+        ('BASSE',  'Poule Basse'),
+    ],
+    widget=forms.RadioSelect(attrs={'class': 'poule-radio'}),
+    required=False,
+    initial='UNIQUE',
+    label='🏆 Configuration des poules',
+    help_text='Sélectionnez le type de poule pour ce tournoi.',
     )
 
     def __init__(self, *args, **kwargs):
@@ -510,8 +513,9 @@ class TournoiForm(AntiSpamFormMixin, forms.ModelForm):
         self.fields['remarques'].required = False
 
         # 🆕 Pré-remplir les poules depuis l'instance existante (modification)
-        if self.instance and self.instance.pk and self.instance.poules_disponibles:
-            self.initial['poules_disponibles'] = self.instance.poules_disponibles
+        if self.instance and self.instance.pk:
+            poules = self.instance.poules_disponibles or []
+            self.initial['poules_disponibles'] = poules[0] if poules else ''
 
     class Meta:
         model = Tournoi
@@ -660,9 +664,10 @@ class TournoiForm(AntiSpamFormMixin, forms.ModelForm):
         """🆕 Sauvegarder avec les poules disponibles"""
         instance = super().save(commit=False)
 
-        # 🆕 Convertir le MultipleChoiceField en liste JSON
+
         # cleaned_data['poules_disponibles'] = ['HAUTE', 'BASSE'] ou []
-        instance.poules_disponibles = self.cleaned_data.get('poules_disponibles', [])
+        config = self.cleaned_data.get('poules_disponibles', '')
+        instance.poules_disponibles = [config] if config else []
 
         if commit:
             instance.save()
